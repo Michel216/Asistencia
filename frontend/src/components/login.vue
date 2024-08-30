@@ -3,7 +3,7 @@
     <q-card style="width: 400px; height: 600px;">
       <q-card-section class="header-section">
         <div class="text-h6 text-white text-center">
-          <img src="/public/imagenes/simg.png" class="logoSena" alt="">
+          <img src="../../public/imagenes/simg.png" class="logoSena" alt="">
         </div>
       </q-card-section>
       <div class="form-box login text-center">

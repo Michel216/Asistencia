@@ -22,7 +22,7 @@
       <!-- Contenido del drawer -->
       <br>
       <q-avatar style="padding: 5px;">
-        <img src="/public/imagenes/usuario.png" alt="Logo SENA" />
+        <img src="../../public/imagenes/usuario.png" alt="Logo SENA" />
       </q-avatar>
       <q-list>
         <br>
@@ -84,7 +84,7 @@
 
       </q-list>
       <div class="logon">
-      <img class="negro" src="/public/imagenes/snegr.png" alt="">
+      <img class="negro" src="../../public/imagenes/snegr.png" alt="">
     </div>
     </q-drawer>
 

@@ -2,7 +2,7 @@
     <div class="recovery-wrapper">
       <div class="frente">
         <div class="cuerpo">
-          <img class="rp" src="/public/imagenes/simg.png" alt="Logo SENA" />
+          <img class="rp" src="../../public/imagenes/simg.png" alt="Logo SENA" />
         </div>
   
         <q-card-section>
