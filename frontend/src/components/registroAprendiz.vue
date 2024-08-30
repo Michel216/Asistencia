@@ -2,7 +2,7 @@
   <div class="form-container">
     <div class="form-card">
       <div class="form-header">
-        <img src="./simg.png" alt="Logo SENA" />
+        <img src="/public/imagenes/simg.png" alt="Logo SENA" />
       </div>
       <h5>Registro de Asistencia</h5>
       <q-form @submit.prevent="handleSubmit">

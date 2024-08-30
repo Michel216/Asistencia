@@ -22,7 +22,7 @@
       <br>
       <div class="avatar-container">
     <q-avatar>
-      <img class="per" src="./usuario.png" alt="perfil " />
+      <img class="per" src="/public/imagenes/usuario.png" alt="perfil " />
     </q-avatar>
   </div>
       <q-list>
@@ -73,7 +73,7 @@
      
        
       <div class="logon">
-      <img class="negro" src="./snegr.png" alt="">
+      <img class="negro" src="/public/imagenes/snegr.png" alt="">
     </div>
     </q-drawer>
    

@@ -25,7 +25,7 @@
       <br>
       <div class="avatar-container">
     <q-avatar>
-      <img class="per" src="./usuario.png" alt="perfil " />
+      <img class="per" src="/public/imagenes/usuario.png" alt="perfil " />
     </q-avatar>
   
   </div>
@@ -97,7 +97,7 @@
       </q-list>
 <br>
 <div class="logon">
-      <img class="negro" src="./snegr.png" alt="">
+      <img class="negro" src="/public/imagenes/snegr.png" alt="">
     </div>
   
     </q-drawer>
@@ -108,7 +108,7 @@
         <div class="card">
           <div class="card-header">Fichas</div>
           <div class="card-body">
-            <img class="pta" src="./documentos.png" alt="Salud Publica">
+            <img class="pta" src="/public/imagenes/documentos.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">
@@ -123,7 +123,7 @@
         <div class="card">
           <div class="card-header">Aprendices</div>
           <div class="card-body">
-            <img class="pta" src="./estudiantes.png" alt="Salud Publica">
+            <img class="pta" src="/public/imagenes/estudiantes.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">
@@ -137,7 +137,7 @@
         <div class="card">
           <div class="card-header">Bitacoras</div>
           <div class="card-body">
-            <img class="pta" src="./internet.png" alt="Salud Publica">
+            <img class="pta" src="/public/imagenes/internet.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">
@@ -151,7 +151,7 @@
         <div class="card">
           <div class="card-header">Usuarios</div>
           <div class="card-body">
-            <img class="pta" src="./seguidores.png" alt="Salud Publica">
+            <img class="pta" src="/public/imagenes/seguidores.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">

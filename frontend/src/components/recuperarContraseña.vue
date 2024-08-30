@@ -2,7 +2,7 @@
     <div class="recovery-wrapper">
       <div class="frente">
         <div class="cuerpo">
-          <img class="rp" src="./simg.png" alt="Logo SENA" />
+          <img class="rp" src="/public/imagenes/simg.png" alt="Logo SENA" />
         </div>
   
         <q-card-section>
@@ -27,9 +27,6 @@
               ]"
               autocomplete="off"
             >
-              <!-- <template v-slot:append>
-                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
-              </template> -->
             </q-input>
             <q-input
               v-model="confirmPassword"
