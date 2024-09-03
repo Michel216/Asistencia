@@ -2,16 +2,13 @@
     "name": "asistencia",
     "version": "1.0.0",
     "scripts": {
-      "build": "cd frontend && npm install && npm run build && cd ../backend && npm install",
-      "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\"",
-      "start:frontend": "npm start --prefix frontend",
-      "start:backend": "npm start --prefix backend"
-    },
-    "dependencies": {
-      "concurrently": "^7.0.0"
+        "build": "cd frontend && npm install && npm run build && cd ../backend && npm install",
+        "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\"",
+        "start:frontend": "npm start --prefix frontend",
+        "start:backend": "npm start --prefix backend"
     },
     "devDependencies": {
-      "nodemon": "^2.0.15"  
+        "concurrently": "^8.2.2",
+        "nodemon": "^2.0.15"
     }
-  }
-  
+}
