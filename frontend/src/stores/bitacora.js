@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda
 
+const API_URL= 'https://asistencia-i7sv.onrender.com'
 
 export const useBitacoraStore = defineStore("bitacora", () => {
     const usuariosStore = useUsuariosStore();
@@ -13,7 +14,7 @@ export const useBitacoraStore = defineStore("bitacora", () => {
       }
       
       try {
-        let r = await axios.post("http://localhost:3082/bitacora", {
+        let r = await axios.post(`${API_URL}/bitacora`, {
           id_aprendiz, 
           fecha
         }, {
@@ -37,7 +38,7 @@ export const useBitacoraStore = defineStore("bitacora", () => {
           return;
         }
     
-        let r = await axios.get("http://localhost:3082/bitacora", {
+        let r = await axios.get(`${API_URL}/bitacora`, {
           headers: {
             "token": usuariosStore.token,
           },

@@ -2,12 +2,14 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda
 
+const API_URL= 'https://asistencia-i7sv.onrender.com'
+
 export const useFichaStore = defineStore("ficha", () => {
     const usuariosStore = useUsuariosStore();  // Crea una instancia de la tienda de usuarios
 
     const listarFicha = async () => {
         try {
-            let r = await axios.get("http://localhost:3082/ficha", {
+            let r = await axios.get(`${API_URL}/ficha`, {
                 headers: {
                     "token": usuariosStore.token,  // Accede al token desde la tienda
                 }
@@ -24,7 +26,7 @@ export const useFichaStore = defineStore("ficha", () => {
 
     const guardarFicha = async (codigo, nombre) => {
         try {
-            let r = await axios.post("http://localhost:3082/ficha", 
+            let r = await axios.post(`${API_URL}/ficha`, 
                 {
                     codigo: codigo,
                     nombre: nombre,
@@ -43,11 +45,8 @@ export const useFichaStore = defineStore("ficha", () => {
         }
     };
 
-    // Otros métodos...
-
     return {
         listarFicha,
         guardarFicha,
-        // Otros métodos...
     };
 });

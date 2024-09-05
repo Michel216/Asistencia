@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useUsuariosStore } from './usuario.js';  // Importa la tienda de usuarios
+import { useUsuariosStore } from './usuario.js';  
+
+const API_URL= 'https://asistencia-i7sv.onrender.com'
 
 export const useAprendizStore = defineStore("aprendiz", () => {
     // Obtener la tienda de usuarios para usar el token
@@ -17,7 +19,7 @@ export const useAprendizStore = defineStore("aprendiz", () => {
         }
 
         try {
-            const r = await axios.get('http://localhost:3082/aprendiz', {
+            const r = await axios.get(`${API_URL}/aprendiz`, {
                 headers: {
                     "token": usuariosStore.token,  // Accede al token desde la tienda
                 }
@@ -33,7 +35,7 @@ export const useAprendizStore = defineStore("aprendiz", () => {
     const guardarAprendiz = async (documento, nombre, telefono, email, id_ficha) => {
         console.log("Función guardarAprendiz ejecutada", { documento, nombre, telefono, email, id_ficha });
         try {
-            let r = await axios.post("http://localhost:3082/aprendiz", {
+            let r = await axios.post(`${API_URL}/aprendiz`, {
                 documento,
                 nombre,
                 telefono,
@@ -56,7 +58,7 @@ export const useAprendizStore = defineStore("aprendiz", () => {
     const modificarAprendiz = async (id, documento, nombre, telefono, email, ficha) => {
         console.log("Función modificarAprendiz ejecutada", { id, documento, nombre, telefono, email, ficha });
         try {
-            const res = await axios.put(`http://localhost:3082/aprendiz/modificar/${id}`, {
+            const res = await axios.put(`${API_URL}/aprendiz/modificar/${id}`, {
                 documento,
                 nombre,
                 telefono,
@@ -82,7 +84,7 @@ export const useAprendizStore = defineStore("aprendiz", () => {
             throw new Error('ID no proporcionado');
         }
         try {
-            let r = await axios.put(`http://localhost:3082/aprendiz/activar/${id}`, {}, {
+            let r = await axios.put(`${API_URL}/aprendiz/activar/${id}`, {}, {
                 headers: {
                     "token": usuariosStore.token, // Accede al token desde la tienda
                 },
@@ -102,7 +104,7 @@ export const useAprendizStore = defineStore("aprendiz", () => {
             throw new Error('ID no proporcionado');
         }
         try {
-            let r = await axios.put(`http://localhost:3082/aprendiz/desactivar/${id}`, {}, {
+            let r = await axios.put(`${API_URL}/aprendiz/desactivar/${id}`, {}, {
                 headers: {
                     "token": usuariosStore.token, // Accede al token desde la tienda
                 },

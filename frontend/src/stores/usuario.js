@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 import { Notify } from 'quasar';
 import axios from 'axios';
 
-// Definición de la tienda para el manejo de usuarios y token
+const API_URL= 'https://asistencia-i7sv.onrender.com'
+
 export const useUsuariosStore = defineStore("usuario", () => {
     const token = ref('');
     const usuario = ref('');
@@ -12,23 +13,20 @@ export const useUsuariosStore = defineStore("usuario", () => {
     const login = async (email, password) => {
         loading.value = true;
         try {
-            const r = await axios.post('http://localhost:3082/usuario/login', {
+            const r = await axios.post(`${API_URL}/usuario/login`, {
                 email,
                 password,
             });
 
-            // Asignar el token y usuario a sus respectivas referencias
             token.value = r.data.token;
             usuario.value = r.data.usuario;
 
-            // Notificar éxito (puedes ajustar este mensaje según tu necesidad)
             Notify.create({
                 type: 'positive',
                 message: 'Inicio de sesión exitoso',
             });
 
         } catch (error) {
-            // Notificar error
             Notify.create({
                 type: 'negative',
                 message: 'Error al iniciar sesión: ' + (error.response?.data?.message || error.message),
@@ -40,7 +38,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
 
     const listarUsuarios = async () => {
         try {
-            let r = await axios.get("http://localhost:3082/usuario", {
+            let r = await axios.get(`${API_URL}/usuario`, {
                 headers: {
                     "token": token.value,
                 }
@@ -56,7 +54,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
 
     const guardarUsuario = async (email, nombre) => {
         try {
-            let r = await axios.post("http://localhost:3082/usuario", 
+            let r = await axios.post(`${API_URL}/usuario`, 
                 {
                     email: email,
                     nombre: nombre,
@@ -84,7 +82,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
 
     const modificarUsuario = async (email, newPassword) => {
         try {
-            const response = await axios.put(`http://localhost:3082/usuario/modificar/${email}`, {
+            const response = await axios.put(`${API_URL}/usuario/modificar/${email}`, {
                 password: newPassword
             });
             return response;
@@ -95,7 +93,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
 
     const activarUsuario = async (id) => {
         try {
-            let r = await axios.put(`http://localhost:3082/usuario/usuario/${id}`, {}, {
+            let r = await axios.put(`${API_URL}/usuario/usuario/${id}`, {}, {
                 headers: {
                    "token": token.value,
                 }
@@ -109,7 +107,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
 
     const desactivarUsuario = async (id) => {
         try {
-            let r = await axios.put(`http://localhost:3082/usuario/inactivar/${id}`, {}, {
+            let r = await axios.put(`${API_URL}/usuario/inactivar/${id}`, {}, {
                 headers: {
                    "token": token.value,
                 }
