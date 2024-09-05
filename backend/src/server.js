@@ -5,7 +5,7 @@ const cors = require('cors');
 class Server {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || 3082;
+        this.port = process.env.PORT;
         this.MONGO_URI=process.env.MONGO_URI
         this.paths = {
             aprendiz: '/aprendiz',

@@ -15,9 +15,6 @@ bitacoraRouter.get('/',
     bitacoraController.listarTodos
 );
 
-
-
-
 bitacoraRouter.post('/listarAprendiz',
     [
         validarJWT,

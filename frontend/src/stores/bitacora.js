@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useUsuariosStore } from './usuario.js';  // Importa la tienda
+import { useUsuariosStore } from './usuario.js';  
 
 const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
@@ -19,7 +19,7 @@ export const useBitacoraStore = defineStore("bitacora", () => {
           fecha
         }, {
           headers: {
-            "token": usuariosStore.token,  // Accede al token desde la tienda
+            "token": usuariosStore.token,  
           }
         })
         console.log(r);
@@ -31,13 +31,7 @@ export const useBitacoraStore = defineStore("bitacora", () => {
     };
     
     const listarTodos = async () => {
-      console.log("listarTodos se está ejecutando"); // Verifica si la función se ejecuta
       try {
-        if (!usuariosStore.token) {
-          console.error("Token no definido en usuariosStore");
-          return;
-        }
-    
         let r = await axios.get(`${API_URL}/bitacora`, {
           headers: {
             "token": usuariosStore.token,

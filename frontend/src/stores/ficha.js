@@ -14,8 +14,6 @@ export const useFichaStore = defineStore("ficha", () => {
                     "token": usuariosStore.token,  // Accede al token desde la tienda
                 }
             });
-            console.log(usuariosStore.token)
-
             console.log(r);
             return r;
         } catch (error) {
