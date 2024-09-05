@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda
 
-const API_URL= 'https://asistencia-i7sv.onrender.com'
+const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 export const useFichaStore = defineStore("ficha", () => {
     const usuariosStore = useUsuariosStore();  // Crea una instancia de la tienda de usuarios

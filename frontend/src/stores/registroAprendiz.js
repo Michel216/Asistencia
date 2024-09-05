@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import axios from "axios";
 import { useUsuariosStore } from './usuario.js';
 
-const API_URL= 'https://asistencia-i7sv.onrender.com'
+const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 export const useAsistenciaStore = defineStore('asistencia', () => {
   const useUsuarios = useUsuariosStore();

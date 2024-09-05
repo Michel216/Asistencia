@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { Notify } from 'quasar';
 import axios from 'axios';
 
-const API_URL= 'https://asistencia-i7sv.onrender.com'
+const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 export const useUsuariosStore = defineStore("usuario", () => {
     const token = ref('');
