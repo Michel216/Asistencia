@@ -1,23 +1,23 @@
-const bcryptjs = require('bcryptjs');
-const Usuario = require('../modelos/usuarios');
+const { genSaltSync, hashSync, compareSync } = require ('bcryptjs');
+const { findOne } = require ('../modelos/usuarios');
 
 const encriptarPassword = (password) => {
-    const salt = bcryptjs.genSaltSync();
-    return bcryptjs.hashSync(password, salt);
+    const salt = genSaltSync();
+    return hashSync(password, salt);
 }
 
 const compararPassword = (password, hash) => {
-    return bcryptjs.compareSync(password, hash);
+    return compareSync(password, hash);
 }
 
 const validarEmailUnico = async (email) => {
-    const usuario = await Usuario.findOne({ email });
+    const usuario = await findOne({ email });
     if (usuario) {
         throw new Error(`El correo ${email} ya está registrado`);
     }
 }
 
-module.exports = {
+export default {
     encriptarPassword,
     compararPassword,
     validarEmailUnico

@@ -1,7 +1,7 @@
 const bcryptjs = require('bcryptjs');
 const Usuario = require('../modelos/usuarios');
 const { generarJWT } = require('../middlewares/validarJWT');
-const { encriptarPassword, compararPassword, validarEmailUnico } = require('../helpers/usuario.js');
+const { encriptarPassword, compararPassword, validarEmailUnico } = require('../helpers/usuario.js').default;
 
 const usuarioController = {
     // Crear usuario

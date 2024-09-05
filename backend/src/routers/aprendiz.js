@@ -3,7 +3,6 @@ const  aprendizController  = require('../controllers/aprendiz');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos.js');
 const { validarJWT } = require('../middlewares/validarJWT'
-
 );
 
 const aprendizRouter = express.Router();
