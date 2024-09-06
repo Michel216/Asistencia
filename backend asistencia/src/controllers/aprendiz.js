@@ -1,4 +1,5 @@
 
+
 const Aprendiz = require('../modelos/aprendiz');
 const { validarCCUnico } = require('../helpers/aprendiz');
 
