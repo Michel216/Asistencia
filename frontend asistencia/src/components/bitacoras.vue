@@ -160,7 +160,7 @@ const useAsistencia = useAsistenciaStore();
 const useBitacora = useBitacoraStore();
 
 const estadoOptions = [
-  { label: 'Asistió ', value: 'Asistió ' },
+  { label: 'Asistió', value: 'Asistió' },
   { label: 'Excusa', value: 'Excusa' },
   { label: 'Pendiente', value: 'Pendiente' }
 ];
