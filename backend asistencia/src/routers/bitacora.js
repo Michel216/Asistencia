@@ -14,7 +14,13 @@ bitacoraRouter.get('/',
     ],
     bitacoraController.listarTodos
 );
-
+bitacoraRouter.put('/:id',
+    [
+        validarJWT,
+        validarCampos
+    ],
+    bitacoraController.updateEstado
+);
 
 
 
@@ -42,11 +48,12 @@ bitacoraRouter.post('/listarFicha',
 // Crear una nueva bitacora - Requiere JWT y validaciones de campos
 bitacoraRouter.post('/',
     [
-        // validarJWT,
+      validarJWT,
         check('id_aprendiz', 'El ID del aprendiz es obligatorio').not().isEmpty(),
         validarCampos
     ],
     bitacoraController.crear
 );
+
 
 module.exports = bitacoraRouter;

@@ -78,7 +78,7 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al activar al aprendiz' });
         }
     },
-    inactivar: async (req, res) => {
+    desactivar: async (req, res) => {
         const documento = req.params.documento;
         try {
             const aprendizInactivo = await Aprendiz.findOneAndUpdate({ documento }, { estado: 0 }, { new: true });

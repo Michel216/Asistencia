@@ -3,7 +3,7 @@
     <q-card style="width: 400px; height: 600px;">
       <q-card-section class="header-section">
         <div class="text-h6 text-white text-center">
-          <img src="./simg.png" class="logoSena" alt="">
+          <img src="../../public/imagenes/simg.png" class="logoSena" alt="">
         </div>
       </q-card-section>
       <div class="form-box login text-center">
@@ -48,8 +48,9 @@ const Login = async () => {
   
   isLoading.value = true; // Muestra el spinner
   try {
-    await useUsuarios.login(email.value, password.value);
-    router.push('/home'); // Redirige a la ruta deseada
+   const login=  await useUsuarios.login(email.value, password.value);
+   if(login){
+    router.push('/home'); }
   } catch (error) {
     console.error("Error en el login:", error);
     $q.notify({

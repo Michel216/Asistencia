@@ -1,7 +1,8 @@
 // stores/useAsistenciaStore.js
 import { defineStore } from 'pinia';
-import axios from "axios";
+import axios from `axios`;
 import { useUsuariosStore } from './usuario.js';
+API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 export const useAsistenciaStore = defineStore('asistencia', () => {
   const useUsuarios = useUsuariosStore();
@@ -9,7 +10,7 @@ export const useAsistenciaStore = defineStore('asistencia', () => {
 
   const crear = async (id_aprendiz, fecha) => {
     try {
-      let r = await axios.post("http://localhost:3082/bitacora", {
+      let r = await axios.post(`${API_URL}/bitacora`, {
         id_aprendiz,
         fecha
       }, {
@@ -28,7 +29,7 @@ export const useAsistenciaStore = defineStore('asistencia', () => {
 
   const listarTodos = async () => {
     try {
-      const r = await axios.get('http://localhost:3082/bitacora', {
+      const r = await axios.get(`${API_URL}/bitacora`, {
         headers: {
           "token": useUsuarios.token,  // Accede al token desde la tienda
         }

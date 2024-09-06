@@ -2,22 +2,13 @@
   <div class="form-container">
     <div class="form-card">
       <div class="form-header">
-        <img src="./simg.png" alt="Logo SENA" />
+        <img src="../../public/imagenes/simg.png" alt="Logo SENA" />
       </div>
       <h5>Registro de Asistencia</h5>
       <q-form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <q-select
-            filled
-            v-model="model"
-            use-input
-            input-debounce="0"
-            label="Escribe tu nombre"
-            :options="options"
-            @filter="filterFn"
-            style="width: 250px"
-            behavior="menu"
-          >
+          <q-select filled v-model="model" use-input input-debounce="0" label="Escribe tu nombre" :options="options"
+            @filter="filterFn" style="width: 250px" behavior="menu">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -82,9 +73,10 @@ const handleSubmit = async () => {
     isLoading.value = true;
 
     try {
-  const creado=    await useAsistencia.crear(model.value, new Date().toISOString());
+      // Enviar solo el valor (ObjectId)
+      const creado = await useAsistencia.registo(model.value.value, new Date().toISOString());
       console.log(creado);
-      
+
       $q.notify({
         type: 'positive',
         message: 'Asistencia registrada con éxito',
@@ -120,7 +112,7 @@ const handleSubmit = async () => {
 // };
 
 // Inicializa la lista de usuarios
-filterFn('', () => {});
+filterFn('', () => { });
 </script>
 
 <style>

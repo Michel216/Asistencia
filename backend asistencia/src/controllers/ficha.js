@@ -50,7 +50,7 @@ const fichaController = {
                 res.status(500).json({ error: 'Error al activar la ficha' });
             }
         },
-            inactivar: async (req, res) => {
+            desactivar: async (req, res) => {
                 const codigo = req.params.codigo;
                 try {
                     const fichaInactiva = await Ficha.findOneAndUpdate({ codigo }, { estado: 0 }, { new: 1 });

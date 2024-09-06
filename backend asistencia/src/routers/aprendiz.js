@@ -2,9 +2,7 @@ const express = require('express');
 const  aprendizController  = require('../controllers/aprendiz');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos.js');
-const { validarJWT } = require('../middlewares/validarJWT'
-
-);
+const { validarJWT } = require('../middlewares/validarJWT');
 
 const aprendizRouter = express.Router();
 
@@ -36,7 +34,6 @@ aprendizRouter.post('/',
 aprendizRouter.put('/modificar/:id', 
     [
         validarJWT,
-
         check('id', 'El id es obligatorio').not().isEmpty(),
         validarCampos
     ], 
@@ -53,6 +50,6 @@ aprendizRouter.put('/desactivar/:documento',
    [   validarJWT,
     validarCampos],
 
-     aprendizController.inactivar);
+     aprendizController.desactivar);
 
 module.exports = aprendizRouter;

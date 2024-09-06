@@ -18,65 +18,87 @@
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <!-- Contenido del drawer -->
-      <br>
-      <div class="avatar-container">
-    <q-avatar>
-      <img class="per" src="./usuario.png" alt="perfil " />
-    </q-avatar>
-  </div>
-      <q-list>
-        <br>
-        <q-item to="./" active-class="q-item--active" class="custom-button" @click="showFichas">
-        <q-item-section avatar>
-          <q-icon name="people" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          
-          <span class="button-text">Home</span>
-        </q-item-section>
-      </q-item>
-
-        <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
-          <q-item-section avatar>
-            <q-icon name="home" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Aprendices</span>
-          </q-item-section>
-          
-        </q-item>
-
-        <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
-          <q-item-section avatar>
-            <q-icon name="people" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Bitacora</span>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <!-- Botón de Fichas que mostrará la sección de tarjetas -->
      
-
-      <q-item to="/usuario" active-class="q-item--active" class="custom-button">
-        <q-item-section avatar>
-          <q-icon name="people" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">Usuarios</span>
-        </q-item-section>
-      </q-item>
-
-       
-
+     <br>
+     <div class="avatar-container">
+   <q-avatar>
+     <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+   </q-avatar>
+ 
+ </div>
      
-       
-      <div class="logon">
-      <img class="negro" src="./snegr.png" alt="">
-    </div>
-    </q-drawer>
+     <q-list>
+       <br>
+       <q-item to="./home" active-class="q-item--active" class="custom-button" @click="showFichas">
+       <q-item-section avatar>
+         <q-icon name="home" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         
+         <span class="button-text">Home</span>
+       </q-item-section>
+     </q-item>
+
+       <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Aprendices</span>
+         </q-item-section>
+         
+       </q-item>
+
+       <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Bitacora</span>
+         </q-item-section>
+       </q-item>
+     </q-list>
+     <!-- Botón de Fichas que mostrará la sección de tarjetas -->
+     <q-item to="./Ficha" active-class="q-item--active" class="custom-button" >
+       <q-item-section avatar>
+         <q-icon name="people" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         
+         <span class="button-text">Fichas</span>
+       </q-item-section>
+     </q-item>
+
+     <q-item to="/usuario" active-class="q-item--active" class="custom-button">
+       <q-item-section avatar>
+         <q-icon name="people" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         <span class="button-text">Usuarios</span>
+       </q-item-section>
+     </q-item>
+    
+     <q-list>
+      
    
+    
+
+       <q-item to="/registro" active-class="q-item--active" class="custom-button">
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Registro Asistencia</span>
+         </q-item-section>
+       </q-item>
+     </q-list>
+<br>
+<div class="logon">
+     <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+   </div>
+ 
+   </q-drawer>
+  
     <q-page-container>
       <div class="fichas-container q-pa-md">
         <h4 class="text-center">FICHAS</h4>
@@ -90,8 +112,8 @@
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
               <q-btn flat dense icon="edit" color="grey-8" @click="abrirModal(props.row)" />
-              <q-btn flat dense icon="check_circle" v-if="props.row.estado == 1" color="green" @click="desactivar(props.row.codigo)" />
-              <q-btn flat dense icon="cancel" v-else color="red" @click="activar(props.row.codigo)" />
+              <q-btn @click="desactivar(props.row.codigo)" flat dense icon="cancel" v-if="props.row.estado == 1" color="red"></q-btn>
+                <q-btn @click="activar(props.row.codigo)" flat dense icon="check_circle" v-else-if="props.row.estado == 0" color="green"></q-btn>
             </q-td>
           </template>
 
@@ -177,12 +199,12 @@ async function traer() {
 }
 
 async function activar(id) {
-  await useFicha.activarFichas(id);
+  await useFicha.activarFicha(id);
   traer();
 }
 
 async function desactivar(id) {
-  await useFicha.desactivarFichas(id);
+  await useFicha.desactivarFicha(id);
   traer();
 }
 

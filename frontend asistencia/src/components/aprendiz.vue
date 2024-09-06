@@ -19,61 +19,86 @@
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <!-- Contenido del drawer -->
-      <br>
-      <div class="avatar-container">
-        <q-avatar>
-          <img class="per" src="./usuario.png" alt="perfil " />
-        </q-avatar>
-      </div>
-      <q-list>
-        <br>
-        <q-item to="/home" active-class="q-item--active" class="custom-button">
-          <q-item-section avatar>
-            <q-icon name="people" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Home</span>
-          </q-item-section>
-        </q-item>
+     
+     <br>
+     <div class="avatar-container">
+   <q-avatar>
+     <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+   </q-avatar>
+ 
+ </div>
+     
+     <q-list>
+       <br>
+       <q-item to="./home" active-class="q-item--active" class="custom-button" @click="showFichas">
+       <q-item-section avatar>
+         <q-icon name="home" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         
+         <span class="button-text">Home</span>
+       </q-item-section>
+     </q-item>
 
+       <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Aprendices</span>
+         </q-item-section>
+         
+       </q-item>
 
-        <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
-          <q-item-section avatar>
-            <q-icon name="people" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Bitacora</span>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <!-- Botón de Fichas que mostrará la sección de tarjetas -->
-      <q-item to="./Ficha" active-class="q-item--active" class="custom-button">
-        <q-item-section avatar>
-          <q-icon name="people" class="icon" />
-        </q-item-section>
-        <q-item-section>
+       <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Bitacora</span>
+         </q-item-section>
+       </q-item>
+     </q-list>
+     <!-- Botón de Fichas que mostrará la sección de tarjetas -->
+     <q-item to="./Ficha" active-class="q-item--active" class="custom-button" >
+       <q-item-section avatar>
+         <q-icon name="people" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         
+         <span class="button-text">Fichas</span>
+       </q-item-section>
+     </q-item>
 
-          <span class="button-text">Fichas</span>
-        </q-item-section>
-      </q-item>
+     <q-item to="/usuario" active-class="q-item--active" class="custom-button">
+       <q-item-section avatar>
+         <q-icon name="people" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         <span class="button-text">Usuarios</span>
+       </q-item-section>
+     </q-item>
+    
+     <q-list>
+      
+   
+    
 
-      <q-item to="/usuario" active-class="q-item--active" class="custom-button">
-        <q-item-section avatar>
-          <q-icon name="people" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">Usuarios</span>
-        </q-item-section>
-      </q-item>
-
-
-
-
-      <div class="logon">
-        <img class="negro" src="./snegr.png" alt="">
-      </div>
-    </q-drawer>
+       <q-item to="/registro" active-class="q-item--active" class="custom-button">
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Registro Asistencia</span>
+         </q-item-section>
+       </q-item>
+     </q-list>
+<br>
+<div class="logon">
+     <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+   </div>
+ 
+   </q-drawer>
 
     <q-page-container>
       <div class="aprendices-container q-pa-md">
@@ -113,19 +138,16 @@
 
               <q-td :props="props"><q-btn flat icon="edit" @click="abrirModal(props.row)" />
                 <!-- <q-btn @click="abrirModal(props.row)" color="primary">📝</q-btn> -->
-                <q-btn @click="desactivar(props.row.documento)" v-if="props.row.estado == 1">❌</q-btn>
-                <q-btn @click="activar(props.row.documento)" v-else>✅</q-btn>
+                <q-btn @click="desactivar(props.row.documento)" flat dense icon="cancel" v-if="props.row.estado == 1" color="red"></q-btn>
+                <q-btn @click="activar(props.row.documento)" flat dense icon="check_circle" v-else-if="props.row.estado == 0" color="green"></q-btn>
               </q-td>
             </template>
             <template v-slot:body-cell-estado1="props">
-              <q-td :props="props">
-                <p :style="{ backgroundColor: 'darkgreen', color: 'white', borderRadius: '10px', width: '100px', height: '20px', textAlign: 'center' }"
-                  v-if="props.row.estado == 1">activo</p>
-                <p :style="{ backgroundColor: ' red', color: 'white', borderRadius: '10px', width: '100px', height: '20px', textAlign: 'center' }"
-                  v-else>inactivo</p>
-
-              </q-td>
-            </template>
+            <q-td :props="props">
+              <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
+              <q-chip square outline color="red" v-else>Inactivo</q-chip>
+            </q-td>
+          </template>
           </q-table>
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
             transition-hide="rotate" persistent>
@@ -165,7 +187,7 @@
             </q-card>
           </q-dialog>
 
-          <!-- //boton de estado estilo quasar -->
+
         </div>
       </div>
     </q-page-container>

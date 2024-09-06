@@ -22,85 +22,85 @@
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
      
-      <br>
-      <div class="avatar-container">
-    <q-avatar>
-      <img class="per" src="./usuario.png" alt="perfil " />
-    </q-avatar>
-  
-  </div>
-      
-      <q-list>
-        <br>
-        <q-item to="./" active-class="q-item--active" class="custom-button" @click="showFichas">
-        <q-item-section avatar>
-          <q-icon name="home" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          
-          <span class="button-text">Home</span>
-        </q-item-section>
-      </q-item>
-
-        <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
-          <q-item-section avatar>
-            <q-icon name="people" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Aprendices</span>
-          </q-item-section>
-          
-        </q-item>
-
-        <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
-          <q-item-section avatar>
-            <q-icon name="people" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Bitacora</span>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <!-- Botón de Fichas que mostrará la sección de tarjetas -->
-      <q-item to="./Ficha" active-class="q-item--active" class="custom-button" >
-        <q-item-section avatar>
-          <q-icon name="people" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          
-          <span class="button-text">Fichas</span>
-        </q-item-section>
-      </q-item>
-
-      <q-item to="/usuario" active-class="q-item--active" class="custom-button">
-        <q-item-section avatar>
-          <q-icon name="people" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">Usuarios</span>
-        </q-item-section>
-      </q-item>
+     <br>
+     <div class="avatar-container">
+   <q-avatar>
+     <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+   </q-avatar>
+ 
+ </div>
      
-      <q-list>
-       
+     <q-list>
+       <br>
+       <q-item to="./home" active-class="q-item--active" class="custom-button" @click="showFichas">
+       <q-item-section avatar>
+         <q-icon name="home" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         
+         <span class="button-text">Home</span>
+       </q-item-section>
+     </q-item>
+
+       <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Aprendices</span>
+         </q-item-section>
+         
+       </q-item>
+
+       <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Bitacora</span>
+         </q-item-section>
+       </q-item>
+     </q-list>
+     <!-- Botón de Fichas que mostrará la sección de tarjetas -->
+     <q-item to="./Ficha" active-class="q-item--active" class="custom-button" >
+       <q-item-section avatar>
+         <q-icon name="people" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         
+         <span class="button-text">Fichas</span>
+       </q-item-section>
+     </q-item>
+
+     <q-item to="/usuario" active-class="q-item--active" class="custom-button">
+       <q-item-section avatar>
+         <q-icon name="people" class="icon" />
+       </q-item-section>
+       <q-item-section>
+         <span class="button-text">Usuarios</span>
+       </q-item-section>
+     </q-item>
     
-     
+     <q-list>
+      
+   
+    
 
-        <q-item to="/registro" active-class="q-item--active" class="custom-button">
-          <q-item-section avatar>
-            <q-icon name="people" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">Registro Asistencia</span>
-          </q-item-section>
-        </q-item>
-      </q-list>
+       <q-item to="/registro" active-class="q-item--active" class="custom-button">
+         <q-item-section avatar>
+           <q-icon name="people" class="icon" />
+         </q-item-section>
+         <q-item-section>
+           <span class="button-text">Registro Asistencia</span>
+         </q-item-section>
+       </q-item>
+     </q-list>
 <br>
 <div class="logon">
-      <img class="negro" src="./snegr.png" alt="">
-    </div>
-  
-    </q-drawer>
+     <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+   </div>
+ 
+   </q-drawer>
 
     <q-page-container>
       <!-- Sección de tarjetas que se muestra cuando `showCards` es verdadero -->
@@ -108,7 +108,7 @@
         <div class="card">
           <div class="card-header">Fichas</div>
           <div class="card-body">
-            <img class="pta" src="./documentos.png" alt="Salud Publica">
+            <img class="pta" src="../../public/imagenes/documentos.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">
@@ -123,7 +123,7 @@
         <div class="card">
           <div class="card-header">Aprendices</div>
           <div class="card-body">
-            <img class="pta" src="./estudiantes.png" alt="Salud Publica">
+            <img class="pta" src="../../public/imagenes/estudiantes.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">
@@ -137,7 +137,7 @@
         <div class="card">
           <div class="card-header">Bitacoras</div>
           <div class="card-body">
-            <img class="pta" src="./internet.png" alt="Salud Publica">
+            <img class="pta" src="../../public/imagenes/internet.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">
@@ -151,7 +151,7 @@
         <div class="card">
           <div class="card-header">Usuarios</div>
           <div class="card-body">
-            <img class="pta" src="./seguidores.png" alt="Salud Publica">
+            <img class="pta" src="../../public/imagenes/seguidores.png" alt="Salud Publica">
           </div>
           <hr>
           <div class="card-footer">

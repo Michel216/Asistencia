@@ -125,35 +125,45 @@ const usuarioController = {
         }
     },
 
-    // Activar usuario
-    activar: async (req, res) => {
-        const { email } = req.params;
-        try {
-            const usuarioActivo = await Usuario.findOneAndUpdate({ email }, { estado: 1 }, { new: true });
-            if (!usuarioActivo) {
-                return res.status(404).json({ msg: 'Usuario no encontrado' });
-            }
-            res.json({ message: 'Usuario activado', usuario: usuarioActivo });
-        } catch (error) {
-            console.error('Error al activar al usuario:', error);
-            res.status(500).json({ error: 'Error al activar al usuario' });
-        }
-    },
 
-    // Inactivar usuario
-    inactivar: async (req, res) => {
-        const { email } = req.params;
-        try {
-            const usuarioInactivo = await Usuario.findOneAndUpdate({ email }, { estado: 0 }, { new: true });
-            if (!usuarioInactivo) {
-                return res.status(404).json({ msg: 'Usuario no encontrado' });
-            }
-            res.json({ message: 'Usuario inactivado'});
-        } catch (error) {
-            console.error('Error al inactivar al usuario:', error);
-            res.status(500).json({ error: 'Error al inactivar al usuario' });
+ // Activar usuario
+activar: async (req, res) => {
+    const { email } = req.params;
+    try {
+        const usuarioActivo = await Usuario.findOneAndUpdate(
+            { email }, 
+            { estado: 1 }, 
+            { new: true }
+        );
+        if (!usuarioActivo) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
         }
-    },
+        res.json({ message: 'Usuario activado', usuario: usuarioActivo });
+    } catch (error) {
+        console.error('Error al activar al usuario:', error);
+        res.status(500).json({ error: 'Error al activar al usuario' });
+    }
+},
+
+// Inactivar usuario
+inactivar: async (req, res) => {
+    const { email } = req.params;
+    try {
+        const usuarioInactivo = await Usuario.findOneAndUpdate(
+            { email }, 
+            { estado: 0 }, 
+            { new: true }
+        );
+        if (!usuarioInactivo) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
+        }
+        res.json({ message: 'Usuario inactivado', usuario: usuarioInactivo });
+    } catch (error) {
+        console.error('Error al inactivar al usuario:', error);
+        res.status(500).json({ error: 'Error al inactivar al usuario' });
+    }
+},
+
 
     // Eliminar usuario
     eliminar: async (req, res) => {

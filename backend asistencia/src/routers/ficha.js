@@ -36,9 +36,9 @@ fichaRouter.put('/activar/:codigo',
     validarCampos);
 
 // Inactivar una ficha - Se requiere JWT
-fichaRouter.put('/inactivar/:codigo', 
+fichaRouter.put('/desactivar/:codigo', 
     validarJWT, 
-    fichaController.inactivar,
+    fichaController.desactivar,
     validarCampos);
 
 module.exports = fichaRouter;

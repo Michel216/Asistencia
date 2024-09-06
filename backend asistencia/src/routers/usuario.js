@@ -47,28 +47,9 @@ usuarioRouter.put(
   usuarioController.modificar
 );
 
-usuarioRouter.put('/activar/:email', 
-  validarJWT,
-   usuarioController.activar);
-
-usuarioRouter.put('/inactivar/:email', 
-  validarJWT,
-   usuarioController.inactivar);
-
-usuarioRouter.delete('/:email', 
-  validarJWT,
-   usuarioController.eliminar);
+usuarioRouter.put('/activar/:email', validarJWT,validarCampos , usuarioController.activar);
+usuarioRouter.put('/desactivar/:email', [validarJWT,validarCampos ], usuarioController.inactivar);
 
 
-// usuarioRouter.put(
-//   '/cambiar-contrasena/:email',
-//   [
-//     check('password', 'La contraseña actual es requerida').not().isEmpty(),
-//     check('newPassword', 'La nueva contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
-//     validarCampos,
-//   ],
-  // validarJWT,
-//   usuarioController.cambiarContrasena
-// );
 
 module.exports = usuarioRouter;
