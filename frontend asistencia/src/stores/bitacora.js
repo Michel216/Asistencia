@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda
 import { ref } from 'vue';
-API_URL= 'https://asistencia-backend-31lj.onrender.com'
+const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 
 export const useBitacoraStore = defineStore('bitacora', () => {
