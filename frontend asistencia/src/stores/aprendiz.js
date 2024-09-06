@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda de usuarios
-API_URL= 'https://asistencia-backend-31lj.onrender.com'
+const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 export const useAprendizStore = defineStore('aprendiz', () => {
     const usuariosStore = useUsuariosStore();
     // Función para listar aprendices
