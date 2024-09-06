@@ -1,14 +1,4 @@
 # Ignorar node_modules
 node_modules/
 
-# Ignorar archivos de entorno
-.env
 
-# Ignorar archivos de salida de compilación
-dist/
-build/
-
-# Ignorar logs y archivos temporales
-*.log
-*.tmp
-*.temp
