@@ -1,16 +1,16 @@
-import { defineStore } from `pinia`;
-import axios from `axios`;
+import { defineStore } from 'pinia';
+import axios from 'axios';
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda
 import { ref } from 'vue';
 API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 
-export const useBitacoraStore = defineStore(`bitacora`, () => {
+export const useBitacoraStore = defineStore('bitacora', () => {
   const usuariosStore = useUsuariosStore();
   const rows = ref([]);
   const crear = async (id_aprendiz, fecha) => {
     if (!usuariosStore.token) {
-      console.error(`Token no definido en usuariosStore`);
+      console.error('Token no definido en usuariosStore');
       return; // O maneja el error de acuerdo a tu lógica
     }
 

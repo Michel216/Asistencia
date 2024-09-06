@@ -1,6 +1,6 @@
 // stores/useAsistenciaStore.js
 import { defineStore } from 'pinia';
-import axios from `axios`;
+import axios from 'axios';
 import { useUsuariosStore } from './usuario.js';
 API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
