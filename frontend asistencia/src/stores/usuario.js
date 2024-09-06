@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { Notify } from 'quasar';
 import axios from 'axios';
-API_URL= 'https://asistencia-backend-31lj.onrender.com'
+const API_URL= 'https://asistencia-backend-31lj.onrender.com'
 
 // Definición de la tienda para el manejo de usuarios y token
 export const useUsuariosStore = defineStore('usuario', () => {
