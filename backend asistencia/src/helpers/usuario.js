@@ -22,7 +22,3 @@ module.exports = {
     compararPassword,
     validarEmailUnico
 }
-
-
-
-
