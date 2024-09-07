@@ -58,16 +58,29 @@ export const useBitacoraStore = defineStore('bitacora', () => {
 
 
   const updateEstado = async (id, estado) => {
+    console.log("id:", id, "estado:",estado)
     try {
-      const response = await axios.put(`${API_URL}/bitacora/${id}`, { estado }, {
-        headers: { 'token': usuariosStore.token }
-      });
-      return response.data;
+        const response = await axios.put(`${API_URL}/bitacora/${id}`, { estado }, {
+            headers: { 'token': usuariosStore.token }
+        });
+        return response.data;
     } catch (error) {
-      console.error('Error al actualizar el estado:', error);
-      throw error;
+        if (error.response) {
+            // Mostrar información detallada del error
+            console.error('Error en la respuesta del servidor:', error.response.data);
+            console.error('Código de estado:', error.response.status);
+            console.error('Headers:', error.response.headers);
+        } else if (error.request) {
+            // La solicitud se hizo, pero no hubo respuesta
+            console.error('No se recibió respuesta del servidor:', error.request);
+        } else {
+            // Error al configurar la solicitud
+            console.error('Error al configurar la solicitud:', error.message);
+        }
+        throw error;
     }
-  };
+};
+
 
 
 

@@ -18,9 +18,9 @@
             </template>
           </q-input>
           <div class="remember-forgot q-mt-md">
-            <button class="btn btn-green" type="submit">INICIO DE SESIÓN</button>
+            <q-btn class="btn-green" type="submit" :loading="isLoading" label="INICIO DE SESIÓN"  unelevated :ripple="true" />
           </div>
-          <button class="btn btn-white" @click="redirectToRecoveryPage">¿Olvidaste tu contraseña?</button>
+          <q-btn class="btn-white" @click="redirectToRecoveryPage" label="¿Olvidaste tu contraseña?"  text :ripple="true" />
         </q-form>
       </div>
     </q-card>
@@ -48,9 +48,10 @@ const Login = async () => {
   
   isLoading.value = true; // Muestra el spinner
   try {
-   const login=  await useUsuarios.login(email.value, password.value);
-   if(login){
-    router.push('/home'); }
+    const login = await useUsuarios.login(email.value, password.value);
+    if (login) {
+      router.push('/home');
+    }
   } catch (error) {
     console.error("Error en el login:", error);
     $q.notify({
@@ -72,8 +73,8 @@ const redirectToRecoveryPage = () => {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 100vh;
-  padding-top: 20px;
+  height: auto;
+  padding-top: 25px;
 }
 
 h2 {
@@ -81,39 +82,53 @@ h2 {
   font-size: 35px;
 }
 
-.btn {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-top: 10px;
-}
-
 .btn-green {
-  background-color: green;
+  width: 60%;
+  padding: 1px;
+  font-size: 16px;
+  margin-top: 5px;
+  text-align: center;
+height: 10px;
+  background-color: rgb(11, 115, 2); 
   color: white;
   border: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.btn-green:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra al pasar el mouse, sin cambiar el color */
 }
 
 .btn-white {
-  background-color: white;
-  color: green;
+  width: 70%;
+  padding: -5px;
+  font-size: 16px;
+  height: 10px;
+  margin-top: 20px;
+  background-color: transparent; 
+  color: rgb(0, 0, 0); 
   border: none;
-}
-
-.btn-white a {
-  color: green;
-  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  padding-top: 10px;
 }
 
 .btn-white::after {
   content: '';
-  display: block;
-  width: 100%;
+  position: absolute;
+  left: 50%;
+  bottom: 0; 
+  width: 80%;
   height: 2px;
-  background-color: green;
-  margin-top: 5px;
+  background-color: rgb(0, 115, 0);
+  transition: transform 0.3s ease;
+  transform: translateX(-50%) scaleX(1); 
+}
+
+.btn-white:hover::after {
+  transform: translateX(-50%) scaleX(0); 
+  color: none;
 }
 
 .logoSena {
@@ -125,15 +140,23 @@ h2 {
   padding: 15px;
 }
 
+
 .text-h6.text-white.text-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.btn-green{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto auto;
+  padding-top: 20px;
+}
 
 .header-section {
   background-color: green;
-  margin-bottom: 20px;
-  padding: 20px;
+  margin-bottom: -5px;
+  padding: 10px;
 }
 </style>

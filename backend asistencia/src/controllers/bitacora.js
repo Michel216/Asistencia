@@ -19,7 +19,7 @@ const bitacoraController = {
             res.status(500).json({ error: 'Error al crear la bitacora', details: error.message });
         }
     },
-   
+
     listarTodos: async (req, res) => {
         try {
             const bitacoras = await Bitacora.find()
@@ -129,24 +129,25 @@ const bitacoraController = {
         try {
             const { estado } = req.body;
             const { id } = req.params;
-
-            console.log('ID recibido:', id);  // Log del ID
+    
+            console.log('Datos recibidos para actualización:', { id, estado });
+    
             const bitacora = await Bitacora.findById(id);
-
+    
             if (!bitacora) {
-                console.log('Bitacora no encontrada');  // Log si no se encuentra
+                console.log('Bitacora no encontrada para el ID:', id);
                 return res.status(404).json({ message: 'Bitacora no encontrada' });
             }
-
-            console.log('Estado recibido:', estado);  // Log del estado
+    
             bitacora.estado = estado;
             await bitacora.save();
+    
             res.status(200).json(bitacora);
         } catch (error) {
             console.error('Error al actualizar bitacora:', error);
-            res.status(500).json({ message: 'Error al actualizar bitacora' });
+            res.status(500).json({ message: 'Error al actualizar bitacora', errorDetail: error.message });
         }
-
     }
-    }
+        
+}
 module.exports = bitacoraController;
