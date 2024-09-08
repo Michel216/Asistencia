@@ -40,13 +40,13 @@ aprendizRouter.put('/modificar/:id',
     aprendizController.modificar
 );
 
-aprendizRouter.put('/activar/:documento', 
+aprendizRouter.put('/activar/:id', 
    [ validarJWT,
     validarCampos],
 
      aprendizController.activar);
 
-aprendizRouter.put('/desactivar/:documento', 
+aprendizRouter.put('/desactivar/:id', 
    [   validarJWT,
     validarCampos],
 

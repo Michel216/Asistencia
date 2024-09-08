@@ -67,9 +67,13 @@ const aprendizController = {
         }
     },
     activar: async (req, res) => {
-        const documento = req.params.documento;
+        const id = req.params.id; // Asegúrate de que la ruta esté configurada para recibir `id` en lugar de `_id`
         try {
-            const aprendizActivo = await Aprendiz.findOneAndUpdate({ documento }, { estado: 1 }, { new: true });
+            const aprendizActivo = await Aprendiz.findByIdAndUpdate(
+                { _id: id }, // Filtro correcto para buscar por ID
+                { estado: 1 }, 
+                { new: true }
+            );
             if (!aprendizActivo) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });
             }
@@ -79,10 +83,15 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al activar al aprendiz' });
         }
     },
+    
     desactivar: async (req, res) => {
-        const documento = req.params.documento;
+        const id = req.params.id; // Asegúrate de que la ruta esté configurada para recibir `id` en lugar de `_id`
         try {
-            const aprendizInactivo = await Aprendiz.findOneAndUpdate({ documento }, { estado: 0 }, { new: true });
+            const aprendizInactivo = await Aprendiz.findByIdAndUpdate(
+                { _id: id }, // Filtro correcto para buscar por ID
+                { estado: 0 }, 
+                { new: true }
+            );
             if (!aprendizInactivo) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });
             }
@@ -92,6 +101,7 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al inactivar al aprendiz' });
         }
     }
+    
 };
 
 module.exports = aprendizController;
