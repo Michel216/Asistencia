@@ -1,19 +1,11 @@
 <template>
-
   <q-layout view="hHh lpR lFf">
     <q-header elevated class="bg-green text-white">
       <q-toolbar style="background-color: green;">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title>
-          Asistencia
-        </q-toolbar-title>
-        
-
+        <q-toolbar-title>Asistencia</q-toolbar-title>
         <q-item to="/" active-class="q-item--active" class="salida">
           <q-item-section avatar>
-          </q-item-section>
-          <q-item-section>
             <q-btn dense flat round icon="logout" />
           </q-item-section>
         </q-item>
@@ -21,145 +13,52 @@
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-     
-     <br>
-     <div class="avatar-container">
-   <q-avatar>
-     <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
-   </q-avatar>
- 
- </div>
-     
-     <q-list>
-       <br>
-       <q-item to="./home" active-class="q-item--active" class="custom-button" @click="showFichas">
-       <q-item-section avatar>
-         <q-icon name="home" class="icon" />
-       </q-item-section>
-       <q-item-section>
-         
-         <span class="button-text">Home</span>
-       </q-item-section>
-     </q-item>
-
-       <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
-         <q-item-section avatar>
-           <q-icon name="people" class="icon" />
-         </q-item-section>
-         <q-item-section>
-           <span class="button-text">Aprendices</span>
-         </q-item-section>
-         
-       </q-item>
-
-       <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
-         <q-item-section avatar>
-           <q-icon name="people" class="icon" />
-         </q-item-section>
-         <q-item-section>
-           <span class="button-text">Bitacora</span>
-         </q-item-section>
-       </q-item>
-     </q-list>
-     <!-- Botón de Fichas que mostrará la sección de tarjetas -->
-     <q-item to="./Ficha" active-class="q-item--active" class="custom-button" >
-       <q-item-section avatar>
-         <q-icon name="people" class="icon" />
-       </q-item-section>
-       <q-item-section>
-         
-         <span class="button-text">Fichas</span>
-       </q-item-section>
-     </q-item>
-
-     <q-item to="/usuario" active-class="q-item--active" class="custom-button">
-       <q-item-section avatar>
-         <q-icon name="people" class="icon" />
-       </q-item-section>
-       <q-item-section>
-         <span class="button-text">Usuarios</span>
-       </q-item-section>
-     </q-item>
-    
-     <q-list>
-      
-   
-    
-
-       <q-item to="/registro" active-class="q-item--active" class="custom-button">
-         <q-item-section avatar>
-           <q-icon name="people" class="icon" />
-         </q-item-section>
-         <q-item-section>
-           <span class="button-text">Registro Asistencia</span>
-         </q-item-section>
-       </q-item>
-     </q-list>
-<br>
-<div class="logon">
-     <img class="negro" src="../../public/imagenes/snegr.png" alt="">
-   </div>
- 
-   </q-drawer>
+      <br>
+      <div class="avatar-container">
+        <q-avatar>
+          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+        </q-avatar>
+      </div>
+      <h5>Bienvenid@ <strong>{{ InfoUser }}</strong></h5>
+      <q-list>
+        <br>
+        <q-item 
+          v-for="item in menuItems" 
+          :key="item.label" 
+          :to="item.path" 
+          active-class="active-item" 
+          class="custom-button"
+        >
+          <q-item-section avatar>
+            <q-icon :name="item.icon" class="icon" />
+          </q-item-section>
+          <q-item-section>
+            <span class="button-text">{{ item.label }}</span>
+          </q-item-section>
+          <q-item-section side v-if="isActiveRoute(item.path)">
+            <q-icon name="arrow_right" class="indicator-icon" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <br>
+      <div class="logon">
+        <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+      </div>
+    </q-drawer>
 
     <q-page-container>
-      <!-- Sección de tarjetas que se muestra cuando `showCards` es verdadero -->
       <div v-if="showCards" class="container">
-        <div class="card">
-          <div class="card-header">Fichas</div>
+        <div v-for="(card, index) in cards" :key="index" class="card">
+          <div class="card-header">{{ card.title }}</div>
           <div class="card-body">
-            <img class="pta" src="../../public/imagenes/documentos.png" alt="Salud Publica">
+            <img class="pta" :src="card.img" :alt="card.alt">
           </div>
-          <hr>
           <div class="card-footer">
-            <q-item to="/Ficha" active-class="q-item--active" class="ver" >
-          <q-item-section>
-            <button class="ver">Ver</button>
-          </q-item-section>
-        </q-item>
-            
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">Aprendices</div>
-          <div class="card-body">
-            <img class="pta" src="../../public/imagenes/estudiantes.png" alt="Salud Publica">
-          </div>
-          <hr>
-          <div class="card-footer">
-            <q-item to="/aprendiz" active-class="q-item--active" class="ver" >
-          <q-item-section>
-            <button class="ver">Ver</button>
-          </q-item-section>
-        </q-item>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">Bitacoras</div>
-          <div class="card-body">
-            <img class="pta" src="../../public/imagenes/internet.png" alt="Salud Publica">
-          </div>
-          <hr>
-          <div class="card-footer">
-            <q-item to="/Bitacora" active-class="q-item--active" class="ver" >
-          <q-item-section>
-            <button class="ver">Ver</button>
-          </q-item-section>
-        </q-item>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">Usuarios</div>
-          <div class="card-body">
-            <img class="pta" src="../../public/imagenes/seguidores.png" alt="Salud Publica">
-          </div>
-          <hr>
-          <div class="card-footer">
-            <q-item to="/Usuario" active-class="q-item--active" class="ver" >
-          <q-item-section>
-            <button class="ver">Ver</button>
-          </q-item-section>
-        </q-item>
+            <q-btn 
+              :loading="isLoading[index]" 
+              @click="handleClick(index, card.route)" 
+              class="ver"
+            >Abrir</q-btn>
           </div>
         </div>
       </div>
@@ -170,54 +69,85 @@
 </template>
 
 <script setup>
-import { ref,  } from 'vue'
-// import { useUsuariosStore } from '../stores/usuario';
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useUsuariosStore } from '../stores/usuario.js';
+import { computed } from 'vue';
 
+// Extrae InfoUser del store
+const { InfoUser } = useUsuariosStore();
+console.log(InfoUser.value) 
+
+// Computed para garantizar la reactividad y mostrarlo en el template
+const userName = computed(() => InfoUser.value);
 const leftDrawerOpen = ref(false)
-const showCards = ref(true) // Variable para controlar la visibilidad de las tarjetas
-const username = ref('')
+const showCards = ref(true)
+const route = useRoute()
+const router = useRouter()
 
+// Arreglo para controlar el estado de carga de cada botón individualmente
+const isLoading = ref([false, false, false, false])
 
-// const useUsuarios = useUsuariosStore();
-// console.log(useUsuarios);
-//  usuario= async () =>  {
-//   usuario= useUsuarios.login()
-//   console.log(usuario)
-// }
-// const userEmail = computed(() => useUsuarios.email);
+// Menú con rutas y etiquetas
+const menuItems = [
+  { label: 'Home', path: '/home', icon: 'home' },            
+  { label: 'Aprendices', path: '/aprendiz', icon: 'school' }, 
+  { label: 'Bitacora', path: '/bitacora', icon: 'library_books' }, 
+  { label: 'Fichas', path: '/ficha', icon: 'folder' },       
+  { label: 'Usuarios', path: '/usuario', icon: 'people' },  
+  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' } 
+]
+
+// Información de las tarjetas y las rutas correspondientes
+const cards = [
+  { title: 'Fichas', img: '../../public/imagenes/documentos.png', alt: 'Salud Publica', route: '/ficha' },
+  { title: 'Aprendices', img: '../../public/imagenes/estudiantes.png', alt: 'Salud Publica', route: '/aprendiz' },
+  { title: 'Bitacoras', img: '../../public/imagenes/internet.png', alt: 'Salud Publica', route: '/bitacora' },
+  { title: 'Usuarios', img: '../../public/imagenes/seguidores.png', alt: 'Salud Publica', route: '/usuario' }
+]
+
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
-  // usuario()
 }
 
+// Función para gestionar el estado del spinner de cada botón individualmente y navegar
+function handleClick(index, route) {
+  isLoading.value[index] = true
+  setTimeout(() => {
+    isLoading.value[index] = false
+    router.push(route)
+  }, 2000)
+}
 
+// Verifica si la ruta actual está activa
+function isActiveRoute(path) {
+  return route.path === path
+}
 </script>
 
 <style scoped>
-/* Estilos personalizados */
 .avatar-container {
-  display: flex; /* Usar flexbox */
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .per {
-  /* Puedes ajustar el tamaño de la imagen si es necesario */
   max-width: 110%;
   max-height: 110%;
-
-  
 }
+
 .logon {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.negro{
+
+.negro {
   width: 30%;
-  height:30% ;
+  height: 30%;
 }
+
 .bg-green {
   background-color: green;
 }
@@ -230,36 +160,7 @@ function toggleLeftDrawer() {
   display: flex;
   align-items: center;
 }
-.pta{
-  width: 40%;
-  height: 40%;
-}
-/* Estilos para los botones personalizados en el drawer */
-.custom-button {
-  background-color: green;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  margin-left: 25px;
-  margin-right: 25px;
-  display: flex;
-  align-items: center;
-  color: white;
-  font-size: 16px;
-  border: none;
-  /* cursor: pointer; */
-  width: 250px;
-}
-.ver{
- 
-  color: #fff;
-  background-color: green;
-  border: none;
-  border-radius: 5px;
-  width: 50%;
-  margin: 0 auto; /* Centrar horizontalmente */
-  display: block; /* Convertir en elemento de bloque */
-  text-align: center; /* Centrar texto */
-}
+
 .icon {
   color: white;
   height: 20px;
@@ -270,31 +171,62 @@ function toggleLeftDrawer() {
   color: white;
 }
 
-/* Estilos para las tarjetas */
+.custom-button {
+  background-color: green;
+  border-radius: 10px;
+  margin: 20px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  color: white;
+  width: 250px;
+  font-size: 130%;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
+}
+
+.active-item {
+  background-color: #005500; /* Fondo más oscuro para la ventana activa */
+  color: #ffffff; /* Cambia esto por el color que desees */
+  font-weight: bold;
+}
+
+.indicator-icon {
+  color: rgb(255, 255, 255); /* Color del ícono indicador */
+  margin-left: 5px;
+
+}
+
 .container {
   display: grid;
   width: 90%;
-  grid-template-columns: repeat(2, 1fr); /* 2 columnas de igual tamaño */
-  grid-gap: 0px; /* Espacio entre las tarjetas */
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
 }
 
-
 .card {
-  width: 65%; /* Ancho completo del contenedor de la tarjeta */
+  width: 65%;
   border: 1px solid #ccc;
   border-radius: 5px;
-margin-top: 10%;
-margin: 5% auto;
+  margin-top: 10%;
+  margin: 5% auto;
 }
 
 .card-header {
   background-color: green;
   color: #fff;
-  padding: 10px;
+  height: 60px;
   text-align: center;
+align-content: center;
+font-size: 160%;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
@@ -311,15 +243,30 @@ margin: 5% auto;
   border-bottom-right-radius: 5px;
 }
 
-.button {
-  background-color: #28a745;
+.ver {
   color: #fff;
-  /* padding: 10px 20px; */
+  background-color: green;
   border: none;
   border-radius: 5px;
- 
+  width: 35%;
+  height: 10px;
+  margin: auto auto;
+  display: block;
+/* padding-top: 20px; */
+align-content: center;
+  text-align: center;
+  font-size: 110%;
+  transition: box-shadow 0.3s;
 }
 
+.ver:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
 
+}
 
+.pta {
+  width: 40%;
+  height: 40%;
+}
 </style>

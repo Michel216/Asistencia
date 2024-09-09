@@ -2,6 +2,7 @@
   <div class="form-container">
     <div class="form-card">
       <div class="form-header">
+        <q-btn dense flat round icon="arrow_back" @click="goHome" class="back-button" />
         <img src="../../public/imagenes/simg.png" alt="Logo SENA" />
       </div>
       <h5>Registro de Asistencia</h5>
@@ -34,10 +35,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
-import axios from 'axios';
 import { useAsistenciaStore } from '../stores/registroAprendiz.js';
 import { useAprendizStore } from '../stores/aprendiz.js';
-import Aprendiz from './aprendiz.vue';
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
 
 const $q = useQuasar();
 const model = ref(null);
@@ -113,6 +114,11 @@ const handleSubmit = async () => {
 
 // Inicializa la lista de usuarios
 filterFn('', () => { });
+
+const goHome = () => {
+  // Redirige a la página de inicio
+  router.push('/home');
+};
 </script>
 
 <style>
@@ -121,17 +127,20 @@ filterFn('', () => { });
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: auto;
+  margin: auto auto
 }
 
 .form-card {
+  margin: 8% auto;
   width: 400px;
-  padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.331);
   background-color: white;
   height: 80%;
+  border: none;
+  border-radius: 10px;
 }
 
 .form-header {
@@ -139,10 +148,13 @@ filterFn('', () => { });
   text-align: center;
   width: 100%;
   padding: 10px 0;
+  position: relative;
+  border-radius: 10px 10px 0px 0px ;
+
 }
 
 .form-header img {
-  width: 89px;
+  width: 100px;
 }
 
 h5 {
@@ -152,13 +164,13 @@ h5 {
 }
 
 .form-group {
-  margin-top: 20px;
-  margin-left: 50px;
+  margin: 30px 75px;
+width: 100%;
   align-items: center;
 }
 
 .submit-button {
-  width: 100%;
+  width: 80%;
   padding: 10px;
   background-color: green;
   color: white;
@@ -170,10 +182,33 @@ h5 {
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+  margin: 20px auto;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.submit-button:hover {
+  background-color: darkgreen;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .submit-button:disabled {
   background-color: darkgreen;
   cursor: not-allowed;
+}
+
+/* Estilo para el botón de regreso */
+.back-button {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: white;
+  background-color: transparent;
+  transition: color 0.3s;
+}
+
+.back-button:hover {
+  color: lightgreen;
+  height: auto;
 }
 </style>

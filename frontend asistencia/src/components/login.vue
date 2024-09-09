@@ -20,7 +20,7 @@
           <div class="remember-forgot q-mt-md">
             <q-btn class="btn-green" type="submit" :loading="isLoading" label="INICIO DE SESIÓN"  unelevated :ripple="true" />
           </div>
-          <q-btn class="btn-white" @click="redirectToRecoveryPage" label="¿Olvidaste tu contraseña?"  text :ripple="true" />
+          <q-btn class="btn-white" @click="redirectToRecoveryPage" label="¿Olvidaste tu contraseña?"  unelevated :ripple="true" />
         </q-form>
       </div>
     </q-card>
@@ -97,6 +97,7 @@ height: 10px;
 
 .btn-green:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra al pasar el mouse, sin cambiar el color */
+  text-shadow: 0px 0px 10px white;
 }
 
 .btn-white {
@@ -122,13 +123,14 @@ height: 10px;
   width: 80%;
   height: 2px;
   background-color: rgb(0, 115, 0);
-  transition: transform 0.3s ease;
+  transition: transform 0.8s ease;
   transform: translateX(-50%) scaleX(1); 
+  text-shadow: 0px 0px 10px rgb(0, 0, 0);
 }
 
 .btn-white:hover::after {
   transform: translateX(-50%) scaleX(0); 
-  color: none;
+
 }
 
 .logoSena {

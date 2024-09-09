@@ -57,7 +57,7 @@ export const useAprendizStore = defineStore('aprendiz', () => {
                 nombre,
                 telefono,
                 email,
-                id_ficha: ficha
+                ficha
             }, {
                 headers: {
                     "token": usuariosStore.token,  // Accede al token desde la tienda

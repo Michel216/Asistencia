@@ -3,15 +3,9 @@
     <q-header elevated class="bg-green text-white">
       <q-toolbar style="background-color: green;">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title>
-          Asistencia
-        </q-toolbar-title>
-
+        <q-toolbar-title>Asistencia</q-toolbar-title>
         <q-item to="/" active-class="q-item--active" class="salida">
           <q-item-section avatar>
-          </q-item-section>
-          <q-item-section>
             <q-btn dense flat round icon="logout" />
           </q-item-section>
         </q-item>
@@ -19,93 +13,41 @@
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-     
-     <br>
-     <div class="avatar-container">
-   <q-avatar>
-     <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
-   </q-avatar>
- 
- </div>
-     
-     <q-list>
-       <br>
-       <q-item to="./home" active-class="q-item--active" class="custom-button" @click="showFichas">
-       <q-item-section avatar>
-         <q-icon name="home" class="icon" />
-       </q-item-section>
-       <q-item-section>
-         
-         <span class="button-text">Home</span>
-       </q-item-section>
-     </q-item>
-
-       <q-item to="./aprendiz" active-class="q-item--active" class="custom-button" >
-         <q-item-section avatar>
-           <q-icon name="people" class="icon" />
-         </q-item-section>
-         <q-item-section>
-           <span class="button-text">Aprendices</span>
-         </q-item-section>
-         
-       </q-item>
-
-       <q-item to="/bitacora" active-class="q-item--active" class="custom-button">
-         <q-item-section avatar>
-           <q-icon name="people" class="icon" />
-         </q-item-section>
-         <q-item-section>
-           <span class="button-text">Bitacora</span>
-         </q-item-section>
-       </q-item>
-     </q-list>
-     <!-- Botón de Fichas que mostrará la sección de tarjetas -->
-     <q-item to="./Ficha" active-class="q-item--active" class="custom-button" >
-       <q-item-section avatar>
-         <q-icon name="people" class="icon" />
-       </q-item-section>
-       <q-item-section>
-         
-         <span class="button-text">Fichas</span>
-       </q-item-section>
-     </q-item>
-
-     <q-item to="/usuario" active-class="q-item--active" class="custom-button">
-       <q-item-section avatar>
-         <q-icon name="people" class="icon" />
-       </q-item-section>
-       <q-item-section>
-         <span class="button-text">Usuarios</span>
-       </q-item-section>
-     </q-item>
-    
-     <q-list>
-      
-   
-    
-
-       <q-item to="/registro" active-class="q-item--active" class="custom-button">
-         <q-item-section avatar>
-           <q-icon name="people" class="icon" />
-         </q-item-section>
-         <q-item-section>
-           <span class="button-text">Registro Asistencia</span>
-         </q-item-section>
-       </q-item>
-     </q-list>
-<br>
-<div class="logon">
-     <img class="negro" src="../../public/imagenes/snegr.png" alt="">
-   </div>
- 
-   </q-drawer>
+      <br>
+      <div class="avatar-container">
+        <q-avatar>
+          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+        </q-avatar>
+      </div>
+      <q-list>
+        <br>
+        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" exact-active-class="active-item"
+          class="custom-button">
+          <q-item-section avatar>
+            <q-icon :name="item.icon" class="icon" />
+          </q-item-section>
+          <q-item-section>
+            <span class="button-text">{{ item.label }}</span>
+          </q-item-section>
+          <q-item-section side v-if="isActiveRoute(item.path)">
+            <q-icon name="arrow_right" class="indicator-icon" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <br>
+      <div class="logon">
+        <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+      </div>
+    </q-drawer>
 
     <q-page-container>
       <div class="aprendices-container q-pa-md">
-        <h4 class="text-center">Aprendices</h4>
+        <h3 class="title-table">Aprendices</h3>
         <div class="q-pa-md">
-          <div style="display: flex; justify-content: end;">
-            <q-btn @click="abrirModal()" color="green">Agregar Aprendiz </q-btn>
+          <div style="display: flex; justify-content: end; ">
+            <q-btn class="agregar" @click="abrirModal()" :loading="loadingCrearAprendiz">
+              Agregar Aprendiz
+            </q-btn>
           </div>
           <q-table title="Aprendiz" :rows="rows" :columns="columns" row-key="name">
             <template v-slot:body-cell-documento="props">
@@ -133,108 +75,157 @@
                 {{ props.row.id_ficha ? props.row.id_ficha.codigo : 'No disponible' }}
               </q-td>
             </template>
-
             <template v-slot:body-cell-opciones="props">
+              <q-td :props="props">
+                <q-td :props="props">
+                  <q-btn flat icon="edit" @click="abrirModal(props.row)" :loading="loadingState[`guardar-${props.row._id}`]" />
+<q-btn @click="desactivar(props.row._id)" 
+  flat
+  dense
+  icon="cancel"
+  v-if="props.row.estado == 1"
+  color="red"
+  :loading="loadingState[`desactivar-${props.row._id}`]"
+/>
+<q-btn @click="activar(props.row._id)"
+  flat
+  dense
+  icon="check_circle"
+  v-else
+  color="green"
+  :loading="loadingState[`activar-${props.row._id}`]"
+/>
 
-              <q-td :props="props"><q-btn flat icon="edit" @click="abrirModal(props.row)" />
-                <!-- <q-btn @click="abrirModal(props.row)" color="primary">📝</q-btn> -->
-                <q-btn @click="desactivar(props.row.documento)" flat dense icon="cancel" v-if="props.row.estado == 1" color="red"></q-btn>
-                <q-btn @click="activar(props.row.documento)" flat dense icon="check_circle" v-else-if="props.row.estado == 0" color="green"></q-btn>
-              </q-td>
+                </q-td>
+                </q-td>
             </template>
             <template v-slot:body-cell-estado1="props">
-            <q-td :props="props">
-              <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
-              <q-chip square outline color="red" v-else>Inactivo</q-chip>
-            </q-td>
-          </template>
+              <q-td :props="props">
+                <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
+                <q-chip square outline color="red" v-else>Inactivo</q-chip>
+              </q-td>
+            </template>
           </q-table>
+
+
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
-            transition-hide="rotate" persistent>
-            <q-card>
-              <q-card-section>
-                <div class="text-h6" v-if="b == true">Editar Aprendiz</div>
-                <div class="text-h6" v-else> Guardar Aprendiz </div>
-              </q-card-section>
+      transition-hide="rotate" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6" v-if="b === true">Editar Aprendiz</div>
+          <div class="text-h6" v-else>Guardar Aprendiz</div>
+        </q-card-section>
 
-              <q-separator />
+        <q-separator />
 
-              <q-card-section style="max-height: 50vh" class="scroll">
-                <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense" />
-                <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense" />
-                <q-input filled v-model="telefono" label="Telefono Del Aprendiz" :dense="dense" />
-                <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense" />
-                <q-select filled v-model="model" use-input input-debounce="0" label="Codigo de la ficha" :options="options"
-                  @filter="filterFn" style="width: 250px" behavior="menu">
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        No results
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
+        <q-card-section style="max-height: 100vh; max-width: 70vh" class="scroll">
+          <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
+            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']" />
+            
+          <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
+            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']" />
+           
+          <q-input filled v-model="telefono" label="Telefono Del Aprendiz" :dense="dense"
+            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono',
+                    val => val.trim().length === 10 || 'Ingrese un teléfono valido']" />
 
+          <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
+            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']" />
+          <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
+            :options="options" @filter="filterFn" style="width: 250px" behavior="menu" emit-value map-options
+            lazy-rules :rules="[
+              (val) => {
+                if (change === false) {
+                  return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
+                } else { return true }
+              }
+            ]">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No results
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </q-card-section>
 
-              </q-card-section>
+        <q-separator />
 
-              <q-separator />
-
-              <q-card-actions align="right">
-                <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-                <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()" />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-
-
-        </div>
+        <q-card-actions align="right">
+          <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
+          <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()"
+            :loading="loadingGuardarAprendiz" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>        </div>
       </div>
     </q-page-container>
   </q-layout>
 </template>
+
 <script setup>
-import axios from 'axios'
-// import { Notify } from 'quasar';
+import { ref, onBeforeMount } from 'vue'
 import { useQuasar } from 'quasar'
-import { onBeforeMount, ref } from 'vue'
-import { useAprendizStore } from '../stores/aprendiz.js';
-import { useFichaStore } from '../stores/ficha.js';
+import { useAprendizStore } from '../stores/aprendiz.js'
+import { useFichaStore } from '../stores/ficha.js'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const $q = useQuasar()
 
-let useAprendiz = useAprendizStore()
-const dense = ref(false);
-let $q = useQuasar()
-let r = ref("")
-let fixed = ref(false)
-let documento = ref("");
-let nombre = ref("");
-let telefono = ref("");
-let email = ref("");
-let ficha = ref("")
-let b = ref(false);
+const menuItems = [
+  { label: 'Home', path: '/home', icon: 'home' },
+  { label: 'Aprendices', path: '/aprendiz', icon: 'school' },
+  { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
+  { label: 'Fichas', path: '/ficha', icon: 'folder' },
+  { label: 'Usuarios', path: '/usuario', icon: 'people' },
+  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
+]
 
-let id = ref("");
-let rows = ref([])
+const leftDrawerOpen = ref(false)
+const fixed = ref(false)
+const documento = ref("")
+const nombre = ref("")
+const telefono = ref("")
+const email = ref("")
+const b = ref(false)
+const id = ref("")
+const rows = ref([])
+const options = ref([])
+const ficha = ref()
+const dense = ref(false)
+
+// Manejo de carga por ID
+const loadingState = ref({})
+
+const useAprendiz = useAprendizStore()
+const useFicha = useFichaStore()
 
 onBeforeMount(() => {
   traer()
 })
 
-function abrirModal(row = null) {
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+function isActiveRoute(path) {
+  return route.path === path
+}
+
+async function abrirModal(row = null) {
   if (row) {
-    // Modo edición
-    id.value = row.id || ''  // Asigna el iD de la Aprendiz
+    id.value = row._id || ''
     documento.value = row.documento || ''
     nombre.value = row.nombre || ''
     telefono.value = row.telefono || ''
     email.value = row.email || ''
-    ficha.value = row.ficha || ''
+    ficha.value = row.id_ficha.codigo || ''
     b.value = true
   } else {
-    // Modo creación
-    id.value = '' // Limpia el iD
-    documento.value = '' // row es null, así que asignamos un string vacío
+    id.value = ''
+    documento.value = ''
     nombre.value = ''
     telefono.value = ''
     email.value = ''
@@ -245,116 +236,81 @@ function abrirModal(row = null) {
 }
 
 async function traer() {
-  let res = await useAprendiz.listarAprendiz()
-  rows.value = res.data
+  loadingState.value['traer'] = true
+  try {
+    let res = await useAprendiz.listarAprendiz()
+    rows.value = res.data
+  } catch (error) {
+    console.error("Error al traer aprendices:", error)
+  } finally {
+    loadingState.value['traer'] = false
+  }
 }
+
 async function activar(id) {
-  console.log('iD para activar:', id);  // Agrega un log para verificar el iD
   if (id) {
-    await useAprendiz.activarAprendiz(id);
-    await traer();  // Actualiza los datos después de la activación
+    loadingState.value[`activar-${id}`] = true
+    try {
+      await useAprendiz.activarAprendiz(id);
+      await traer();
+    } catch (error) {
+      console.error('Error al activar:', error);
+    } finally {
+      loadingState.value[`activar-${id}`] = false
+    }
   } else {
-    console.error('iD no proporcionado para activar');
+    console.error('ID no proporcionado para activar');
   }
 }
 
 async function desactivar(id) {
-  console.log('iD para desactivar:', id);  // Agrega un log para verificar el iD
   if (id) {
-    await useAprendiz.desactivarAprendiz(id);
-    await traer();  // Actualiza los datos después de la desactivación
+    loadingState.value[`desactivar-${id}`] = true
+    try {
+      await useAprendiz.desactivarAprendiz(id);
+      await traer();
+    } catch (error) {
+      console.error('Error al desactivar:', error);
+    } finally {
+      loadingState.value[`desactivar-${id}`] = false
+    }
   } else {
-    console.error('iD no proporcionado para desactivar');
+    console.error('ID no proporcionado para desactivar');
   }
 }
 
 async function crearAprendiz() {
-  console.log(b.value);
-  if (b.value === true) {
-    console.log("estoy editando...");
+  if (b.value === true) {  // Editar
     if (!id.value) {
-      console.error("iD de la Aprendiz no está disponible")
-      return
+      console.error("ID del Aprendiz no está disponible");
+      return;
     }
 
+    loadingState.value[`guardar-${id.value}`] = true
     try {
-      let res = await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value)
-      console.log('Respuesta del servidor (modificar):', res.data)
-      await traer()
-      fixed.value = false
-      b.value = false
+      await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value);
+      await traer();
+      fixed.value = false;
+      b.value = false;
     } catch (error) {
-      console.error("Error al modificar la Aprendiz1:", error)
+      console.error("Error al modificar el Aprendiz:", error);
+    } finally {
+      loadingState.value[`guardar-${id.value}`] = false
     }
-  } else {
+  } else {  // Crear
+    loadingState.value['guardar-nuevo'] = true
     try {
-      let res = await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value);
-      console.log('Respuesta del servidor (guardar):', res);
+      await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value);
       await traer();
       fixed.value = false;
     } catch (error) {
-      console.error("Error al guardar el aprendiz:", error.response?.data || error.message);
+      console.error("Error al guardar el aprendiz:", error);
+    } finally {
+      loadingState.value['guardar-nuevo'] = false
     }
   }
 }
-const columns = [
-  {
-    name: 'documento1',
-    required: true,
-    label: 'Numero Documento',
-    align: 'center',
-    field: "documento",
-    sortable: true
-  },
-  {
-    name: 'nombre1',
-    align: 'center',
-    label: 'Nombre del Aprendiz',
-    field: 'nombre',  // Cambiado a 'nombre'
-    sortable: true
-  },
-  {
-    name: 'telefono1',
-    align: 'center',
-    label: 'Telefono del Aprendiz',
-    field: 'telefono',  // Cambiado a 'telefono'
-    sortable: true
-  },
-  {
-    name: 'email1',
-    align: 'center',
-    label: 'Email del Aprendiz',
-    field: 'email',  // Cambiado a 'email'
-    sortable: true
-  },
-  {
-    name: 'ficha',
-    align: 'center',
-    label: 'Ficha del Aprendiz',
-    field: 'id_ficha',  // Cambiado a 'id_ficha'
-    sortable: true
-  },
-  {
-    name: 'estado1',
-    align: 'center',
-    label: 'Estado',
-    field: 'estado',  // Sin cambios
-    sortable: true
-  },
-  {
-    name: 'opciones',
-    label: 'Opciones'
-  },
-]
 
-
-
-
-const useFicha =useFichaStore()
-
-
-const options = ref()
-const model = ref(null)
 const filterFn = async (val, update) => {
   let res = await useFicha.listarFicha();
   if (val === '') {
@@ -376,51 +332,145 @@ const filterFn = async (val, update) => {
   });
 }
 
+const columns = [
+  {
+    name: 'documento1',
+    required: true,
+    label: 'Numero Documento',
+    align: 'center',
+    field: "documento",
+    sortable: true
+  },
+  {
+    name: 'nombre1',
+    align: 'center',
+    label: 'Nombre del Aprendiz',
+    field: 'nombre',
+    sortable: true
+  },
+  {
+    name: 'telefono1',
+    align: 'center',
+    label: 'Telefono del Aprendiz',
+    field: 'telefono',
+    sortable: true
+  },
+  {
+    name: 'email1',
+    align: 'center',
+    label: 'Email del Aprendiz',
+    field: 'email',
+    sortable: true
+  },
+  {
+    name: 'ficha',
+    align: 'center',
+    label: 'Ficha del Aprendiz',
+    field: 'id_ficha',
+    sortable: true
+  },
+  {
+    name: 'estado1',
+    align: 'center',
+    label: 'Estado',
+    field: 'estado',
+    sortable: true
+  },
+  {
+    name: 'opciones',
+    label: 'Opciones',
+    align: 'center',
+  },
+]
 </script>
+
 
 <style>
 .custom-button {
-  text-decoration: none;
   background-color: green;
-  /* padding: 10px; */
   border-radius: 10px;
-  margin-bottom: 20px;
-  margin-left: 25px;
-  margin-right: 25px;
+  margin: 20px;
+  height: auto;
   display: flex;
   align-items: center;
   color: white;
-  font-size: 16px;
-  border: none;
-  /* cursor: pointer; */
   width: 250px;
+  font-size: 130%;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.active-item {
+  background-color: #005500;
+  /* Fondo más oscuro para la ventana activa */
+  color: #ffffff !important;
+  /* Cambia esto por el color que desees */
+  font-weight: bold;
+}
+
+.indicator-icon {
+  color: rgb(255, 255, 255);
+  margin-left: 5px;
+}
+
+.custom-button:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+
 }
 
 .avatar-container {
   display: flex;
-  /* Usar flexbox */
   justify-content: center;
-  /* Centrar horizontalmente */
   align-items: center;
-  /* Centrar verticalmente */
-
 }
 
 .per {
-  /* Puedes ajustar el tamaño de la imagen si es necesario */
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 110%;
+  max-height: 110%;
+}
 
+.logon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.negro {
+  width: 30%;
+  height: 30%;
+}
+
+.title-table {
+  text-align: center;
 
 }
 
-.text-center {
-  text-align: center;
+.agregar {
+  background-color: green;
+  color: #ffffff;
+  align-content: center;
+  align-items: center;
+  height: auto;
+  width: 17%;
   margin-bottom: 20px;
+
+}
+
+.agregar:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
 }
 
 .aprendices-container {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.text-h6{
+font-weight: bold;
+align-content: center;
+text-align: center;
+}
+
 </style>

@@ -26,8 +26,7 @@
               val => val && val.length > 0 || 'Por favor ingresa tu nueva contraseña'
             ]"
             autocomplete="off"
-          >
-          </q-input>
+          />
           <q-input
             v-model="confirmPassword"
             label="Confirmar Contraseña"
@@ -43,7 +42,7 @@
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
             </template>
           </q-input>
-          <q-btn class="q-mt-md" :disabled="isLoading" @click="handlePasswordReset">
+          <q-btn class="q-mt-md recovery-button" :disabled="isLoading" @click="handlePasswordReset">
             <template v-if="isLoading">
               <q-spinner size="20px" color="white" />
             </template>
@@ -56,6 +55,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref } from 'vue';
@@ -118,13 +118,13 @@ const handlePasswordReset = async () => {
 };
 </script>
 
+
 <style scoped>
 .recovery-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 70vh;
- 
 }
 
 .frente {
@@ -164,10 +164,16 @@ const handlePasswordReset = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s ease; /* Transición para el hover */
 }
 
 .q-btn:disabled {
   background-color: green;
   cursor: not-allowed;
 }
+
+.recovery-button:hover {
+  background-color: darkgreen; /* Color de fondo al pasar el ratón */
+}
 </style>
+

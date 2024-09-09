@@ -9,6 +9,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
     const token = ref("");
     const usuario = ref("");
     const loading = ref(false);
+    const InfoUser = ref("");
 
     const login = async (email, password) => {
         loading.value = true;
@@ -21,6 +22,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
             // Asignar el token y usuario a sus respectivas referencias
             token.value = r.data.token;
             usuario.value = r.data.usuario;
+            InfoUser.value = r.data.usuario.nombre;
 
             // Notificar éxito (puedes ajustar este mensaje según tu necesidad)
             Notify.create({
@@ -148,6 +150,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
         listarUsuarios,
         activarUsuario,
         desactivarUsuario,
-        guardarUsuario
+        guardarUsuario,
+        InfoUser
     };
 }, { persist: true });
