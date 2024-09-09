@@ -75,6 +75,7 @@ const redirectToRecoveryPage = () => {
   align-items: flex-start;
   height: auto;
   padding-top: 25px;
+  
 }
 
 h2 {
@@ -86,7 +87,8 @@ h2 {
   width: 60%;
   padding: 1px;
   font-size: 16px;
-  margin-top: 5px;
+  padding-top: -10px;
+  padding-bottom: 20px;
   text-align: center;
 height: 10px;
   background-color: rgb(11, 115, 2); 
@@ -101,7 +103,7 @@ height: 10px;
 }
 
 .btn-white {
-  width: 70%;
+  width: auto;
   padding: -5px;
   font-size: 16px;
   height: 10px;
@@ -147,6 +149,7 @@ height: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .btn-green{
   display: flex;
