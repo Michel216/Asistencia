@@ -43,11 +43,10 @@
     <q-page-container>
       <div class="fichas-container q-pa-md">
         <!-- Botones para generar documento y guardar estados -->
-        <q-btn  icon="save" @click="guardarEstados" :loading="loadingGuardarEstados" class="q-mr-xs">
+        <q-btn icon="save" @click="guardarEstados" :loading="loadingGuardarEstados" class="q-mr-xs">
           <q-tooltip anchor="bottom middle" self="top middle">Guardar estados</q-tooltip>
         </q-btn>
-        <q-btn  icon="description" @click="openDateDialog" :loading="loadingGenerarDocumento"
-          class="q-mr-xs">
+        <q-btn icon="description" @click="openDateDialog" :loading="loadingGenerarDocumento" class="q-mr-xs">
           <q-tooltip anchor="bottom middle" self="top middle">Generar documento</q-tooltip>
         </q-btn>
 
@@ -55,24 +54,37 @@
         <q-dialog v-model="fechaFiltrada">
           <q-card>
             <q-card-section>
-              <q-input filled v-model="selectedDate" label="Fecha (AAAA-MM-DD)" dense>
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="selectedDate" locale="auto">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
+              <q-input
+          filled
+          v-model="selectedDate"
+          label="Fecha (AAAA-MM-DD)"
+          dense
+          ref="dateInput"
+          :error="showError"
+          error-message="Por favor, ingrese la fecha"
+          class="custom-error-message"
+          @input="showError = false" 
+        >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="selectedDate" locale="auto">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+<br>
+        <q-btn 
+          label="Previsualizar" 
+          color="green" 
+          @click="previsualizarDocumento" 
+        />
+        <q-btn  label="Cancelar" @click="fechaFiltrada = false" />
             </q-card-section>
-            <q-card-actions>
-              <q-btn color="green" label="Previsualizar" @click="previsualizarDocumento" />
-              <q-btn color="white" label="Cancelar" @click="fechaFiltrada = false" />
-            </q-card-actions>
           </q-card>
         </q-dialog>
 
@@ -175,6 +187,7 @@ const tableContainer = ref(null);
 const useAsistencia = useAsistenciaStore();
 const useFicha = useFichaStore();
 const useBitacora = useBitacoraStore();
+const showError = ref(false); 
 import { useFichaStore } from '../stores/ficha.js'
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
@@ -277,14 +290,10 @@ const openDateDialog = () => {
 
 const previsualizarDocumento = () => {
   if (!selectedDate.value) {
-    Notify.create({
-      type: 'warning',
-      message: 'Debe seleccionar una fecha.',
-      position: 'top-right'
-    });
+    showError.value = true;
     return;
   }
-
+  showError.value = false;
   const selectedDateObj = new Date(selectedDate.value);
   const startOfDay = new Date(selectedDateObj.setHours(0, 0, 0, 0));
   const endOfDay = new Date(selectedDateObj.setHours(23, 59, 59, 999));
@@ -299,7 +308,7 @@ const previsualizarDocumento = () => {
   if (Asistió.length === 0) {
     Notify.create({
       type: 'warning',
-      message: 'No hay aprendices marcados como Asistió para la fecha seleccionada.',
+      message: 'No hay aprendices marcados con Asistió para la fecha seleccionada.',
       position: 'top-right'
     });
     return;
@@ -389,7 +398,7 @@ const generarPdf = async () => {
       valign: 'middle',
       lineWidth: 0.3,
       lineColor: [0, 0, 0] // Solo bordes exteriores
-    }, 
+    },
     tableWidth: 'auto', // Ajusta el ancho de la tabla automáticamente
     margin: { top: 10, right: 10, bottom: 10, left: 10 },
     didDrawCell: (data) => {
@@ -469,14 +478,16 @@ onMounted(() => {
 
 .q-btn:hover {
   background-color: green;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra al pasar el mouse, sin cambiar el color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  /* Sombra al pasar el mouse, sin cambiar el color */
   text-shadow: 0px 0px 10px white;
   /* Color de hover para los botones fuera del menú lateral */
 }
-.q-mr-xs{
-background-color: green;
-color: #ffffff;
-margin-bottom: 20px;
+
+.q-mr-xs {
+  background-color: green;
+  color: #ffffff;
+  margin-bottom: 20px;
 
 }
 
@@ -484,7 +495,9 @@ margin-bottom: 20px;
   max-width: 900px;
   margin: 20px auto;
 }
-
+.custom-error-message .q-field__messages {
+  color: red; /* Cambia el color del mensaje a tu preferencia */
+}
 .boton-flotante {
   position: fixed;
   bottom: 20px;

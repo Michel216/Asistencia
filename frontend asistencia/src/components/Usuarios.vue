@@ -16,7 +16,7 @@
       <br>
       <div class="avatar-container">
         <q-avatar>
-          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil" />
         </q-avatar>
       </div>
       <q-list>
@@ -65,7 +65,7 @@
                   flat 
                   icon="edit" 
                   @click="abrirModal(props.row)" 
-                  :loading="loadingEditarUsuario"
+                  :loading="loadingState[`guardar-${props.row._id}`]"
                 />
                 <q-btn 
                   @click="desactivar(props.row.email)" 
@@ -74,7 +74,7 @@
                   icon="cancel" 
                   v-if="props.row.estado == 1" 
                   color="red" 
-                  :loading="loadingDesactivar"
+                  :loading="loadingState[`desactivar-${props.row._id}`]"
                 />
                 <q-btn 
                   @click="activar(props.row.email)" 
@@ -83,7 +83,7 @@
                   icon="check_circle" 
                   v-else 
                   color="green" 
-                  :loading="loadingActivar"
+                  :loading="loadingState[`activar-${props.row._id}`]"
                 />
               </q-td>
             </template>
@@ -99,7 +99,7 @@
             transition-hide="rotate" persistent>
             <q-card>
               <q-card-section>
-                <div class="text-h6" v-if="b == true">Editar Usuario</div>
+                <div class="text-h6" v-if="b">Editar Usuario</div>
                 <div class="text-h6" v-else>Guardar Usuario</div>
               </q-card-section>
 
@@ -108,6 +108,14 @@
               <q-card-section style="max-height: 50vh" class="scroll">
                 <q-input filled v-model="email" label="Código del Usuario" :dense="dense" />
                 <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" />
+                <q-input 
+                  v-if="!b" 
+                  filled 
+                  v-model="password" 
+                  type="password" 
+                  label="Contraseña" 
+                  :dense="dense" 
+                />
               </q-card-section>
 
               <q-separator />
@@ -130,6 +138,8 @@
   </q-layout>
 </template>
 
+
+
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import { useQuasar } from 'quasar'
@@ -148,15 +158,13 @@ const $q = useQuasar();
 const fixed = ref(false);
 const email = ref("");
 const nombre = ref("");
+const password = ref(""); // Agrega esta línea
 const b = ref(false);
 
 const selectedId = ref(""); // Almacena el ID del Usuario seleccionado
 const rows = ref([]);
 
 const loadingCrearUsuario = ref(false);
-const loadingEditarUsuario = ref(false);
-const loadingDesactivar = ref(false);
-const loadingActivar = ref(false);
 const loadingState = ref({});
 
 import { useRoute, useRouter } from 'vue-router'
@@ -171,10 +179,12 @@ const menuItems = [
   { label: 'Usuarios', path: '/usuario', icon: 'people' },  
   { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' } 
 ]
+
 function isActiveRoute(path) {
   console.log(`Current Route: ${route.path}, Checking Path: ${path}`);
   return route.path === path;
 }
+
 onBeforeMount(() => {
   traer();
 });
@@ -182,15 +192,17 @@ onBeforeMount(() => {
 function abrirModal(row = null) {
   if (row) {
     // Modo edición
-    selectedId.value = row._id || '';  // Asigna el ID del Usuario
+    selectedId.value = row._id || '';
     email.value = row.email || '';
     nombre.value = row.nombre || '';
+    password.value = ''; // Limpia la contraseña en modo edición
     b.value = true;
   } else {
     // Modo creación
-    selectedId.value = ''; // Limpia el ID
+    selectedId.value = '';
     email.value = '';
     nombre.value = '';
+    password.value = ''; // Inicializa la contraseña para creación
     b.value = false;
   }
   fixed.value = true;
@@ -206,66 +218,95 @@ async function traer() {
 }
 
 async function activar(email) {
-  loadingActivar.value = true;
+  const id = selectedId.value;
+  loadingState.value[`activar-${id}`] = true
   try {
     await useUsuario.activarUsuario(email);
     await traer();  // Refresca la lista de usuarios
   } catch (error) {
     console.error("Error al activar usuario:", error);
   } finally {
-    loadingActivar.value = false;
+    loadingState.value[`activar-${id}`] = false;
   }
 }
 
 async function desactivar(email) {
-  loadingDesactivar.value = true;
+  const id = selectedId.value;
+  loadingState.value[`desactivar-${id}`] = true
   try {
     await useUsuario.desactivarUsuario(email);
     await traer();  // Refresca la lista de usuarios
   } catch (error) {
     console.error("Error al desactivar usuario:", error);
   } finally {
-    loadingDesactivar.value = false;
+    loadingState.value[`desactivar-${id}`]= false;
   }
 }
 
 async function crearUsuario() {
-  if (b.value === true) {
+  if (!nombre.value.trim() || !email.value.trim() || (b.value === false && !password.value.trim())) {
+    // Muestra un notify de error si los campos obligatorios están vacíos
+    $q.notify({
+      color: 'negative',
+      icon: 'error',
+      message: 'Todos los campos son obligatorios'
+    });
+    return; // Detiene la ejecución si los campos están vacíos
+  }
+  if (b.value === true) { // Editar
     if (!selectedId.value) {
       console.error("ID del Usuario no está disponible");
       return;
     }
 
-    loadingEditarUsuario.value = true;
+    loadingState.value[`guardar-${selectedId.value}`] = true;
     try {
       await useUsuario.modificarUsuario(selectedId.value, email.value, nombre.value);
       await traer();
       fixed.value = false;
       b.value = false;
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Usuario editado correctamente'
+      });
     } catch (error) {
       console.error("Error al modificar el Usuario:", error);
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al editar el usuario'
+      });
     } finally {
-      loadingEditarUsuario.value = false;
+      loadingState.value[`guardar-${selectedId.value}`] = false;
     }
-  } else {
-    loadingCrearUsuario.value = true;
+  } else { // Crear
+    loadingState.value['guardar-nuevo'] = true;
     try {
-      await useUsuario.guardarUsuario(email.value, nombre.value);
+      await useUsuario.guardarUsuario(email.value, nombre.value, password.value);
       await traer();
-      fixed.value = false;
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Usuario guardado correctamente'
+      });
     } catch (error) {
-      console.error("Error al guardar el Usuario:", error);
+      console.error("Error al guardar el usuario:", error);
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al guardar el usuario'
+      });
     } finally {
-      loadingCrearUsuario.value = false;
+      loadingState.value['guardar-nuevo'] = false;
     }
   }
 }
-
 const columns = [
   {
     name: 'nombre1',
     required: true,
-    label: 'Email del Usuario',
+    label: 'Nombre del Usuario',
     align: 'center',
     field: "nombre",
     sortable: true
@@ -273,7 +314,7 @@ const columns = [
   {
     name: 'codigo1',
     align: 'center',
-    label: 'Nombre del Usuario',
+    label: 'Email del Usuario',
     field: 'email',
     sortable: true
   },
@@ -286,12 +327,12 @@ const columns = [
   },
   {
     name: 'opciones',
-    label: 'Opciones'
+    label: 'Opciones',
+    align: 'center'
   },
 ];
-
-
 </script>
+
 
 <style scoped>
 .text-center {
@@ -330,11 +371,15 @@ const columns = [
   height: 20px;
   margin-right: 10px;
 }
+
 .active-item {
-  background-color: #005500; /* Fondo más oscuro para la ventana activa */
-  color: #ffffff; /* Cambia esto por el color que desees */
+  background-color: #005500;
+  /* Fondo más oscuro para la ventana activa */
+  color: #ffffff;
+  /* Cambia esto por el color que desees */
   font-weight: bold;
 }
+
 .button-text {
   color: white;
 }

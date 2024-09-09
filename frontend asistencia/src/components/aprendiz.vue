@@ -280,33 +280,68 @@ async function desactivar(id) {
 }
 
 async function crearAprendiz() {
+  // Validación para verificar si todos los campos están vacíos
+  if (!documento.value.trim() && !nombre.value.trim() && !telefono.value.trim() && !email.value.trim() && !ficha.value) {
+    // Muestra un notify de error si todos los campos están vacíos
+    $q.notify({
+      color: 'negative',
+      icon: 'error',
+      message: 'No se pudo guardar el aprendiz'
+    });
+    return; // Detiene la ejecución si los campos están vacíos
+  }
+
   if (b.value === true) {  // Editar
     if (!id.value) {
       console.error("ID del Aprendiz no está disponible");
       return;
     }
 
-    loadingState.value[`guardar-${id.value}`] = true
+    loadingState.value[`guardar-${id.value}`] = true;
     try {
       await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value);
       await traer();
       fixed.value = false;
       b.value = false;
+      // Notificación de éxito al editar
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Aprendiz editado correctamente'
+      });
     } catch (error) {
       console.error("Error al modificar el Aprendiz:", error);
+      // Notificación de error al editar
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al editar el aprendiz'
+      });
     } finally {
-      loadingState.value[`guardar-${id.value}`] = false
+      loadingState.value[`guardar-${id.value}`] = false;
     }
   } else {  // Crear
-    loadingState.value['guardar-nuevo'] = true
+    loadingState.value['guardar-nuevo'] = true;
     try {
       await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value);
       await traer();
       fixed.value = false;
+      // Notificación de éxito al crear
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Aprendiz guardado correctamente'
+      });
     } catch (error) {
       console.error("Error al guardar el aprendiz:", error);
+      // Notificación de error al crear
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al guardar el aprendiz'
+      });
     } finally {
-      loadingState.value['guardar-nuevo'] = false
+      loadingState.value['guardar-nuevo'] = false;
     }
   }
 }
