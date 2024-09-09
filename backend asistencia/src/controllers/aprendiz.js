@@ -53,10 +53,10 @@ const aprendizController = {
         }
     },
     modificar: async (req, res) => {
-        const id = req.params._id;
+        const id = req.params.id;
         const nuevosDatos = req.body;
         try {
-            const aprendizModificado = await Aprendiz.findOneAndUpdate( id , nuevosDatos, { new: true });
+            const aprendizModificado = await Aprendiz.findByIdAndUpdate( id , nuevosDatos, { new: true });
             if (!aprendizModificado) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });
             }
