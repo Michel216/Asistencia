@@ -128,10 +128,10 @@ const usuarioController = {
 
  // Activar usuario
 activar: async (req, res) => {
-    const { email } = req.params;
+    const id = req.params.id;
     try {
-        const usuarioActivo = await Usuario.findOneAndUpdate(
-            { email }, 
+        const usuarioActivo = await Usuario.findByIdAndUpdate(
+            { id }, 
             { estado: 1 }, 
             { new: true }
         );
@@ -147,10 +147,10 @@ activar: async (req, res) => {
 
 // Inactivar usuario
 inactivar: async (req, res) => {
-    const { email } = req.params;
+    const id = req.params.id;
     try {
-        const usuarioInactivo = await Usuario.findOneAndUpdate(
-            { email }, 
+        const usuarioInactivo = await Usuario.findByIdAndUpdate(
+            { id }, 
             { estado: 0 }, 
             { new: true }
         );

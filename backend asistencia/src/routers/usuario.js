@@ -47,8 +47,8 @@ usuarioRouter.put(
   usuarioController.modificar
 );
 
-usuarioRouter.put('/activar/:email', validarJWT,validarCampos , usuarioController.activar);
-usuarioRouter.put('/desactivar/:email', [validarJWT,validarCampos ], usuarioController.inactivar);
+usuarioRouter.put('/activar/:id', validarJWT,validarCampos , usuarioController.activar);
+usuarioRouter.put('/desactivar/:id', [validarJWT,validarCampos ], usuarioController.inactivar);
 
 
 
