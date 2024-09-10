@@ -8,7 +8,7 @@
       <h5>Registro de Asistencia</h5>
       <q-form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <q-select filled v-model="model" use-input input-debounce="0" label="Escribe tu nombre" :options="options"
+          <q-select filled v-model="model" use-input input-debounce="0" label="Escribe tu documento" :options="options"
             @filter="filterFn" style="width: 250px" behavior="menu">
             <template v-slot:no-option>
               <q-item>
@@ -39,7 +39,7 @@ import { useAsistenciaStore } from '../stores/registroAprendiz.js';
 import { useAprendizStore } from '../stores/aprendiz.js';
 import { useRoute, useRouter } from 'vue-router'
 const router = useRouter()
-
+const rows = ref([])
 const $q = useQuasar();
 const model = ref(null);
 const options = ref([]);
@@ -75,19 +75,31 @@ const handleSubmit = async () => {
 
     try {
       // Enviar solo el valor (ObjectId)
-      const creado = await useAsistencia.registo(model.value.value, new Date().toISOString());
-      console.log(creado);
+      const creado = await useAsistencia.crear(model.value.value, new Date().toISOString());
 
-      $q.notify({
-        type: 'positive',
-        message: 'Asistencia registrada con éxito',
-      });
+      // Revisa si la respuesta contiene los datos esperados
+      if (creado && creado.data && !creado.data.error) { // Verifica que no haya un error en los datos de respuesta
+        console.log('creado', creado);
+        $q.notify({
+          type: 'positive',
+          message: 'Asistencia registrada con éxito',
+        });
 
-      // Actualizar la tabla o cualquier otro estado necesario
-      await fetchRegistros();
+        // Actualizar la tabla o cualquier otro estado necesario
+        await fetchRegistros();
 
-      model.value = null;
+        model.value = null;
+      } else {
+        // Maneja el caso en que haya un error en la respuesta
+        console.error('Error al registrar la asistencia:', creado.data.error || 'Error inesperado');
+        $q.notify({
+          type: 'negative',
+          message: creado.data.error || 'Error al registrar la asistencia',
+        });
+      }
+
     } catch (error) {
+      console.error('Error al registrar la asistencia:', error);
       $q.notify({
         type: 'negative',
         message: 'Error al registrar la asistencia',
@@ -103,14 +115,14 @@ const handleSubmit = async () => {
   }
 };
 
-// const fetchRegistros = async () => {
-//   try {
-//     const res = await useAsistencia.listarTodos();
-//     rows.value = res.data || [];
-//   } catch (error) {
-//     console.error('Error al listar registros:', error);
-//   }
-// };
+const fetchRegistros = async () => {
+  try {
+    const res = await useAsistencia.listarTodos();
+    rows.value = res.data ;
+  } catch (error) {
+    console.error('Error al listar registros:', error);
+  }
+};
 
 // Inicializa la lista de usuarios
 filterFn('', () => { });

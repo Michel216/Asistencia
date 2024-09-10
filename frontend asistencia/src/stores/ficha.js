@@ -46,6 +46,22 @@ export const useFichaStore = defineStore('ficha', () => {
             return error;
         }
     };
+    const modificarFicha = async (id, codigo, nombre) => {
+        try {
+            const r = await axios.put(`${API_URL}/ficha/modificar/${id}`, {
+                codigo: codigo,
+                nombre: nombre
+            },  {
+                headers: {
+                    "token": usuariosStore.token,
+                },
+            });
+            console.log(r);
+            return r;
+        } catch (error) {
+            throw error;
+        }
+    };
 
     // Función para activar un aprendiz
     const activarFicha = async (id) => {
@@ -91,6 +107,7 @@ export const useFichaStore = defineStore('ficha', () => {
     return {
         listarFicha,
         guardarFicha,
+        modificarFicha,
         activarFicha,
         desactivarFicha
     };

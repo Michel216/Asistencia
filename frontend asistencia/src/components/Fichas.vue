@@ -55,11 +55,24 @@
             <q-td :props="props">
               <q-btn flat dense icon="edit" color="grey-8" @click="abrirModal(props.row)"
                 :loading="loadingState[`guardar-${props.row._id || 'default'}`]" />
-              <q-btn @click="desactivar(props.row.codigo)" flat dense icon="cancel" v-if="props.row.estado == 1"
-                color="red" :loading="loadingState[`desactivar-${props.row.codigo || 'default'}`]" />
-              <q-btn @click="activar(props.row.codigo)" flat dense icon="check_circle" v-else-if="props.row.estado == 0"
-                color="green" :loading="loadingState[`activar-${props.row.codigo || 'default'}`]" />
-
+                <q-btn
+      @click="desactivar(props.row._id)"
+      flat
+      dense
+      icon="cancel"
+      v-if="props.row.estado == 1"
+      color="red"
+      :loading="loadingState[`desactivar-${props.row._id || 'default'}`]"
+    />
+    <q-btn
+      @click="activar(props.row._id)"
+      flat
+      dense
+      icon="check_circle"
+      v-else-if="props.row.estado == 0"
+      color="green"
+      :loading="loadingState[`activar-${props.row._id || 'default'}`]"
+    />
             </q-td>
           </template>
 
@@ -136,7 +149,7 @@ function isActiveRoute(path) {
   return route.path === path;
 }
 
-const selectedId = ref(""); // Almacena el ID de la ficha seleccionada
+const id = ref(""); // Almacena el ID de la ficha seleccionada
 const rows = ref([]);
 
 onBeforeMount(() => {
@@ -146,13 +159,13 @@ onBeforeMount(() => {
 function abrirModal(row = null) {
   if (row) {
     // Modo edición
-    selectedId.value = row._id || '';  // Asigna el ID de la ficha
+    id.value = row._id || '';  // Asigna el ID de la ficha
     codigo.value = row.codigo || '';
     nombre.value = row.nombre || '';
     b.value = true;
   } else {
     // Modo creación
-    selectedId.value = ''; // Limpia el ID
+    id.value = ''; // Limpia el ID
     codigo.value = '';
     nombre.value = '';
     b.value = false;
@@ -163,14 +176,27 @@ function abrirModal(row = null) {
 async function traer() {
   const res = await useFicha.listarFicha();
   rows.value = res.data;
+  console.log(res)
 }
 
 async function activar(id) {
+  console.log("Activando ficha con ID:", id); // Verificar el ID
+  if (!id) return; // Verificar que el ID no sea undefined
   loadingState.value[`activar-${id}`] = true;
   try {
     await useFicha.activarFicha(id);
     await traer();
+    $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Ficha Activa'
+      });
   } catch (error) {
+    $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al activar ficha'
+      });
     console.error("Error al activar la ficha:", error);
   } finally {
     loadingState.value[`activar-${id}`] = false;
@@ -178,16 +204,30 @@ async function activar(id) {
 }
 
 async function desactivar(id) {
+  console.log("Desactivando ficha con ID:", id); // Verificar el ID
+  if (!id) return; // Verificar que el ID no sea undefined
   loadingState.value[`desactivar-${id}`] = true;
   try {
     await useFicha.desactivarFicha(id);
     await traer();
+    $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Ficha inactiva'
+      });
   } catch (error) {
+    $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al inactivar ficha'
+      });
     console.error("Error al desactivar la ficha:", error);
   } finally {
     loadingState.value[`desactivar-${id}`] = false;
   }
 }
+
+
 
 async function crearFicha() {
   if (!nombre.value.trim() && !codigo.value.trim()) {
@@ -200,15 +240,15 @@ async function crearFicha() {
     return;
   }
     if (b.value === true) {
-      if (!selectedId.value) {
+      if (!id.value) {
         console.error("ID de la ficha no está disponible");
         return;
       }
 
-      loadingState.value[`guardar-${selectedId.value}`] = true;
+      loadingState.value[`guardar-${id.value}`] = true;
 
       try {
-        await useFicha.modificarFicha(selectedId.value, codigo.value, nombre.value);
+        await useFicha.modificarFicha(id.value, codigo.value, nombre.value);
         await traer();
         fixed.value = false;
         b.value = false;
@@ -225,10 +265,10 @@ async function crearFicha() {
       });
         console.error("Error al modificar la ficha:", error);
       } finally {
-        loadingState.value[`guardar-${selectedId.value}`] = false;
+        loadingState.value[`guardar-${id.value}`] = false;
       }
     } else {
-      loadingState.value[`guardar-${selectedId.value}`] = false;
+      loadingState.value[`guardar-${id.value}`] = false;
 
       try {
         await useFicha.guardarFicha(codigo.value, nombre.value);

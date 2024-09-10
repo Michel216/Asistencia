@@ -49,7 +49,7 @@
               Agregar Aprendiz
             </q-btn>
           </div>
-          <q-table title="Aprendiz" :rows="rows" :columns="columns" row-key="name">
+          <q-table title="Aprendiz" :rows="rows" :columns="columns" row-key="_id">
             <template v-slot:body-cell-documento="props">
               <q-td :props="props">
                 {{ props.row.documento ? props.row.documento : 'No disponible' }}
@@ -198,12 +198,15 @@ const dense = ref(false)
 
 // Manejo de carga por ID
 const loadingState = ref({})
+const loadingGuardarAprendiz = ref(false)
+const loadingCrearAprendiz = ref({})
 
 const useAprendiz = useAprendizStore()
 const useFicha = useFichaStore()
 
 onBeforeMount(() => {
   traer()
+  traerFichas()
 })
 
 function toggleLeftDrawer() {
@@ -221,7 +224,7 @@ async function abrirModal(row = null) {
     nombre.value = row.nombre || ''
     telefono.value = row.telefono || ''
     email.value = row.email || ''
-    ficha.value = row.id_ficha.codigo || ''
+    ficha.value =  row.id_ficha._id || ''
     b.value = true
   } else {
     id.value = ''
@@ -239,6 +242,7 @@ async function traer() {
   loadingState.value['traer'] = true
   try {
     let res = await useAprendiz.listarAprendiz()
+    console.log("Datos traídos:", res.data) // Depuración para ver los datos traídos
     rows.value = res.data
   } catch (error) {
     console.error("Error al traer aprendices:", error)
@@ -253,7 +257,17 @@ async function activar(id) {
     try {
       await useAprendiz.activarAprendiz(id);
       await traer();
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Aprendiz activo'
+      });
     } catch (error) {
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al activar aprendiz'
+      });
       console.error('Error al activar:', error);
     } finally {
       loadingState.value[`activar-${id}`] = false
@@ -269,7 +283,17 @@ async function desactivar(id) {
     try {
       await useAprendiz.desactivarAprendiz(id);
       await traer();
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Aprendiz inactivo'
+      });
     } catch (error) {
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al inactivar aprendiz'
+      });
       console.error('Error al desactivar:', error);
     } finally {
       loadingState.value[`desactivar-${id}`] = false
@@ -278,20 +302,25 @@ async function desactivar(id) {
     console.error('ID no proporcionado para desactivar');
   }
 }
+async function traerFichas() {
+  let res = await useFicha.listarFicha();
+  options.value = res.data.map(ficha => ({
+      label: ficha.codigo,
+      value: ficha._id
+  }));
 
+}
 async function crearAprendiz() {
-  // Validación para verificar si todos los campos están vacíos
-  if (!documento.value.trim() && !nombre.value.trim() && !telefono.value.trim() && !email.value.trim() && !ficha.value) {
-    // Muestra un notify de error si todos los campos están vacíos
+  if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value) {
     $q.notify({
       color: 'negative',
       icon: 'error',
-      message: 'No se pudo guardar el aprendiz'
+      message: 'Todos los campos son obligatorios'
     });
-    return; // Detiene la ejecución si los campos están vacíos
+    return;
   }
 
-  if (b.value === true) {  // Editar
+  if (b.value) {  // Editar
     if (!id.value) {
       console.error("ID del Aprendiz no está disponible");
       return;
@@ -300,10 +329,9 @@ async function crearAprendiz() {
     loadingState.value[`guardar-${id.value}`] = true;
     try {
       await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value);
-      await traer();
+      await traer();  // Actualizar la lista de aprendices
       fixed.value = false;
       b.value = false;
-      // Notificación de éxito al editar
       $q.notify({
         color: 'positive',
         icon: 'check',
@@ -311,7 +339,6 @@ async function crearAprendiz() {
       });
     } catch (error) {
       console.error("Error al modificar el Aprendiz:", error);
-      // Notificación de error al editar
       $q.notify({
         color: 'negative',
         icon: 'error',
@@ -324,9 +351,8 @@ async function crearAprendiz() {
     loadingState.value['guardar-nuevo'] = true;
     try {
       await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value);
-      await traer();
+      await traer();  // Actualizar la lista de aprendices
       fixed.value = false;
-      // Notificación de éxito al crear
       $q.notify({
         color: 'positive',
         icon: 'check',
@@ -334,7 +360,6 @@ async function crearAprendiz() {
       });
     } catch (error) {
       console.error("Error al guardar el aprendiz:", error);
-      // Notificación de error al crear
       $q.notify({
         color: 'negative',
         icon: 'error',
@@ -345,6 +370,7 @@ async function crearAprendiz() {
     }
   }
 }
+
 
 const filterFn = async (val, update) => {
   let res = await useFicha.listarFicha();

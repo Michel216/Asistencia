@@ -217,11 +217,11 @@ async function traer() {
   }
 }
 
-async function activar(email) {
-  const id = selectedId.value;
+async function activar(id) {
+  // const id = selectedId.value;
   loadingState.value[`activar-${id}`] = true
   try {
-    await useUsuario.activarUsuario(email);
+    await useUsuario.activarUsuario(id);
     await traer();  // Refresca la lista de usuarios
   } catch (error) {
     console.error("Error al activar usuario:", error);
@@ -230,11 +230,11 @@ async function activar(email) {
   }
 }
 
-async function desactivar(email) {
-  const id = selectedId.value;
+async function desactivar(id) {
+  // const id = selectedId.value
   loadingState.value[`desactivar-${id}`] = true
   try {
-    await useUsuario.desactivarUsuario(email);
+    await useUsuario.desactivarUsuario(id);
     await traer();  // Refresca la lista de usuarios
   } catch (error) {
     console.error("Error al desactivar usuario:", error);
@@ -249,7 +249,7 @@ async function crearUsuario() {
     $q.notify({
       color: 'negative',
       icon: 'error',
-      message: 'Todos los campos son obligatorios'
+      message: 'Error al guardar Usuario'
     });
     return; // Detiene la ejecución si los campos están vacíos
   }
@@ -261,7 +261,7 @@ async function crearUsuario() {
 
     loadingState.value[`guardar-${selectedId.value}`] = true;
     try {
-      await useUsuario.modificarUsuario(selectedId.value, email.value, nombre.value);
+      await useUsuario.modificarDatosUsuario(selectedId.value, email.value, nombre.value);
       await traer();
       fixed.value = false;
       b.value = false;

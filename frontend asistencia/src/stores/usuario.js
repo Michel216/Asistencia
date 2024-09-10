@@ -96,10 +96,25 @@ export const useUsuariosStore = defineStore('usuario', () => {
             throw error;
         }
     };
-
-    const activarUsuario = async (email) => {
+    const modificarDatosUsuario = async (id, email, nombre) => {
         try {
-            const response = await axios.put(`${API_URL}/usuario/activar/${email}`, {}, {
+            const response = await axios.put(`${API_URL}/usuario/modificar/${id}`, {
+                email: email,
+                nombre: nombre
+            },  {
+                headers: {
+                    "token": token.value,
+                },
+            });
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const activarUsuario = async (id) => {
+        try {
+            const response = await axios.put(`${API_URL}/usuario/activar/${id}`, {}, {
                 headers: {
                     "token": token.value,
                 }
@@ -119,9 +134,9 @@ export const useUsuariosStore = defineStore('usuario', () => {
         }
     };
 
-    const desactivarUsuario = async (email) => {
+    const desactivarUsuario = async (id) => {
         try {
-            const response = await axios.put(`${API_URL}/usuario/desactivar/${email}`, {}, {
+            const response = await axios.put(`${API_URL}/usuario/desactivar/${id}`, {}, {
                 headers: {
                     "token": token.value,
                 }
@@ -147,6 +162,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
         loading,
         login,
         modificarUsuario,
+        modificarDatosUsuario,
         listarUsuarios,
         activarUsuario,
         desactivarUsuario,
