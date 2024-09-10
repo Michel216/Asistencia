@@ -24,7 +24,7 @@ const fichaController = {
         }
     },
     modificar: async (req, res) => {
-        const id = req.params._id;
+        const id = req.params.id;
 
         const nuevosDatos = req.body;
         try {

@@ -103,7 +103,7 @@ const usuarioController = {
 
     // Modificar usuario (incluyendo cambiar contraseña)
     modificar: async (req, res) => {
-        const { email } = req.params;
+        const { id } = req.params.id;
         const nuevosDatos = req.body;
 
         try {
@@ -112,7 +112,7 @@ const usuarioController = {
                 nuevosDatos.password = encriptarPassword(nuevosDatos.password);
             }
 
-            const usuarioModificado = await Usuario.findOneAndUpdate({ email }, nuevosDatos, { new: true });
+            const usuarioModificado = await Usuario.findByIdAndUpdate(id, nuevosDatos, { new: true });
 
             if (!usuarioModificado) {
                 return res.status(404).json({ msg: 'Usuario no encontrado' });
