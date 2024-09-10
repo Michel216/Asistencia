@@ -22,7 +22,7 @@ const bitacoraController = {
 
     listarTodos: async (req, res) => {
         try {
-            const bitacoras = await Bitacora.find()
+            const bitacoras = await Bitacora.find().sort({fecha: -1})
                 .populate({
                     path: 'id_aprendiz', populate: {
                         path: 'id_ficha',

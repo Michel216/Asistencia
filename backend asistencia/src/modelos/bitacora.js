@@ -6,7 +6,7 @@ const bitacoraSchema = new mongoose.Schema({
     estado: {
       type: String,
       enum: ['No Asistió ', 'Asistió', 'Excusa', 'Pendiente'],
-      default: 'pendiente' // Estado predeterminado
+      default: 'Pendiente' // Estado predeterminado
     },
   
 }, { timestamps: true });
