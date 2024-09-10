@@ -37,7 +37,7 @@ usuarioRouter.get('/', [
    validarCampos], usuarioController.listarTodos);
 
 usuarioRouter.put(
-  '/modificar/:email',
+  '/modificar/:id',
   [
     // validarJWT,
     check('email', 'El email no es válido').isEmail(),
