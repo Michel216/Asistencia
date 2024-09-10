@@ -131,7 +131,7 @@ activar: async (req, res) => {
     const id = req.params.id;
     try {
         const usuarioActivo = await Usuario.findByIdAndUpdate(
-            { id }, 
+             id , 
             { estado: 1 }, 
             { new: true }
         );
@@ -150,7 +150,7 @@ inactivar: async (req, res) => {
     const id = req.params.id;
     try {
         const usuarioInactivo = await Usuario.findByIdAndUpdate(
-            { id }, 
+             id , 
             { estado: 0 }, 
             { new: true }
         );
