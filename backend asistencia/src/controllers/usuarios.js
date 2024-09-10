@@ -103,7 +103,7 @@ const usuarioController = {
 
     // Modificar usuario (incluyendo cambiar contraseña)
     modificar: async (req, res) => {
-        const { id } = req.params.id;
+        const { id } = req.params;
         const nuevosDatos = req.body;
 
         try {
