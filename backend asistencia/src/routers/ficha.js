@@ -19,7 +19,7 @@ fichaRouter.post('/',
     fichaController.crear
 );
 
-fichaRouter.put('/modificar/:_id', 
+fichaRouter.put('/modificar/:id', 
     [
         validarJWT,
         validarCampos
