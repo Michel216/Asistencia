@@ -108,10 +108,6 @@ const usuarioController = {
 
         try {
 
-            if (nuevosDatos.password) {
-                nuevosDatos.password = encriptarPassword(nuevosDatos.password);
-            }
-
             const usuarioModificado = await Usuario.findByIdAndUpdate(id, nuevosDatos, { new: true });
 
             if (!usuarioModificado) {
@@ -181,39 +177,39 @@ inactivar: async (req, res) => {
     },
 
     // Cambiar contraseña
-    // cambiarContrasena: async (req, res) => {
-    //     const { email } = req.params;
-    //     const { password, newPassword } = req.body;
+    cambiarContrasena: async (req, res) => {
+        const { email } = req.params;
+        const { password, newPassword } = req.body;
 
-    //     try {
-    //         // Encontrar usuario por email
-    //         const usuario = await Usuario.findOne({ email });
+        try {
+            // Encontrar usuario por email
+            const usuario = await Usuario.findOne({ email });
 
-    //         // Verificar si el usuario existe
-    //         if (!usuario) {
-    //             return res.status(404).json({ msg: 'Usuario no encontrado' });
-    //         }
+            // Verificar si el usuario existe
+            if (!usuario) {
+                return res.status(404).json({ msg: 'Usuario no encontrado' });
+            }
 
-    //         // Verificar si la contraseña actual coincide
-    //         const isMatch = compararPassword(password, usuario.password);
+            // Verificar si la contraseña actual coincide
+            const isMatch = compararPassword(password, usuario.password);
 
-    //         if (!isMatch) {
-    //             return res.status(400).json({ msg: 'La contraseña actual no es válida' });
-    //         }
+            if (!isMatch) {
+                return res.status(400).json({ msg: 'La contraseña actual no es válida' });
+            }
 
-    //         // Encriptar nueva contraseña
-    //         const hashedPassword = encriptarPassword(newPassword);
+            // Encriptar nueva contraseña
+            const hashedPassword = encriptarPassword(newPassword);
 
-    //         // Actualizar contraseña en la base de datos
-    //         usuario.password = hashedPassword;
-    //         await usuario.save();
+            // Actualizar contraseña en la base de datos
+            usuario.password = hashedPassword;
+            await usuario.save();
 
-    //         res.json({ message: 'Contraseña modificada exitosamente' });
-    //     } catch (error) {
-    //         console.error('Error al cambiar la contraseña:', error);
-    //         res.status(500).json({ error: 'Error al cambiar la contraseña' });
-    //     }
-    // },
+            res.json({ message: 'Contraseña modificada exitosamente' });
+        } catch (error) {
+            console.error('Error al cambiar la contraseña:', error);
+            res.status(500).json({ error: 'Error al cambiar la contraseña' });
+        }
+    },
 };
 
 module.exports = usuarioController;
