@@ -46,7 +46,7 @@ usuarioRouter.put(
   usuarioController.modificar
 );
 usuarioRouter.put(
-  '/cambiarContrasena/:id',
+  '/cambiarContrasena/:email',
   [
     check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({ min: 6 }),
     validarCampos,
