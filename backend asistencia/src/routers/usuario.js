@@ -39,8 +39,15 @@ usuarioRouter.get('/', [
 usuarioRouter.put(
   '/modificar/:id',
   [
-    // validarJWT,
-    check('email', 'El email no es válido').isEmail(),
+    validarJWT,
+    check('id', 'El id no es válido').isMongoId(),
+    validarCampos,
+  ],
+  usuarioController.modificar
+);
+usuarioRouter.put(
+  '/cambiarContrasena/:id',
+  [
     check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({ min: 6 }),
     validarCampos,
   ],
