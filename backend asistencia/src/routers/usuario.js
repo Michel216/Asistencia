@@ -51,7 +51,7 @@ usuarioRouter.put(
     check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({ min: 6 }),
     validarCampos,
   ],
-  usuarioController.modificar
+  usuarioController.cambiarContrasena
 );
 
 usuarioRouter.put('/activar/:id', validarJWT,validarCampos , usuarioController.activar);
