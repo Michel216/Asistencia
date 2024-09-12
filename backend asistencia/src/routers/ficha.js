@@ -7,7 +7,11 @@ const { validarJWT } = require('../middlewares/validarJWT');
 const fichaRouter = express.Router();
 
 // Listar todas las fichas - No se requiere JWT para esta ruta
-fichaRouter.get('/', fichaController.listarTodos);
+fichaRouter.get('/'
+    [
+        validarJWT,
+        validarCampos
+    ], fichaController.listarTodos);
 
 fichaRouter.post('/',
     [
@@ -27,8 +31,6 @@ fichaRouter.put('/modificar/:id',
     ],
     fichaController.modificar
 );
-// check('codigo', 'El código es obligatorio').optional().not().isEmpty(),
-// check('nombre', 'El nombre es obligatorio').optional().not().isEmpty(),
 
 // Activar una ficha - Se requiere JWT
 fichaRouter.put('/activar/:id',
@@ -36,15 +38,15 @@ fichaRouter.put('/activar/:id',
         validarJWT, 
     check('id', 'El id es obligatorio').isMongoId(), 
     validarCampos
-],
-    fichaController.activar,
+],fichaController.activar,
    );
 
 // Inactivar una ficha - Se requiere JWT
 fichaRouter.put('/desactivar/:id',
-   [ validarJWT,
+   [ 
+    validarJWT,
     check('id', 'El id es obligatorio').isMongoId(),
-    validarCampos],
-    fichaController.desactivar,);
+    validarCampos
+],fichaController.desactivar,);
 
 module.exports = fichaRouter;

@@ -6,8 +6,7 @@ const { validarJWT } = require('../middlewares/validarJWT');
 
 const usuarioRouter = express.Router();
 
-usuarioRouter.post(
-  '/',
+usuarioRouter.post('/',
   [
     check('email', 'El email es obligatorio').isEmail(),
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
@@ -32,12 +31,13 @@ usuarioRouter.get('/listarPorCorreo/:email',
   usuarioController.login
 );
 
-usuarioRouter.get('/', [
+usuarioRouter.get('/', 
+  [
   validarJWT,
-  validarCampos], usuarioController.listarTodos);
+  validarCampos
+], usuarioController.listarTodos);
 
-usuarioRouter.put(
-  '/modificar/:id',
+usuarioRouter.put('/modificar/:id',
   [
     validarJWT,
     check('id', 'El id es obligatorio').isMongoId(),
@@ -55,7 +55,7 @@ usuarioRouter.put(
   usuarioController.cambiarContrasena
 );
 
-usuarioRouter.put('/activar/:id', validarJWT, validarCampos, usuarioController.activar);
+usuarioRouter.put('/activar/:id', [validarJWT, validarCampos], usuarioController.activar);
 usuarioRouter.put('/desactivar/:id', [validarJWT, validarCampos], usuarioController.inactivar);
 
 
