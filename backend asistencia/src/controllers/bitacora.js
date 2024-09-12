@@ -22,7 +22,7 @@ const bitacoraController = {
 
     listarTodos: async (req, res) => {
         try {
-            const bitacoras = await Bitacora.find().sort({fecha: -1})
+            const bitacoras = await Bitacora.find().sort({ fecha: -1 })
                 .populate({
                     path: 'id_aprendiz', populate: {
                         path: 'id_ficha',
@@ -129,25 +129,25 @@ const bitacoraController = {
         try {
             const { estado } = req.body;
             const { id } = req.params;
-    
+
             console.log('Datos recibidos para actualización:', { id, estado });
-    
+
             const bitacora = await Bitacora.findById(id);
-    
+
             if (!bitacora) {
                 console.log('Bitacora no encontrada para el ID:', id);
                 return res.status(404).json({ message: 'Bitacora no encontrada' });
             }
-    
+
             bitacora.estado = estado;
             await bitacora.save();
-    
+
             res.status(200).json(bitacora);
         } catch (error) {
             console.error('Error al actualizar bitacora:', error);
             res.status(500).json({ message: 'Error al actualizar bitacora', errorDetail: error.message });
         }
     }
-        
+
 }
 module.exports = bitacoraController;

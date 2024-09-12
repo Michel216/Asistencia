@@ -15,9 +15,13 @@
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <br>
       <div class="avatar-container">
-        <q-avatar>
-          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+        <q-avatar class="large-avatar">
+          <img class="per" src="/imagenes/usuario.png" alt="perfil " />
         </q-avatar>
+      </div>
+      <div style="text-align: center; margin-top: 10px;">
+        <p style="margin: 0;"> <strong>{{ nombreUser }}</strong></p>
+        <p style="margin: 0;"> {{ emailUser }}</p>
       </div>
       <q-list>
         <br>
@@ -36,16 +40,16 @@
       </q-list>
       <br>
       <div class="logon">
-        <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+        <img class="negro" src="/imagenes/snegr.png" alt="">
       </div>
     </q-drawer>
 
     <q-page-container>
       <div class="fichas-container q-pa-md">
-        <h4 class="text-center">FICHAS</h4>
-
-        <div style="display: flex; justify-content: end; margin-bottom: 20px;">
-          <q-btn @click="abrirModal()" color="green" label="Crear Ficha" style="width: 200px;"
+        <h3 class="title-table">Fichas</h3>
+        <hr id="hr" class="bg-green-9">
+        <div style="display: flex; justify-content: end; margin-bottom: 20px; margin-top: 30px">
+          <q-btn @click="abrirModal()" label="Crear Ficha" style="width: 150px; background-color: green; color: white"
             :loading="loadingCrearFicha" />
         </div>
 
@@ -53,26 +57,12 @@
           <!-- Columna de Opciones -->
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
-              <q-btn flat dense icon="edit" color="grey-8" @click="abrirModal(props.row)"
+              <q-btn flat dense icon="edit" color="black" @click="abrirModal(props.row)"
                 :loading="loadingState[`guardar-${props.row._id || 'default'}`]" />
-                <q-btn
-      @click="desactivar(props.row._id)"
-      flat
-      dense
-      icon="cancel"
-      v-if="props.row.estado == 1"
-      color="red"
-      :loading="loadingState[`desactivar-${props.row._id || 'default'}`]"
-    />
-    <q-btn
-      @click="activar(props.row._id)"
-      flat
-      dense
-      icon="check_circle"
-      v-else-if="props.row.estado == 0"
-      color="green"
-      :loading="loadingState[`activar-${props.row._id || 'default'}`]"
-    />
+              <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
+                color="red" :loading="loadingState[`desactivar-${props.row._id || 'default'}`]" />
+              <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else-if="props.row.estado == 0"
+                color="green" :loading="loadingState[`activar-${props.row._id || 'default'}`]" />
             </q-td>
           </template>
 
@@ -97,9 +87,9 @@
 
             <q-card-section style="max-height: 50vh" class="scroll">
               <q-input filled v-model="codigo" label="Código de la Ficha" :dense="dense"
-                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el codigo de su ficha']" />
+                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el codigo de la ficha']" />
               <q-input filled v-model="nombre" label="Nombre de la Ficha" :dense="dense"
-                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre de su ficha']" />
+                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre de la ficha']" />
 
             </q-card-section>
 
@@ -117,11 +107,18 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, computed } from 'vue';
 import { useQuasar } from 'quasar'
 
 import { useFichaStore } from '../stores/ficha.js';
+import { useUsuariosStore } from '../stores/usuario.js';
 
+const { InfoUser } = useUsuariosStore();
+console.log(InfoUser);
+
+// Computed para garantizar la reactividad y mostrarlo en el template
+const nombreUser = computed(() => InfoUser[0]);
+const emailUser = computed(() => InfoUser[1]);
 const useFicha = useFichaStore();
 const dense = ref(false);
 const loadingCrearFicha = ref(false);
@@ -178,7 +175,53 @@ async function traer() {
   rows.value = res.data;
   console.log(res)
 }
+async function crearFicha() {
 
+  if (!nombre.value.trim() && !codigo.value.trim()) {
+
+    $q.notify({
+      color: 'negative',
+      icon: 'error',
+      message: 'No se pudo guardar la ficha'
+    });
+    return;
+  }
+  if (b.value === true) {
+    if (!id.value) {
+      console.error("ID de la ficha no está disponible");
+      return;
+    }
+
+    loadingState.value[`guardar-${id.value}`] = true;
+
+    try {
+      await useFicha.modificarFicha(id.value, codigo.value, nombre.value);
+      await traer();
+      fixed.value = false;
+      b.value = false;
+
+    } catch (error) {
+
+      console.error("Error al modificar la ficha:", error);
+    } finally {
+      loadingState.value[`guardar-${id.value}`] = false;
+    }
+  } else {
+    loadingState.value[`guardar-${id.value}`] = false;
+
+    try {
+      await useFicha.guardarFicha(codigo.value, nombre.value);
+      await traer();
+      fixed.value = false;
+
+    } catch (error) {
+
+      console.error("Error al guardar la ficha:", error);
+    } finally {
+      loadingState.value[`crear`] = false;
+    }
+  }
+}
 async function activar(id) {
   console.log("Activando ficha con ID:", id); // Verificar el ID
   if (!id) return; // Verificar que el ID no sea undefined
@@ -186,17 +229,9 @@ async function activar(id) {
   try {
     await useFicha.activarFicha(id);
     await traer();
-    $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Ficha Activa'
-      });
+
   } catch (error) {
-    $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al activar ficha'
-      });
+
     console.error("Error al activar la ficha:", error);
   } finally {
     loadingState.value[`activar-${id}`] = false;
@@ -210,17 +245,9 @@ async function desactivar(id) {
   try {
     await useFicha.desactivarFicha(id);
     await traer();
-    $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Ficha inactiva'
-      });
+
   } catch (error) {
-    $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al inactivar ficha'
-      });
+
     console.error("Error al desactivar la ficha:", error);
   } finally {
     loadingState.value[`desactivar-${id}`] = false;
@@ -229,111 +256,41 @@ async function desactivar(id) {
 
 
 
-async function crearFicha() {
-  if (!nombre.value.trim() && !codigo.value.trim()) {
-
-    $q.notify({
-      color: 'negative',
-      icon: 'error',
-      message: 'No se pudo guardar la ficha'
-    });
-    return;
-  }
-    if (b.value === true) {
-      if (!id.value) {
-        console.error("ID de la ficha no está disponible");
-        return;
-      }
-
-      loadingState.value[`guardar-${id.value}`] = true;
-
-      try {
-        await useFicha.modificarFicha(id.value, codigo.value, nombre.value);
-        await traer();
-        fixed.value = false;
-        b.value = false;
-        $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Ficha editada correctamente'
-      });
-      } catch (error) {
-        $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al editar la ficha'
-      });
-        console.error("Error al modificar la ficha:", error);
-      } finally {
-        loadingState.value[`guardar-${id.value}`] = false;
-      }
-    } else {
-      loadingState.value[`guardar-${id.value}`] = false;
-
-      try {
-        await useFicha.guardarFicha(codigo.value, nombre.value);
-        await traer();
-        fixed.value = false;
-        $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Ficha guardada correctamente'
-      });
-      } catch (error) {
-        $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al guardar la ficha'
-      });
-        console.error("Error al guardar la ficha:", error);
-      } finally {
-        loadingState.value[`crear`] = false;
-      }
-    }
-  }
 
 
-  const columns = [
-    {
-      name: 'numero',
-      required: true,
-      label: 'N°',
-      align: 'center',
-      field: row => rows.value.indexOf(row) + 1, // Esto te da el número de fila
-      sortable: true
-    },
-    {
-      name: 'codigo',
-      align: 'center',
-      label: 'Código',
-      field: 'codigo',
-      sortable: true
-    },
-    {
-      name: 'nombre',
-      align: 'center',
-      label: 'Nombre',
-      field: 'nombre',
-      sortable: true
-    },
-    {
-      name: 'estado',
-      align: 'center',
-      label: 'Estado',
-      field: 'estado',
-      sortable: true
-    },
-    {
-      name: 'opciones',
-      align: 'center',
-      label: 'Opciones'
-    },
-  ];
+const columns = [
+  {
+    name: 'codigo',
+    align: 'center',
+    label: 'Código',
+    field: 'codigo',
+    sortable: true
+  },
+  {
+    name: 'nombre',
+    align: 'center',
+    label: 'Nombre',
+    field: 'nombre',
+    sortable: true
+  },
+  {
+    name: 'estado',
+    align: 'center',
+    label: 'Estado',
+    field: 'estado',
+    sortable: true
+  },
+  {
+    name: 'opciones',
+    align: 'center',
+    label: 'Opciones'
+  },
+];
 
-  const leftDrawerOpen = ref(false);
-  function toggleLeftDrawer() {
-    leftDrawerOpen.value = !leftDrawerOpen.value;
-  }
+const leftDrawerOpen = ref(false);
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
 </script>
 
 <style scoped>
@@ -346,6 +303,21 @@ async function crearFicha() {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.large-avatar {
+  width: 110px;
+  /* Ancho del avatar */
+  height: 110px;
+  /* Alto del avatar */
+}
+
+.large-avatar img {
+  width: 100%;
+  /* La imagen ocupa todo el avatar */
+  height: 100%;
+  /* La imagen ocupa todo el avatar */
+}
+
 
 .custom-button {
   background-color: green;
@@ -364,6 +336,9 @@ async function crearFicha() {
 
 .custom-button:hover {
   background-color: darkgreen;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
 }
 
 .active-item {
@@ -393,5 +368,11 @@ async function crearFicha() {
 .negro {
   width: 30%;
   height: 30%;
+}
+
+.q-btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
 }
 </style>

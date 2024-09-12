@@ -71,7 +71,7 @@ const usuarioController = {
     },
     listarPorEmail: async (req, res) => {
         try {
-            const usuarios = await Usuario.findOne({email});
+            const usuarios = await Usuario.findOne({ email });
             res.json(usuarios);
         } catch (error) {
             console.error('Error al obtener los usuarios:', error);
@@ -122,43 +122,43 @@ const usuarioController = {
     },
 
 
- // Activar usuario
-activar: async (req, res) => {
-    const id = req.params.id;
-    try {
-        const usuarioActivo = await Usuario.findByIdAndUpdate(
-             id , 
-            { estado: 1 }, 
-            { new: true }
-        );
-        if (!usuarioActivo) {
-            return res.status(404).json({ msg: 'Usuario no encontrado' });
+    // Activar usuario
+    activar: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const usuarioActivo = await Usuario.findByIdAndUpdate(
+                id,
+                { estado: 1 },
+                { new: true }
+            );
+            if (!usuarioActivo) {
+                return res.status(404).json({ msg: 'Usuario no encontrado' });
+            }
+            res.json({ message: 'Usuario activado', usuario: usuarioActivo });
+        } catch (error) {
+            console.error('Error al activar al usuario:', error);
+            res.status(500).json({ error: 'Error al activar al usuario' });
         }
-        res.json({ message: 'Usuario activado', usuario: usuarioActivo });
-    } catch (error) {
-        console.error('Error al activar al usuario:', error);
-        res.status(500).json({ error: 'Error al activar al usuario' });
-    }
-},
+    },
 
-// Inactivar usuario
-inactivar: async (req, res) => {
-    const id = req.params.id;
-    try {
-        const usuarioInactivo = await Usuario.findByIdAndUpdate(
-             id , 
-            { estado: 0 }, 
-            { new: true }
-        );
-        if (!usuarioInactivo) {
-            return res.status(404).json({ msg: 'Usuario no encontrado' });
+    // Inactivar usuario
+    inactivar: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const usuarioInactivo = await Usuario.findByIdAndUpdate(
+                id,
+                { estado: 0 },
+                { new: true }
+            );
+            if (!usuarioInactivo) {
+                return res.status(404).json({ msg: 'Usuario no encontrado' });
+            }
+            res.json({ message: 'Usuario inactivado', usuario: usuarioInactivo });
+        } catch (error) {
+            console.error('Error al inactivar al usuario:', error);
+            res.status(500).json({ error: 'Error al inactivar al usuario' });
         }
-        res.json({ message: 'Usuario inactivado', usuario: usuarioInactivo });
-    } catch (error) {
-        console.error('Error al inactivar al usuario:', error);
-        res.status(500).json({ error: 'Error al inactivar al usuario' });
-    }
-},
+    },
 
 
     // Eliminar usuario

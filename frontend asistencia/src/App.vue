@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <router-view v-if="!isLoginPage" />
@@ -6,7 +5,7 @@
       <router-view />
     </div>
   </div>
-</template> 
+</template>
 
 <script>
 import { computed } from 'vue';

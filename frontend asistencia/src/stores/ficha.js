@@ -1,10 +1,13 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { useUsuariosStore } from './usuario.js';  // Importa la tienda
-const API_URL= 'https://asistencia-backend-31lj.onrender.com'
+import { useUsuariosStore } from './usuario.js';
+import { useQuasar } from 'quasar'
+
+const API_URL = 'https://asistencia-backend-31lj.onrender.com'
 
 export const useFichaStore = defineStore('ficha', () => {
     const usuariosStore = useUsuariosStore();  // Crea una instancia de la tienda de usuarios
+    const $q = useQuasar()
 
     const listarFicha = async () => {
         console.log(`Función listarAprendiz ejecutada`); // Para confirmar ejecución
@@ -40,9 +43,19 @@ export const useFichaStore = defineStore('ficha', () => {
                 }
             );
             console.log(r);
+            $q.notify({
+                color: 'positive',
+                icon: 'check',
+                message: 'Ficha guardada correctamente'
+            });
             return r;
         } catch (error) {
             console.log(error);
+            $q.notify({
+                color: 'negative',
+                icon: 'error',
+                message: 'Error al guardar la ficha'
+            });
             return error;
         }
     };
@@ -51,14 +64,24 @@ export const useFichaStore = defineStore('ficha', () => {
             const r = await axios.put(`${API_URL}/ficha/modificar/${id}`, {
                 codigo: codigo,
                 nombre: nombre
-            },  {
+            }, {
                 headers: {
                     "token": usuariosStore.token,
                 },
             });
+            $q.notify({
+                color: 'positive',
+                icon: 'check',
+                message: 'Ficha editada correctamente'
+            });
             console.log(r);
             return r;
         } catch (error) {
+            $q.notify({
+                color: 'negative',
+                icon: 'error',
+                message: 'Error al editar la ficha'
+            });
             throw error;
         }
     };
@@ -76,9 +99,19 @@ export const useFichaStore = defineStore('ficha', () => {
                 },
             });
             console.log(`Respuesta de activarficha:`, r);
+            $q.notify({
+                color: 'positive',
+                icon: 'check',
+                message: 'Ficha Activa'
+            });
             return r;
         } catch (error) {
             console.error('Error en activarficha:', error);
+            $q.notify({
+                color: 'negative',
+                icon: 'error',
+                message: 'Error al activar ficha'
+            });
             throw error;  // Vuelve a lanzar el error para manejarlo en el frontend
         }
     };
@@ -96,9 +129,19 @@ export const useFichaStore = defineStore('ficha', () => {
                 },
             });
             console.log(`Respuesta de desactivarficha:`, r);
+            $q.notify({
+                color: 'positive',
+                icon: 'check',
+                message: 'Ficha inactiva'
+            });
             return r;
         } catch (error) {
             console.error('Error en desactivarficha:', error);
+            $q.notify({
+                color: 'negative',
+                icon: 'error',
+                message: 'Error al inactivar ficha'
+            });
             throw error;  // Vuelve a lanzar el error para manejarlo en el frontend
         }
     };

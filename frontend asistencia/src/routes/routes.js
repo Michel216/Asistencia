@@ -7,17 +7,19 @@ import Usuario from '../components/Usuarios.vue';
 import Bitacora from '../components/bitacoras.vue';
 import RecuperarContraseña from '../components/recuperarContraseña.vue';
 import registroAprendiz from '../components/registroAprendiz.vue';
+import documentoPrevio from '../components/documentoPrevio.vue';
 
 
 const routes = [
   { path: '/', component: Login },
-  { path: '/home', component: Home,  },
-  { path: '/ficha', component: Ficha,  },
-  { path: '/usuario', component: Usuario,  },
-  { path: '/bitacora', component: Bitacora,  },
-  { path: '/aprendiz', component: Aprendiz,  },
+  { path: '/home', component: Home, },
+  { path: '/ficha', component: Ficha, },
+  { path: '/usuario', component: Usuario, },
+  { path: '/bitacora', component: Bitacora, },
+  { path: '/aprendiz', component: Aprendiz, },
   { path: '/recuperarContraseña', component: RecuperarContraseña },
-  { path: '/registro', component: registroAprendiz }
+  { path: '/registro', component: registroAprendiz },
+  { path: '/documento', component: documentoPrevio }
 ];
 
 export const router = createRouter({

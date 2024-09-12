@@ -21,8 +21,8 @@ const aprendizController = {
     listarTodos: async (req, res) => {
         try {
             const aprendices = await Aprendiz.find()
-            .populate({path: 'id_ficha'})
-            .exec()
+                .populate({ path: 'id_ficha' })
+                .exec()
             res.json(aprendices);
         } catch (error) {
             console.error('Error al obtener los aprendices:', error);
@@ -56,7 +56,7 @@ const aprendizController = {
         const id = req.params.id;
         const nuevosDatos = req.body;
         try {
-            const aprendizModificado = await Aprendiz.findByIdAndUpdate( id , nuevosDatos, { new: true });
+            const aprendizModificado = await Aprendiz.findByIdAndUpdate(id, nuevosDatos, { new: true });
             if (!aprendizModificado) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });
             }
@@ -71,7 +71,7 @@ const aprendizController = {
         try {
             const aprendizActivo = await Aprendiz.findByIdAndUpdate(
                 { _id: id }, // Filtro correcto para buscar por ID
-                { estado: 1 }, 
+                { estado: 1 },
                 { new: true }
             );
             if (!aprendizActivo) {
@@ -83,13 +83,13 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al activar al aprendiz' });
         }
     },
-    
+
     desactivar: async (req, res) => {
         const id = req.params.id; // Asegúrate de que la ruta esté configurada para recibir `id` en lugar de `_id`
         try {
             const aprendizInactivo = await Aprendiz.findByIdAndUpdate(
                 { _id: id }, // Filtro correcto para buscar por ID
-                { estado: 0 }, 
+                { estado: 0 },
                 { new: true }
             );
             if (!aprendizInactivo) {
@@ -101,7 +101,7 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al inactivar al aprendiz' });
         }
     }
-    
+
 };
 
 module.exports = aprendizController;

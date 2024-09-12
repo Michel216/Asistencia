@@ -19,7 +19,7 @@ fichaRouter.post('/',
     fichaController.crear
 );
 
-fichaRouter.put('/modificar/:id', 
+fichaRouter.put('/modificar/:id',
     [
         validarJWT,
         validarCampos
@@ -30,14 +30,14 @@ fichaRouter.put('/modificar/:id',
 // check('nombre', 'El nombre es obligatorio').optional().not().isEmpty(),
 
 // Activar una ficha - Se requiere JWT
-fichaRouter.put('/activar/:id', 
-    validarJWT, 
+fichaRouter.put('/activar/:id',
+    validarJWT,
     fichaController.activar,
     validarCampos);
 
 // Inactivar una ficha - Se requiere JWT
-fichaRouter.put('/desactivar/:id', 
-    validarJWT, 
+fichaRouter.put('/desactivar/:id',
+    validarJWT,
     fichaController.desactivar,
     validarCampos);
 

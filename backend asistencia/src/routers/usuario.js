@@ -16,25 +16,25 @@ usuarioRouter.post(
   ],
   usuarioController.crear
 );
-usuarioRouter.post('/login', 
+usuarioRouter.post('/login',
   [
-      check('email', 'El correo es obligatorio').isEmail(),
-      check('password', 'La contraseña es obligatoria').not().isEmpty(),
-      validarCampos
-  ], 
+    check('email', 'El correo es obligatorio').isEmail(),
+    check('password', 'La contraseña es obligatoria').not().isEmpty(),
+    validarCampos
+  ],
   usuarioController.login
 );
-usuarioRouter.get('/listarPorCorreo/:email', 
+usuarioRouter.get('/listarPorCorreo/:email',
   [
-      check('email', 'El correo es obligatorio').isEmail(),
-      validarCampos
-  ], 
+    check('email', 'El correo es obligatorio').isEmail(),
+    validarCampos
+  ],
   usuarioController.login
 );
 
 usuarioRouter.get('/', [
   validarJWT,
-   validarCampos], usuarioController.listarTodos);
+  validarCampos], usuarioController.listarTodos);
 
 usuarioRouter.put(
   '/modificar/:id',
@@ -55,8 +55,8 @@ usuarioRouter.put(
   usuarioController.cambiarContrasena
 );
 
-usuarioRouter.put('/activar/:id', validarJWT,validarCampos , usuarioController.activar);
-usuarioRouter.put('/desactivar/:id', [validarJWT,validarCampos ], usuarioController.inactivar);
+usuarioRouter.put('/activar/:id', validarJWT, validarCampos, usuarioController.activar);
+usuarioRouter.put('/desactivar/:id', [validarJWT, validarCampos], usuarioController.inactivar);
 
 
 

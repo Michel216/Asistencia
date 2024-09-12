@@ -15,13 +15,17 @@
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <br>
       <div class="avatar-container">
-        <q-avatar>
-          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil " />
+        <q-avatar class="large-avatar">
+          <img class="per" src="/imagenes/usuario.png" alt="perfil " />
         </q-avatar>
+      </div>
+      <div style="text-align: center; margin-top: 10px;">
+        <p style="margin: 0;"> <strong>{{ nombreUser }}</strong></p>
+        <p style="margin: 0;"> {{ emailUser }}</p>
       </div>
       <q-list>
         <br>
-        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" exact-active-class="active-item"
+        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
           class="custom-button">
           <q-item-section avatar>
             <q-icon :name="item.icon" class="icon" />
@@ -36,13 +40,14 @@
       </q-list>
       <br>
       <div class="logon">
-        <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+        <img class="negro" src="/imagenes/snegr.png" alt="">
       </div>
     </q-drawer>
 
     <q-page-container>
       <div class="aprendices-container q-pa-md">
         <h3 class="title-table">Aprendices</h3>
+        <hr id="hr" class="bg-green-9">
         <div class="q-pa-md">
           <div style="display: flex; justify-content: end; ">
             <q-btn class="agregar" @click="abrirModal()" :loading="loadingCrearAprendiz">
@@ -75,29 +80,20 @@
                 {{ props.row.id_ficha ? props.row.id_ficha.codigo : 'No disponible' }}
               </q-td>
             </template>
+            <template v-slot:body-cell-fichaNombre="props">
+              <q-td :props="props">
+                {{ props.row.id_ficha ? props.row.id_ficha.nombre : 'No disponible' }}
+              </q-td>
+            </template>
             <template v-slot:body-cell-opciones="props">
               <q-td :props="props">
-                <q-td :props="props">
-                  <q-btn flat icon="edit" @click="abrirModal(props.row)" :loading="loadingState[`guardar-${props.row._id}`]" />
-<q-btn @click="desactivar(props.row._id)" 
-  flat
-  dense
-  icon="cancel"
-  v-if="props.row.estado == 1"
-  color="red"
-  :loading="loadingState[`desactivar-${props.row._id}`]"
-/>
-<q-btn @click="activar(props.row._id)"
-  flat
-  dense
-  icon="check_circle"
-  v-else
-  color="green"
-  :loading="loadingState[`activar-${props.row._id}`]"
-/>
-
-                </q-td>
-                </q-td>
+                <q-btn flat icon="edit" @click="abrirModal(props.row)"
+                  :loading="loadingState[`guardar-${props.row._id}`]" />
+                <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
+                  color="red" :loading="loadingState[`desactivar-${props.row._id}`]" />
+                <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else color="green"
+                  :loading="loadingState[`activar-${props.row._id}`]" />
+              </q-td>
             </template>
             <template v-slot:body-cell-estado1="props">
               <q-td :props="props">
@@ -107,72 +103,80 @@
             </template>
           </q-table>
 
-
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
-      transition-hide="rotate" persistent>
-      <q-card>
-        <q-card-section>
-          <div class="text-h6" v-if="b === true">Editar Aprendiz</div>
-          <div class="text-h6" v-else>Guardar Aprendiz</div>
-        </q-card-section>
+            transition-hide="rotate" persistent>
+            <q-card>
+              <q-card-section>
+                <div class="text-h6" v-if="b">Editar Aprendiz</div>
+                <div class="text-h6" v-else>Guardar Aprendiz</div>
+              </q-card-section>
 
-        <q-separator />
+              <q-separator />
 
-        <q-card-section style="max-height: 100vh; max-width: 70vh" class="scroll">
-          <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
-            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']" />
-            
-          <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
-            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']" />
-           
-          <q-input filled v-model="telefono" label="Telefono Del Aprendiz" :dense="dense"
-            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono',
-                    val => val.trim().length === 10 || 'Ingrese un teléfono valido']" />
+              <q-card-section style="max-height: 100vh; max-width: 90vh" class="scroll">
+                <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']" />
 
-          <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
-            :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']" />
-          <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-            :options="options" @filter="filterFn" style="width: 250px" behavior="menu" emit-value map-options
-            lazy-rules :rules="[
-              (val) => {
-                if (change === false) {
-                  return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
-                } else { return true }
-              }
-            ]">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </q-card-section>
+                <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']" />
 
-        <q-separator />
+                <q-input filled v-model="telefono" label="Telefono Del Aprendiz" :dense="dense" :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono',
+                val => val.trim().length === 10 || 'Ingrese un teléfono valido']" />
 
-        <q-card-actions align="right">
-          <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-          <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()"
-            :loading="loadingGuardarAprendiz" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>        </div>
+                <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']" />
+                <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
+                  :options="options" @filter="filterFn" style="width: 250px" behavior="menu" emit-value map-options
+                  lazy-rules :rules="[
+                    (val) => {
+                      if (b.value === false) {
+                        return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
+                      } else { return true }
+                    }
+                  ]">
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </q-card-section>
+
+              <q-separator />
+
+              <q-card-actions align="right">
+                <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
+                <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()"
+                  :loading="loadingGuardarAprendiz" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </div>
       </div>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAprendizStore } from '../stores/aprendiz.js'
 import { useFichaStore } from '../stores/ficha.js'
 import { useRoute } from 'vue-router'
+import { useUsuariosStore } from '../stores/usuario.js';
 
 const route = useRoute()
-const $q = useQuasar()
+const $q = useQuasar();
+
+
+const { InfoUser } = useUsuariosStore();
+console.log(InfoUser);
+
+// Computed para garantizar la reactividad y mostrarlo en el template
+const nombreUser = computed(() => InfoUser[0]);
+const emailUser = computed(() => InfoUser[1]);
 
 const menuItems = [
   { label: 'Home', path: '/home', icon: 'home' },
@@ -224,7 +228,7 @@ async function abrirModal(row = null) {
     nombre.value = row.nombre || ''
     telefono.value = row.telefono || ''
     email.value = row.email || ''
-    ficha.value =  row.id_ficha._id || ''
+    ficha.value = row.id_ficha ? row.id_ficha._id : ''
     b.value = true
   } else {
     id.value = ''
@@ -251,65 +255,6 @@ async function traer() {
   }
 }
 
-async function activar(id) {
-  if (id) {
-    loadingState.value[`activar-${id}`] = true
-    try {
-      await useAprendiz.activarAprendiz(id);
-      await traer();
-      $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Aprendiz activo'
-      });
-    } catch (error) {
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al activar aprendiz'
-      });
-      console.error('Error al activar:', error);
-    } finally {
-      loadingState.value[`activar-${id}`] = false
-    }
-  } else {
-    console.error('ID no proporcionado para activar');
-  }
-}
-
-async function desactivar(id) {
-  if (id) {
-    loadingState.value[`desactivar-${id}`] = true
-    try {
-      await useAprendiz.desactivarAprendiz(id);
-      await traer();
-      $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Aprendiz inactivo'
-      });
-    } catch (error) {
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al inactivar aprendiz'
-      });
-      console.error('Error al desactivar:', error);
-    } finally {
-      loadingState.value[`desactivar-${id}`] = false
-    }
-  } else {
-    console.error('ID no proporcionado para desactivar');
-  }
-}
-async function traerFichas() {
-  let res = await useFicha.listarFicha();
-  options.value = res.data.map(ficha => ({
-      label: ficha.codigo,
-      value: ficha._id
-  }));
-
-}
 async function crearAprendiz() {
   if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value) {
     $q.notify({
@@ -329,21 +274,14 @@ async function crearAprendiz() {
     loadingState.value[`guardar-${id.value}`] = true;
     try {
       await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value);
-      await traer();  // Actualizar la lista de aprendices
+      traer()
+
       fixed.value = false;
       b.value = false;
-      $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Aprendiz editado correctamente'
-      });
+
     } catch (error) {
       console.error("Error al modificar el Aprendiz:", error);
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al editar el aprendiz'
-      });
+
     } finally {
       loadingState.value[`guardar-${id.value}`] = false;
     }
@@ -353,22 +291,57 @@ async function crearAprendiz() {
       await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value);
       await traer();  // Actualizar la lista de aprendices
       fixed.value = false;
-      $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Aprendiz guardado correctamente'
-      });
+
     } catch (error) {
       console.error("Error al guardar el aprendiz:", error);
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al guardar el aprendiz'
-      });
+
     } finally {
       loadingState.value['guardar-nuevo'] = false;
     }
   }
+}
+async function activar(id) {
+  if (id) {
+    loadingState.value[`activar-${id}`] = true
+    try {
+      await useAprendiz.activarAprendiz(id);
+      await traer();
+
+    } catch (error) {
+
+      console.error('Error al activar:', error);
+    } finally {
+      loadingState.value[`activar-${id}`] = false
+    }
+  } else {
+    console.error('ID no proporcionado para activar');
+  }
+}
+
+async function desactivar(id) {
+  if (id) {
+    loadingState.value[`desactivar-${id}`] = true
+    try {
+      await useAprendiz.desactivarAprendiz(id);
+      await traer();
+
+    } catch (error) {
+
+      console.error('Error al desactivar:', error);
+    } finally {
+      loadingState.value[`desactivar-${id}`] = false
+    }
+  } else {
+    console.error('ID no proporcionado para desactivar');
+  }
+}
+async function traerFichas() {
+  let res = await useFicha.listarFicha();
+  options.value = res.data.map(ficha => ({
+    label: ficha.codigo,
+    value: ficha._id
+  }));
+
 }
 
 
@@ -431,6 +404,13 @@ const columns = [
     sortable: true
   },
   {
+    name: 'fichaNombre',
+    align: 'center',
+    label: 'Nombre de la Ficha',
+    field: 'id_ficha',
+    sortable: true
+  },
+  {
     name: 'estado1',
     align: 'center',
     label: 'Estado',
@@ -447,6 +427,11 @@ const columns = [
 
 
 <style>
+.q-drawer {
+  overflow-y: auto !important;
+  /* Asegura que el contenido del drawer permita scroll */
+}
+
 .custom-button {
   background-color: green;
   border-radius: 10px;
@@ -490,6 +475,20 @@ const columns = [
   max-height: 110%;
 }
 
+.large-avatar {
+  width: 110px;
+  /* Ancho del avatar */
+  height: 110px;
+  /* Alto del avatar */
+}
+
+.large-avatar img {
+  width: 100%;
+  /* La imagen ocupa todo el avatar */
+  height: 100%;
+  /* La imagen ocupa todo el avatar */
+}
+
 .logon {
   display: flex;
   justify-content: center;
@@ -503,7 +502,14 @@ const columns = [
 
 .title-table {
   text-align: center;
+  margin-bottom: 0
+}
 
+.bg-green-9 {
+  color: green;
+  width: 70%;
+  height: 3.5px;
+  border-radius: 10px;
 }
 
 .agregar {
@@ -528,10 +534,15 @@ const columns = [
   margin: 0 auto;
 }
 
-.text-h6{
-font-weight: bold;
-align-content: center;
-text-align: center;
+.text-h6 {
+  font-weight: bold;
+  align-content: center;
+  text-align: center;
 }
 
+.q-btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
+}
 </style>

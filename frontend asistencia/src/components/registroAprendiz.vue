@@ -3,9 +3,9 @@
     <div class="form-card">
       <div class="form-header">
         <q-btn dense flat round icon="arrow_back" @click="goHome" class="back-button" />
-        <img src="../../public/imagenes/simg.png" alt="Logo SENA" />
+        <img src="/imagenes/simg.png" alt="Logo SENA" />
       </div>
-      <h5>Registro de Asistencia</h5>
+      <h5><strong>Registro de Asistencia</strong></h5>
       <q-form @submit.prevent="handleSubmit">
         <div class="form-group">
           <q-select filled v-model="model" use-input input-debounce="0" label="Escribe tu documento" :options="options"
@@ -35,7 +35,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
-import { useAsistenciaStore } from '../stores/registroAprendiz.js';
+import { useBitacoraStore } from '../stores/bitacora.js';
 import { useAprendizStore } from '../stores/aprendiz.js';
 import { useRoute, useRouter } from 'vue-router'
 const router = useRouter()
@@ -45,7 +45,7 @@ const model = ref(null);
 const options = ref([]);
 const isLoading = ref(false);
 
-const useAsistencia = useAsistenciaStore();
+const useBitacora = useBitacoraStore();
 const useAprendiz = useAprendizStore();
 
 const filterFn = async (val, update) => {
@@ -75,35 +75,19 @@ const handleSubmit = async () => {
 
     try {
       // Enviar solo el valor (ObjectId)
-      const creado = await useAsistencia.crear(model.value.value, new Date().toISOString());
+      const creado = await useBitacora.crear(model.value.value, new Date().toISOString());
 
       // Revisa si la respuesta contiene los datos esperados
-      if (creado && creado.data && !creado.data.error) { // Verifica que no haya un error en los datos de respuesta
-        console.log('creado', creado);
-        $q.notify({
-          type: 'positive',
-          message: 'Asistencia registrada con éxito',
-        });
+      console.log('creado', creado);
 
-        // Actualizar la tabla o cualquier otro estado necesario
-        await fetchRegistros();
 
-        model.value = null;
-      } else {
-        // Maneja el caso en que haya un error en la respuesta
-        console.error('Error al registrar la asistencia:', creado.data.error || 'Error inesperado');
-        $q.notify({
-          type: 'negative',
-          message: creado.data.error || 'Error al registrar la asistencia',
-        });
-      }
+      // Actualizar la tabla o cualquier otro estado necesario
+      await fetchRegistros();
 
+      model.value = null;
     } catch (error) {
       console.error('Error al registrar la asistencia:', error);
-      $q.notify({
-        type: 'negative',
-        message: 'Error al registrar la asistencia',
-      });
+
     } finally {
       isLoading.value = false;
     }
@@ -117,8 +101,8 @@ const handleSubmit = async () => {
 
 const fetchRegistros = async () => {
   try {
-    const res = await useAsistencia.listarTodos();
-    rows.value = res.data ;
+    const res = await useBitacora.listarTodos();
+    rows.value = res.data;
   } catch (error) {
     console.error('Error al listar registros:', error);
   }
@@ -161,7 +145,7 @@ const goHome = () => {
   width: 100%;
   padding: 10px 0;
   position: relative;
-  border-radius: 10px 10px 0px 0px ;
+  border-radius: 10px 10px 0px 0px;
 
 }
 
@@ -177,7 +161,7 @@ h5 {
 
 .form-group {
   margin: 30px 75px;
-width: 100%;
+  width: 100%;
   align-items: center;
 }
 
@@ -202,6 +186,10 @@ width: 100%;
 .submit-button:hover {
   background-color: darkgreen;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
+
 }
 
 .submit-button:disabled {
@@ -220,7 +208,9 @@ width: 100%;
 }
 
 .back-button:hover {
-  color: lightgreen;
-  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
+
 }
 </style>

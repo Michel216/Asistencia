@@ -15,19 +15,18 @@
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <br>
       <div class="avatar-container">
-        <q-avatar>
-          <img class="per" src="../../public/imagenes/usuario.png" alt="perfil" />
+        <q-avatar class="large-avatar">
+          <img class="per" src="/imagenes/usuario.png" alt="perfil" />
         </q-avatar>
+      </div>
+      <div style="text-align: center; margin-top: 10px;">
+        <p style="margin: 0;"> <strong>{{ nombreUser }}</strong></p>
+        <p style="margin: 0;"> {{ emailUser }}</p>
       </div>
       <q-list>
         <br>
-        <q-item 
-          v-for="item in menuItems" 
-          :key="item.label" 
-          :to="item.path" 
-          active-class="active-item" 
-          class="custom-button"
-        >
+        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
+          class="custom-button">
           <q-item-section avatar>
             <q-icon :name="item.icon" class="icon" />
           </q-item-section>
@@ -41,50 +40,29 @@
       </q-list>
       <br>
       <div class="logon">
-        <img class="negro" src="../../public/imagenes/snegr.png" alt="">
+        <img class="negro" src="/imagenes/snegr.png" alt="">
       </div>
     </q-drawer>
 
     <q-page-container>
       <div class="usuarios-container q-pa-md">
-        <h4 class="text-center">Usuarios</h4>
-
+        <h3 class="title-table">Usuarios</h3>
+        <hr id="hr" class="bg-green-9">
         <div class="q-pa-md">
-          <div style="display: flex; justify-content: end;">
-            <q-btn 
-              @click="abrirModal()" 
-              color="green" 
-              label="Agregar Usuario" 
-              :loading="loadingCrearUsuario"
-            />
+          <div style="display: flex; justify-content: end; ">
+            <q-btn @click="abrirModal()"
+              style="background-color: green; color: white; margin:10px 0 20px 0; width: 160px" label="Agregar Usuario"
+              :loading="loadingCrearUsuario" />
           </div>
           <q-table title="Usuarios" :rows="rows" :columns="columns" row-key="email">
             <template v-slot:body-cell-opciones="props">
               <q-td :props="props">
-                <q-btn 
-                  flat 
-                  icon="edit" 
-                  @click="abrirModal(props.row)" 
-                  :loading="loadingState[`guardar-${props.row._id}`]"
-                />
-                <q-btn 
-                  @click="desactivar(props.row.email)" 
-                  flat 
-                  dense 
-                  icon="cancel" 
-                  v-if="props.row.estado == 1" 
-                  color="red" 
-                  :loading="loadingState[`desactivar-${props.row._id}`]"
-                />
-                <q-btn 
-                  @click="activar(props.row.email)" 
-                  flat 
-                  dense 
-                  icon="check_circle" 
-                  v-else 
-                  color="green" 
-                  :loading="loadingState[`activar-${props.row._id}`]"
-                />
+                <q-btn flat icon="edit" @click="abrirModal(props.row)"
+                  :loading="loadingState[`guardar-${props.row._id}`]" />
+                <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
+                  color="red" :loading="loadingState[`desactivar-${props.row._id}`]" />
+                <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else color="green"
+                  :loading="loadingState[`activar-${props.row._id}`]" />
               </q-td>
             </template>
             <template v-slot:body-cell-estado1="props">
@@ -105,30 +83,27 @@
 
               <q-separator />
 
-              <q-card-section style="max-height: 50vh" class="scroll">
-                <q-input filled v-model="email" label="Código del Usuario" :dense="dense" />
-                <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" />
-                <q-input 
-                  v-if="!b" 
-                  filled 
-                  v-model="password" 
-                  type="password" 
-                  label="Contraseña" 
-                  :dense="dense" 
-                />
+              <q-card-section style="max-height: 80vh" class="scroll">
+                <q-input filled v-model="email" label="Email del Usuario" :dense="dense" lazy-rules
+                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']" />
+                <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" lazy-rules
+                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']" />
+                <q-input v-if="!b" :type="isPwd ? 'password' : 'text'" filled v-model="password" label="Contraseña"
+                  lazy-rules :rules="[
+                    val => val && val.trim() >= 6 || 'La contraseña debe tener al menos 6 caracteres'
+                  ]">
+                  <template v-slot:append>
+                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                      @click="isPwd = !isPwd" />
+                  </template>
+                </q-input>
               </q-card-section>
 
               <q-separator />
 
               <q-card-actions align="right">
                 <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-                <q-btn 
-                  flat 
-                  label="Guardar" 
-                  color="primary" 
-                  @click="crearUsuario()"
-                  :loading="loadingCrearUsuario"
-                />
+                <q-btn flat label="Guardar" color="primary" @click="crearUsuario()" :loading="loadingCrearUsuario" />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -141,7 +116,7 @@
 
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useUsuariosStore } from '../stores/usuario.js'
 
@@ -153,6 +128,13 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
+const { InfoUser } = useUsuariosStore();
+console.log(InfoUser);
+
+// Computed para garantizar la reactividad y mostrarlo en el template
+const nombreUser = computed(() => InfoUser[0]);
+const emailUser = computed(() => InfoUser[1]);
+
 const useUsuario = useUsuariosStore();
 const $q = useQuasar();
 const fixed = ref(false);
@@ -160,7 +142,7 @@ const email = ref("");
 const nombre = ref("");
 const password = ref(""); // Agrega esta línea
 const b = ref(false);
-
+const isPwd = ref(true);
 const selectedId = ref(""); // Almacena el ID del Usuario seleccionado
 const rows = ref([]);
 
@@ -172,12 +154,12 @@ const route = useRoute()
 const router = useRouter()
 
 const menuItems = [
-  { label: 'Home', path: '/home', icon: 'home' },            
-  { label: 'Aprendices', path: '/aprendiz', icon: 'school' }, 
-  { label: 'Bitacora', path: '/bitacora', icon: 'library_books' }, 
-  { label: 'Fichas', path: '/ficha', icon: 'folder' },       
-  { label: 'Usuarios', path: '/usuario', icon: 'people' },  
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' } 
+  { label: 'Home', path: '/home', icon: 'home' },
+  { label: 'Aprendices', path: '/aprendiz', icon: 'school' },
+  { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
+  { label: 'Fichas', path: '/ficha', icon: 'folder' },
+  { label: 'Usuarios', path: '/usuario', icon: 'people' },
+  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 
 function isActiveRoute(path) {
@@ -239,7 +221,7 @@ async function desactivar(id) {
   } catch (error) {
     console.error("Error al desactivar usuario:", error);
   } finally {
-    loadingState.value[`desactivar-${id}`]= false;
+    loadingState.value[`desactivar-${id}`] = false;
   }
 }
 
@@ -253,7 +235,7 @@ async function crearUsuario() {
     });
     return; // Detiene la ejecución si los campos están vacíos
   }
-  if (b.value === true) { // Editar
+  if (b.value) { // Editar
     if (!selectedId.value) {
       console.error("ID del Usuario no está disponible");
       return;
@@ -265,18 +247,10 @@ async function crearUsuario() {
       await traer();
       fixed.value = false;
       b.value = false;
-      $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Usuario editado correctamente'
-      });
+
     } catch (error) {
       console.error("Error al modificar el Usuario:", error);
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al editar el usuario'
-      });
+
     } finally {
       loadingState.value[`guardar-${selectedId.value}`] = false;
     }
@@ -285,18 +259,10 @@ async function crearUsuario() {
     try {
       await useUsuario.guardarUsuario(email.value, nombre.value, password.value);
       await traer();
-      $q.notify({
-        color: 'positive',
-        icon: 'check',
-        message: 'Usuario guardado correctamente'
-      });
+
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Error al guardar el usuario'
-      });
+
     } finally {
       loadingState.value['guardar-nuevo'] = false;
     }
@@ -345,6 +311,21 @@ const columns = [
   margin: 0 auto;
 }
 
+.large-avatar {
+  width: 110px;
+  /* Ancho del avatar */
+  height: 110px;
+  /* Alto del avatar */
+}
+
+.large-avatar img {
+  width: 100%;
+  /* La imagen ocupa todo el avatar */
+  height: 100%;
+  /* La imagen ocupa todo el avatar */
+}
+
+
 .custom-button {
   text-decoration: none;
   background-color: green;
@@ -382,5 +363,22 @@ const columns = [
 
 .button-text {
   color: white;
+}
+
+.title-table {
+  margin-bottom: 0
+}
+
+.bg-green-9 {
+  color: green;
+  width: 70%;
+  height: 3.5px;
+  border-radius: 10px;
+}
+
+.q-btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+
 }
 </style>

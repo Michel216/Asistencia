@@ -40,26 +40,26 @@ const fichaController = {
 
     },
 
-        activar: async (req, res) => {
-            const id = req.params.id;
-            try {
-                const fichaActiva = await Ficha.findByIdAndUpdate( id , { estado: 1 }, { new: 1 });
-                res.json({ message: 'Ficha activada', fichaActiva });
-            } catch (error) {
-                console.error('Error al activar la ficha:', error);
-                res.status(500).json({ error: 'Error al activar la ficha' });
-            }
-        },
-            desactivar: async (req, res) => {
-                const id = req.params.id;
-                try {
-                    const fichaInactiva = await Ficha.findByIdAndUpdate( id , { estado: 0 }, { new: 1 });
-                    res.json({ message: 'Ficha inactivada', fichaInactiva });
-                } catch (error) {
-                    console.error('Error al inactivar la ficha:', error);
-                    res.status(500).json({ error: 'Error al inactivar la ficha' });
-                }
-            }
-    };
+    activar: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const fichaActiva = await Ficha.findByIdAndUpdate(id, { estado: 1 }, { new: 1 });
+            res.json({ message: 'Ficha activada', fichaActiva });
+        } catch (error) {
+            console.error('Error al activar la ficha:', error);
+            res.status(500).json({ error: 'Error al activar la ficha' });
+        }
+    },
+    desactivar: async (req, res) => {
+        const id = req.params.id;
+        try {
+            const fichaInactiva = await Ficha.findByIdAndUpdate(id, { estado: 0 }, { new: 1 });
+            res.json({ message: 'Ficha inactivada', fichaInactiva });
+        } catch (error) {
+            console.error('Error al inactivar la ficha:', error);
+            res.status(500).json({ error: 'Error al inactivar la ficha' });
+        }
+    }
+};
 
-    module.exports = fichaController;
+module.exports = fichaController;

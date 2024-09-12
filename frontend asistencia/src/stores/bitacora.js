@@ -2,12 +2,15 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUsuariosStore } from './usuario.js';  // Importa la tienda
 import { ref } from 'vue';
-const API_URL= 'https://asistencia-backend-31lj.onrender.com'
+import { useQuasar } from 'quasar'; // Importa useQuasar para notificaciones
 
+const API_URL = 'https://asistencia-backend-31lj.onrender.com';
 
 export const useBitacoraStore = defineStore('bitacora', () => {
   const usuariosStore = useUsuariosStore();
+  const $q = useQuasar(); // Usa useQuasar para acceder a $q
   const rows = ref([]);
+
   const crear = async (id_aprendiz, fecha) => {
     if (!usuariosStore.token) {
       console.error('Token no definido en usuariosStore');
@@ -22,21 +25,30 @@ export const useBitacoraStore = defineStore('bitacora', () => {
         headers: {
           "token": usuariosStore.token,  // Accede al token desde la tienda
         }
-      })
+      });
       console.log(r);
+      $q.notify({
+        type: 'positive',
+        message: 'Asistencia registrada con éxito',
+        icon: 'check'
+      });
       return r;
     } catch (error) {
       console.log(error);
+      $q.notify({
+        type: 'negative',
+        message: 'Error al registrar la asistencia',
+        icon: 'error'
+      });
       return error;
     }
   };
 
   const listarTodos = async () => {
-    console.log(`Función listarAprendiz ejecutada`); // Para confirmar ejecución
-    console.log(`Token actual:`, usuariosStore.token); // Verifica el token
+
     try {
       if (!usuariosStore.token) {
-        console.error(`Token no definido en usuariosStore`);
+        console.error('Token no definido en usuariosStore');
         return;
       }
 
@@ -46,46 +58,45 @@ export const useBitacoraStore = defineStore('bitacora', () => {
         },
       });
 
-      console.log(`Respuesta:`, r);
+      console.log('Respuesta:', r);
       return r;
     } catch (error) {
-      console.error(`Error al listar aprendices:`, error);
+      console.error('Error al listar datos:', error);
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al traer los datos.',
+      });
       return error;
     }
   };
-  // Actualizar el estado de un registro en el backend
-
-
 
   const updateEstado = async (id, estado) => {
-    console.log("id:", id, "estado:",estado)
+    console.log("id:", id, "estado:", estado);
+
     try {
-        const response = await axios.put(`${API_URL}/bitacora/${id}`, { estado }, {
-            headers: { 'token': usuariosStore.token }
-        });
-        return response.data;
+      const response = await axios.put(`${API_URL}/bitacora/${id}`, { estado }, {
+        headers: { 'token': usuariosStore.token }
+      });
+      $q.notify({
+        color: 'positive',
+        icon: 'check',
+        message: 'Estado actualizado correctamente.',
+        timeout: 900
+      });
+      return response;
     } catch (error) {
-        if (error.response) {
-            // Mostrar información detallada del error
-            console.error('Error en la respuesta del servidor:', error.response.data);
-            console.error('Código de estado:', error.response.status);
-            console.error('Headers:', error.response.headers);
-        } else if (error.request) {
-            // La solicitud se hizo, pero no hubo respuesta
-            console.error('No se recibió respuesta del servidor:', error.request);
-        } else {
-            // Error al configurar la solicitud
-            console.error('Error al configurar la solicitud:', error.message);
-        }
-        throw error;
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al actualizar el estado.',
+        timeout: 900
+      });
+      return error;
     }
-};
-
-
-
+  };
 
   return {
     rows, crear, updateEstado, listarTodos
   };
-})
-
+});
