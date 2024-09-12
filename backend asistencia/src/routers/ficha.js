@@ -7,7 +7,7 @@ const { validarJWT } = require('../middlewares/validarJWT');
 const fichaRouter = express.Router();
 
 // Listar todas las fichas - No se requiere JWT para esta ruta
-fichaRouter.get('/'
+fichaRouter.get('/',
     [
         validarJWT,
         validarCampos
