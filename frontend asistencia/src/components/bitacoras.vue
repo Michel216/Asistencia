@@ -119,7 +119,6 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useAsistenciaStore } from '../stores/registroAprendiz.js';
 import { useBitacoraStore } from '../stores/bitacora.js';
 import { Notify } from 'quasar';
 import { useUsuariosStore } from '../stores/usuario.js';
