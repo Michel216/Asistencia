@@ -5,7 +5,7 @@ const bitacoraSchema = new mongoose.Schema({
   fecha: { type: Date, default: Date.now },
     estado: {
       type: String,
-      enum: ['No Asistió ', 'Asistió', 'Excusa', 'Pendiente'],
+      enum: ['No Asistió', 'Asistió', 'Excusa', 'Pendiente'],
       default: 'Pendiente' // Estado predeterminado
     },
   

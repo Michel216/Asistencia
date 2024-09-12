@@ -179,7 +179,7 @@ inactivar: async (req, res) => {
     // Cambiar contraseña
     cambiarContrasena: async (req, res) => {
         const { email } = req.params;
-        const { password, newPassword } = req.body;
+        const { newPassword } = req.body;
 
         try {
             // Encontrar usuario por email
@@ -190,12 +190,6 @@ inactivar: async (req, res) => {
                 return res.status(404).json({ msg: 'Usuario no encontrado' });
             }
 
-            // Verificar si la contraseña actual coincide
-            const isMatch = compararPassword(password, usuario.password);
-
-            if (!isMatch) {
-                return res.status(400).json({ msg: 'La contraseña actual no es válida' });
-            }
 
             // Encriptar nueva contraseña
             const hashedPassword = encriptarPassword(newPassword);

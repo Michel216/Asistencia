@@ -48,6 +48,7 @@ usuarioRouter.put(
 usuarioRouter.put(
   '/cambiarContrasena/:email',
   [
+    check('email', 'El correo es obligatorio').isEmail(),
     check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({ min: 6 }),
     validarCampos,
   ],
