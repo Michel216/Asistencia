@@ -155,6 +155,11 @@
           </q-dialog>
         </div>
       </div>
+      <div class="footer">
+          <div class="text-h7 text-weight-bold">
+              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+          </div>
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -544,5 +549,14 @@ const columns = [
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
 
+}
+.footer {
+  background-color: #e7e3e3; /* Color de fondo del pie de página */
+  color: #000; /* Color del texto del pie de página */
+  margin-bottom: 0;
+  width: 100%;
+  height: 45px;
+  align-content: center;
+text-align: center;
 }
 </style>

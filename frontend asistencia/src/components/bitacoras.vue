@@ -4,7 +4,7 @@
     <q-header elevated class="bg-green text-white">
       <q-toolbar style="background-color: green;">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>Bitacoras</q-toolbar-title>
+        <q-toolbar-title>Asistencia</q-toolbar-title>
         <q-item to="/" active-class="q-item--active" class="salida">
           <q-item-section avatar>
             <q-btn dense flat round icon="logout" />
@@ -107,6 +107,11 @@
             </q-td>
           </template>
         </q-table>
+      </div>
+      <div class="footer">
+          <div class="text-h7 text-weight-bold">
+              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+          </div>
       </div>
     </q-page-container>
   </q-layout>
@@ -369,5 +374,16 @@ onMounted(() => {
 .q-table__header th:last-child {
   border-right: 1px solid #ddd;
   /* Borde derecho del encabezado */
+}
+.footer {
+  background-color: #e7e3e3; /* Color de fondo del pie de página */
+  color: #000; /* Color del texto del pie de página */
+  margin-bottom: 0;
+  width: 100%;
+  height: 45px;
+  position: sta;
+  bottom: 0;
+  align-content: center;
+text-align: center;
 }
 </style>
