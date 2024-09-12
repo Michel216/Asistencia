@@ -38,7 +38,7 @@ const bitacoraController = {
             res.status(500).json({ error: 'Error al obtener las bitacoras' });
         }
     },
-    listarPorFichaYFecha = async (req, res) => {
+    listarPorFichaYFecha : async (req, res) => {
         try {
             const { idFicha, fecha } = req.body; // Extrae los parámetros desde el cuerpo de la solicitud
 
