@@ -47,7 +47,7 @@ bitacoraRouter.post('/listarFicha',
 bitacoraRouter.post('/listarFichaHora', [
     validarJWT,
     check('idFicha', 'El idFicha es obligatorio').isMongoId(),
-    check('fecha', 'La fecha es obligatoria').isISO8601(),
+    check('fecha', 'La fecha es obligatoria').notEmpty(),
     validarCampos
 ], bitacoraController.listarPorFichaYFecha);
 
