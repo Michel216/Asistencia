@@ -38,6 +38,43 @@ const bitacoraController = {
             res.status(500).json({ error: 'Error al obtener las bitacoras' });
         }
     },
+    listarPorFichaYFecha: async (req, res) => {
+        try {
+            const { idFicha, fecha } = req.body; // Extrae los parámetros desde el cuerpo de la solicitud
+    
+            if (!idFicha || !fecha) {
+                return res.status(400).json({ error: 'Debe proporcionar un idFicha y una fecha' });
+            }
+    
+            const fechaInicio = new Date(fecha);
+            fechaInicio.setHours(0, 0, 0, 0); // Inicio del día
+            const fechaFin = new Date(fecha);
+            fechaFin.setHours(23, 59, 59, 999); // Fin del día
+    
+            const bitacoras = await Bitacora.find({
+                fecha: { $gte: fechaInicio, $lte: fechaFin } // Rango de fecha
+            })
+            .populate({
+                path: 'id_aprendiz',
+                populate: {
+                    path: 'id_ficha',
+                    match: { _id: idFicha }
+                }
+            })
+            .sort({ fecha: -1 })
+            .exec();
+    
+            const bitacorasFiltradas = bitacoras.filter(bitacora => bitacora.id_aprendiz && bitacora.id_aprendiz.id_ficha);
+    
+            console.log('Bitacoras encontradas:', bitacorasFiltradas);
+    
+            res.json(bitacorasFiltradas);
+        } catch (error) {
+            console.error('Error al obtener las bitacoras:', error);
+            res.status(500).json({ error: 'Error al obtener las bitacoras' });
+        }
+    },
+    
     listarAprendiz: async (req, res) => {
         const { cc, fechaInicio, fechaFin } = req.body;
 

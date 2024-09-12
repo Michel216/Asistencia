@@ -23,7 +23,6 @@ bitacoraRouter.put('/:id',
 );
 
 
-
 bitacoraRouter.post('/listarAprendiz',
     [
         validarJWT,
@@ -45,6 +44,13 @@ bitacoraRouter.post('/listarFicha',
     ],
     bitacoraController.listarFicha
 );
+ bitacoraRouter.post('listarFichaHora'[
+    validarJWT,
+    check('id', 'El id es obligatorio').isMongoId(),
+    check('fechaInicio', 'La fecha de inicio es obligatoria').isISO8601(),
+    check('fechaFin', 'La fecha de fin es obligatoria').isISO8601(),
+    validarCampos
+ ],bitacoraController.listarPorFichaYFecha)
 // Crear una nueva bitacora - Requiere JWT y validaciones de campos
 bitacoraRouter.post('/',
     [

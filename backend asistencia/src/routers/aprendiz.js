@@ -34,7 +34,7 @@ aprendizRouter.post('/',
 aprendizRouter.put('/modificar/:id',
     [
         validarJWT,
-        check('id', 'El id es obligatorio').not().isEmpty(),
+        check('id', 'El id es obligatorio').isMongoId(),
         validarCampos
     ],
     aprendizController.modificar
@@ -42,12 +42,14 @@ aprendizRouter.put('/modificar/:id',
 
 aprendizRouter.put('/activar/:id',
     [validarJWT,
+        check('id', 'El id es obligatorio').isMongoId(),
         validarCampos],
 
     aprendizController.activar);
 
 aprendizRouter.put('/desactivar/:id',
     [validarJWT,
+        check('id', 'El id es obligatorio').isMongoId(),
         validarCampos],
 
     aprendizController.desactivar);

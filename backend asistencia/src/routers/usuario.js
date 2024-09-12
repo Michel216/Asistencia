@@ -40,7 +40,7 @@ usuarioRouter.put(
   '/modificar/:id',
   [
     validarJWT,
-    check('id', 'El id no es válido').isMongoId(),
+    check('id', 'El id es obligatorio').isMongoId(),
     validarCampos,
   ],
   usuarioController.modificar
