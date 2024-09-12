@@ -31,7 +31,12 @@ fichaRouter.put('/modificar/:id',
 // check('nombre', 'El nombre es obligatorio').optional().not().isEmpty(),
 
 // Activar una ficha - Se requiere JWT
-fichaRouter.put('/activar/:id'[validarJWT, check('id', 'El id es obligatorio').isMongoId(), validarCampos],
+fichaRouter.put('/activar/:id',
+    [
+        validarJWT, 
+    check('id', 'El id es obligatorio').isMongoId(), 
+    validarCampos
+],
     fichaController.activar,
    );
 
