@@ -38,44 +38,49 @@ const bitacoraController = {
             res.status(500).json({ error: 'Error al obtener las bitacoras' });
         }
     },
-    listarPorFichaYFecha : async (req, res) => {
+    listarPorFichaYFecha: async (req, res) => {
         try {
             const { idFicha, fecha } = req.body; // Extrae los parámetros desde el cuerpo de la solicitud
-
+    
             if (!idFicha || !fecha) {
                 return res.status(400).json({ error: 'Debe proporcionar un idFicha y una fecha' });
             }
-
+    
             // Convierte la fecha en un objeto Date
             const fechaObj = new Date(fecha);
-
+    
             // Asegúrate de que la fecha sea válida
             if (isNaN(fechaObj.getTime())) {
                 return res.status(400).json({ error: 'Fecha no válida' });
             }
-
+    
             // Formatea la fecha para comparación sin hora
             const fechaISO = fechaObj.toISOString().split('T')[0]; // Obtiene la parte de la fecha en formato YYYY-MM-DD
-
+    
+            // Calcula la fecha final para el rango del día
+            const fechaInicio = new Date(fechaISO);
+            const fechaFin = new Date(fechaISO);
+            fechaFin.setDate(fechaFin.getDate() + 1); // Fin del día
+    
             // Busca las bitácoras que tengan la fecha igual a la proporcionada
             const bitacoras = await Bitacora.find({
-                fecha: { $gte: fechaISO, $lt: new Date(fechaISO).setDate(new Date(fechaISO).getDate() + 1) } // Filtra por fecha sin considerar hora
+                fecha: { $gte: fechaInicio, $lt: fechaFin } // Filtra por fecha sin considerar hora
             })
-                .populate({
-                    path: 'id_aprendiz',
-                    populate: {
-                        path: 'id_ficha',
-                        match: { _id: idFicha }
-                    }
-                })
-                .sort({ fecha: -1 })
-                .exec();
-
+            .populate({
+                path: 'id_aprendiz',
+                populate: {
+                    path: 'id_ficha',
+                    match: { _id: idFicha }
+                }
+            })
+            .sort({ fecha: -1 })
+            .exec();
+    
             // Filtra las bitácoras para asegurar que tengan la ficha correcta
             const bitacorasFiltradas = bitacoras.filter(bitacora => bitacora.id_aprendiz && bitacora.id_aprendiz.id_ficha);
-
+    
             console.log('Bitacoras encontradas:', bitacorasFiltradas);
-
+    
             res.json(bitacorasFiltradas);
         } catch (error) {
             console.error('Error al obtener las bitacoras:', error);
