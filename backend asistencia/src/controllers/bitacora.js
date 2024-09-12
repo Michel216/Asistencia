@@ -39,47 +39,53 @@ const bitacoraController = {
         }
     },
 
-            listarPorFichaYFecha: async (req, res) => {
-                try {
-                    const { idFicha, fecha } = req.body; 
-            
-                    if (!idFicha || !fecha) {
-                        return res.status(400).json({ error: 'Debe proporcionar un idFicha y una fecha' });
-                    }
-            
-                    const fechaObj = new Date(fecha);
-            
-                    if (isNaN(fechaObj.getTime())) {
-                        return res.status(400).json({ error: 'Fecha no válida' });
-                    }
-            
-                    const fechaInicio = new Date(Date.UTC(fechaObj.getFullYear(), fechaObj.getMonth(), fechaObj.getDate()));
-                    
-                    const fechaFin = new Date(Date.UTC(fechaObj.getFullYear(), fechaObj.getMonth(), fechaObj.getDate(), 23, 59, 59, 999));
-            
-                    const bitacoras = await Bitacora.find({
-                        fecha: { $gte: fechaInicio, $lte: fechaFin }
-                    })
-                    .populate({
-                        path: 'id_aprendiz',
-                        populate: {
-                            path: 'id_ficha',
-                            match: { _id: idFicha }
-                        }
-                    })
-                    .sort({ fecha: -1 })
-                    .exec();
-            
-                    const bitacorasFiltradas = bitacoras.filter(bitacora => bitacora.id_aprendiz && bitacora.id_aprendiz.id_ficha);
-            
-                    console.log('Bitacoras encontradas:', bitacorasFiltradas);
-            
-                    res.json(bitacorasFiltradas);
-                } catch (error) {
-                    console.error('Error al obtener las bitacoras:', error);
-                    res.status(500).json({ error: 'Error al obtener las bitacoras' });
+    listarPorFichaYFecha: async (req, res) => {
+        try {
+            const { idFicha, fecha } = req.body; 
+    
+            if (!idFicha || !fecha) {
+                return res.status(400).json({ error: 'Debe proporcionar un idFicha y una fecha' });
+            }
+    
+            const fechaObj = new Date(fecha);
+    
+            if (isNaN(fechaObj.getTime())) {
+                return res.status(400).json({ error: 'Fecha no válida' });
+            }
+    
+            const fechaInicioLocal = new Date(fechaObj);
+            fechaInicioLocal.setHours(0, 0, 0, 0); 
+    
+            const fechaFinLocal = new Date(fechaObj);
+            fechaFinLocal.setHours(23, 59, 59, 999); 
+    
+            const fechaInicioUTC = new Date(fechaInicioLocal.toISOString());
+            const fechaFinUTC = new Date(fechaFinLocal.toISOString());
+    
+            const bitacoras = await Bitacora.find({
+                fecha: { $gte: fechaInicioUTC, $lte: fechaFinUTC } 
+            })
+            .populate({
+                path: 'id_aprendiz',
+                populate: {
+                    path: 'id_ficha',
+                    match: { _id: idFicha }
                 }
-            },
+            })
+            .sort({ fecha: -1 })
+            .exec();
+    
+            const bitacorasFiltradas = bitacoras.filter(bitacora => bitacora.id_aprendiz && bitacora.id_aprendiz.id_ficha);
+    
+            console.log('Bitacoras encontradas:', bitacorasFiltradas);
+    
+            res.json(bitacorasFiltradas);
+        } catch (error) {
+            console.error('Error al obtener las bitacoras:', error);
+            res.status(500).json({ error: 'Error al obtener las bitacoras' });
+        }
+    },
+    
             
     listarAprendiz: async (req, res) => {
         const { cc, fechaInicio, fechaFin } = req.body;
