@@ -1,4 +1,4 @@
-<template>
+USUARIOS <template>
   <q-layout view="hHh lpR lFf">
     <q-header elevated class="bg-green text-white">
       <q-toolbar style="background-color: green;">
@@ -12,37 +12,46 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <br>
-      <div class="avatar-container">
-        <q-avatar class="large-avatar">
-          <img class="per" src="/imagenes/usuario.png" alt="perfil" />
-        </q-avatar>
-      </div>
-      <div style="text-align: center; margin-top: 10px;">
-        <p style="margin: 0;"> <strong>{{ nombreUser }}</strong></p>
-        <p style="margin: 0;"> {{ emailUser }}</p>
-      </div>
-      <q-list>
-        <br>
-        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
-          class="custom-button">
-          <q-item-section avatar>
-            <q-icon :name="item.icon" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">{{ item.label }}</span>
-          </q-item-section>
-          <q-item-section side v-if="isActiveRoute(item.path)">
-            <q-icon name="arrow_right" class="indicator-icon" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <br>
-      <div class="logon">
-        <img class="negro" src="/imagenes/snegr.png" alt="">
-      </div>
-    </q-drawer>
+    <q-drawer
+    show-if-above
+    v-model="leftDrawerOpen"
+    side="left"
+    bordered
+    class="my-drawer"
+       :breakpoint="500"
+  >
+    <div class="avatar-container">
+      <q-avatar class="large-avatar">
+        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
+      </q-avatar>
+    </div>
+    <div class="user-info">
+      <p class="user-name">{{ nombreUser }}</p>
+      <p class="user-email">{{ emailUser }}</p>
+    </div>
+    <q-list class="drawer-list">
+      <q-item
+        v-for="item in menuItems"
+        :key="item.label"
+        :to="item.path"
+        active-class="active-item"
+        class="custom-button"
+      >
+        <q-item-section avatar>
+          <q-icon :name="item.icon" class="icon" />
+        </q-item-section>
+        <q-item-section>
+          <span class="button-text">{{ item.label }}</span>
+        </q-item-section>
+        <q-item-section side v-if="isActiveRoute(item.path)">
+          <q-icon name="arrow_right" class="indicator-icon" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+    <div class="logon">
+      <img class="negro" src="/imagenes/snegr.png" alt="" />
+    </div>
+  </q-drawer>
 
     <q-page-container>
       <div class="usuarios-container q-pa-md">
@@ -168,7 +177,7 @@ const menuItems = [
 ]
 
 function isActiveRoute(path) {
-  console.log(`Current Route: ${route.path}, Checking Path: ${path}`);
+  // console.log(Current Route: ${route.path}, Checking Path: ${path});
   return route.path === path;
 }
 

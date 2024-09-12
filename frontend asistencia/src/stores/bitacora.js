@@ -71,6 +71,28 @@ export const useBitacoraStore = defineStore('bitacora', () => {
     }
   };
 
+  const listarFichaFecha = async (idFicha, fecha) => {
+    try {
+      let r = await axios.post(`${API_URL}/bitacora/listarFichaHora`, {
+         idFicha,
+         fecha: new Date(fecha).toISOString()
+      }, {
+        headers: {
+          "token": usuariosStore.token,
+        },
+      });
+      console.log('Respuesta:', r);
+      return r;
+    } catch (error) {
+      console.error('Error al listar datos:', error);
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Error al traer los datos.',
+      })
+    }
+  }
+
   const updateEstado = async (id, estado) => {
     console.log("id:", id, "estado:", estado);
 
@@ -97,6 +119,6 @@ export const useBitacoraStore = defineStore('bitacora', () => {
   };
 
   return {
-    rows, crear, updateEstado, listarTodos
+    rows, crear, updateEstado, listarTodos, listarFichaFecha
   };
 });

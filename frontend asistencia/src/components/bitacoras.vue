@@ -13,37 +13,46 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <br>
-      <div class="avatar-container">
-        <q-avatar class="large-avatar">
-          <img class="per" src="/imagenes/usuario.png" alt="perfil " />
-        </q-avatar>
-      </div>
-      <div style="text-align: center; margin-top: 10px;">
-        <p style="margin: 0;"> <strong>{{ nombreUser }}</strong></p>
-        <p style="margin: 0;"> {{ emailUser }}</p>
-      </div>
-      <q-list>
-        <br>
-        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" exact-active-class="active-item"
-          class="custom-button">
-          <q-item-section avatar>
-            <q-icon :name="item.icon" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">{{ item.label }}</span>
-          </q-item-section>
-          <q-item-section side v-if="isActiveRoute(item.path)">
-            <q-icon name="arrow_right" class="indicator-icon" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <br>
-      <div class="logon">
-        <img class="negro" src="/imagenes/snegr.png" alt="">
-      </div>
-    </q-drawer>
+    <q-drawer
+    show-if-above
+    v-model="leftDrawerOpen"
+    side="left"
+    bordered
+    class="my-drawer"
+       :breakpoint="500"
+  >
+    <div class="avatar-container">
+      <q-avatar class="large-avatar">
+        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
+      </q-avatar>
+    </div>
+    <div class="user-info">
+      <p class="user-name">{{ nombreUser }}</p>
+      <p class="user-email">{{ emailUser }}</p>
+    </div>
+    <q-list class="drawer-list">
+      <q-item
+        v-for="item in menuItems"
+        :key="item.label"
+        :to="item.path"
+        exact-active-class="active-item"
+        class="custom-button"
+      >
+        <q-item-section avatar>
+          <q-icon :name="item.icon" class="icon" />
+        </q-item-section>
+        <q-item-section>
+          <span class="button-text">{{ item.label }}</span>
+        </q-item-section>
+        <q-item-section side v-if="isActiveRoute(item.path)">
+          <q-icon name="arrow_right" class="indicator-icon" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+    <div class="logon">
+      <img class="negro" src="/imagenes/snegr.png" alt="" />
+    </div>
+  </q-drawer>
 
     <q-page-container>
       <h3 class="title-table">Bitacoras</h3>
@@ -56,27 +65,43 @@
           </q-btn>
         </div>
 
-        <!-- Diálogo para seleccionar fecha -->
-        <q-dialog v-model="fechaFiltrada">
+            <q-dialog v-model="fechaFiltrada">
           <q-card>
             <q-card-section>
-              <q-input filled v-model="selectedDate" label="Fecha (AAAA-MM-DD)" dense ref="dateInput" :error="showError"
-                error-message="Por favor, ingrese la fecha" class="custom-error-message" @input="showError = false">
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="selectedDate" locale="auto">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
+              <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
+                :options="options" @filter="filterFn" style="width: 250px" behavior="menu" emit-value map-options
+                lazy-rules :rules="[
+                  (val) => {
+                    if (b.value === false) {
+                      return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
+                    } else { return true }
+                  }
+                ]">
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+              <q-input  filled v-model="selectedDate" label="Fecha (AAAA-MM-DD)" dense ref="dateInput" :error="showError"
+              error-message="Por favor, ingrese la fecha" class="custom-error-message" @input="handleInput">
+              <template v-slot:append > 
+                <q-icon name="event" class="cursor-pointer" @click="showDatePicker" />
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale"    class="custom-overlay">
+                    <div class="calendar-centered" style="width: 100%">
+                    <q-date v-model="selectedDate" locale="auto" >
+                      <div class="row items-center justify-center">
+                        <q-btn v-close-popup label="Aceptar" color="white" flat />
+                      </div>
+                    </q-date></div>
+                  </q-popup-proxy>
                 </template>
               </q-input>
               <br>
-              <q-btn label="Previsualizar" color="green" @click="previsualizarDocumento" />
-              <q-btn label="Cancelar" @click="fechaFiltrada = false" />
+              <q-btn label="Cancelar" @click="fechaFiltrada = false" /> <span>         </span>
+              <q-btn label="Previsualizar" style="background-color: green; color: white" @click="previsualizarDocumento" />
             </q-card-section>
           </q-card>
         </q-dialog>
@@ -123,6 +148,8 @@ import { useBitacoraStore } from '../stores/bitacora.js';
 import { Notify } from 'quasar';
 import { useUsuariosStore } from '../stores/usuario.js';
 import { useRoute, useRouter } from 'vue-router';
+import { useFichaStore } from '../stores/ficha.js'
+
 
 const { InfoUser } = useUsuariosStore();
 
@@ -137,9 +164,13 @@ const router = useRouter();
 const route = useRoute();
 const loadingGuardarEstados = ref(false);
 const loadingGenerarDocumento = ref(false);
-const useAsistencia = useAsistenciaStore();
 const useBitacora = useBitacoraStore();
+const useFicha = useFichaStore()
+const options = ref([])
 const showError = ref(false);
+const ficha = ref()
+const filteredRows = ref([]);
+
 
 
 const menuItems = [
@@ -174,7 +205,7 @@ const toggleLeftDrawer = () => {
 
 const traer = async () => {
   try {
-    const res = await useAsistencia.listarTodos();
+    const res = await useBitacora.listarTodos();
     rows.value = res.data.map(item => ({
       ...item,
       estado: item.estado || 'Pendiente',
@@ -208,28 +239,68 @@ const updateEstado = async (newValue, id) => {
 const openDateDialog = () => {
   fechaFiltrada.value = true;
 };
+const filterFn = async (val, update) => {
+  let res = await useFicha.listarFicha();
+  if (val === '') {
+    update(() => {
+      options.value = res.data.map(ficha => ({
+        label: ficha.codigo,
+        value: ficha._id
+      }));
+    });
+    return;
+  }
 
-const previsualizarDocumento = () => {
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = res.data.map(ficha => ({
+      label: ficha.codigo,
+      value: ficha._id
+    })).filter(option => option.label.toLowerCase().includes(needle));
+  });
+}
+const previsualizarDocumento = async () => {
   if (!selectedDate.value) {
     showError.value = true;
     return;
   }
   showError.value = false;
-  const selectedDateObj = new Date(selectedDate.value);
-  const startOfDay = new Date(selectedDateObj.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(selectedDateObj.setHours(23, 59, 59, 999));
 
-  const filteredRows = rows.value.filter(row => {
-    const rowDate = new Date(row.fecha);
-    return rowDate >= startOfDay && rowDate <= endOfDay;
-  });
-  const Asistieron = filteredRows.filter(row => row.estado === 'Asistió');
+  try {
+    const selectedDateObj = new Date(selectedDate.value);
 
-  // Enviar los datos filtrados a la vista previa
-  router.push({
-    path: '/documento',
-    query: { date: selectedDate.value, data: JSON.stringify(Asistieron) }
-  });
+    const startOfDay = new Date(selectedDateObj.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(selectedDateObj.setHours(23, 59, 59, 999));
+
+    const filteredRows = rows.value.filter(row => {
+      const rowDate = new Date(row.fecha);
+      return rowDate >= startOfDay && rowDate <= endOfDay;
+    });
+
+    const filtrarFichas = filteredRows.filter(row => {
+      return row.id_aprendiz && row.id_aprendiz.id_ficha && row.id_aprendiz.id_ficha._id === ficha.value;
+    });
+
+    const Asistieron = filtrarFichas.filter(row => row.estado === 'Asistió');
+
+    if (Asistieron.length === 0) {
+      Notify.create({
+        type: 'negative',
+        message: 'No hay registros de asistencia para la fecha seleccionada.'
+      });
+      return;
+    }
+
+    router.push({
+      path: '/documento',
+      query: { date: selectedDate.value, data: JSON.stringify(Asistieron) }
+    });
+  } catch (error) {
+    Notify.create({
+      type: 'negative',
+      message: `Error: ${error.message}`
+    });
+  }
 };
 
 onMounted(() => {
@@ -299,7 +370,7 @@ onMounted(() => {
 }
 
 .q-btn:hover {
-  background-color: green;
+ 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   /* Sombra al pasar el mouse, sin cambiar el color */
   text-shadow: 0px 0px 10px white;
@@ -374,15 +445,43 @@ onMounted(() => {
   border-right: 1px solid #ddd;
   /* Borde derecho del encabezado */
 }
+/* Asegúrate de que el calendario se centre correctamente */
+.calendar-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.calendar-centered .q-btn{
+background-color: green;
+color: white;
+}
+.q-popup-proxy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.custom-overlay .q-overlay {
+  background-color: rgb(0, 0, 0); /* Ajusta la opacidad aquí */
+}
+
 .footer {
-  background-color: #e7e3e3; /* Color de fondo del pie de página */
-  color: #000; /* Color del texto del pie de página */
+  background-color: #e7e3e3;
+  /* Color de fondo del pie de página */
+  color: #000;
+  /* Color del texto del pie de página */
   margin-bottom: 0;
   width: 100%;
   height: 45px;
   position: sta;
   bottom: 0;
   align-content: center;
-text-align: center;
+  text-align: center;
 }
+
+.q-date__header {
+  background-color: #008000
+}
+
 </style>
+

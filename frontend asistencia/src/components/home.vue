@@ -282,11 +282,11 @@ function isActiveRoute(path) {
   height: 40%;
 }
 
-.q-btn:hover {
+/* .q-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
 
-}
+} */
 .footer {
   background-color: #e7e3e3; /* Color de fondo del pie de página */
   color: #000; /* Color del texto del pie de página */

@@ -64,6 +64,9 @@ const selectedDate = ref(null);
 const loadingGenerarPdf = ref(false);
 const router = useRouter();
 const route = useRoute();
+const dia = ref("")
+const mes = ref("")
+const año = ref("")
 
 onMounted(() => {
   const dateQuery = route.query.date;
@@ -84,9 +87,9 @@ const pagination = ref({
 });
 const formatFecha = (date) => {
   const fecha = new Date(date);
-  const dia = fecha.getDate();
-  const mes = fecha.toLocaleString('default', { month: 'long' }).toUpperCase();
-  const año = fecha.getFullYear();
+   const dia = fecha.getDate();
+   const mes = fecha.toLocaleString('default', { month: 'long' }).toUpperCase();
+   const año = fecha.getFullYear();
   return `DEL DÍA ${dia} DEL MES DE ${mes} DEL AÑO ${año}`;
 };
 const columnsPDF = [
@@ -137,53 +140,84 @@ const generarPdf = async () => {
   while (startRow < pdfRows.length) {
     // Define el encabezado para cada página
     const fechaTexto = formatFecha(selectedDate.value);
-    const headerText = [`REGISTRO DE ASISTENCIA      ${fechaTexto}`];
+    const headerText = `REGISTRO DE ASISTENCIA      ${fechaTexto}`;
 
-    // Agrega el encabezado en la primera página
+    // Si es la primera página, agrega el encabezado y la tabla
     if (currentPage === 1) {
-      doc.text(headerText, 10, startY - 20); // Agregar encabezado en la parte superior
-    }
-
-    doc.autoTable({
-      head: [
-        [
-          { content: headerText, colSpan: 7, styles: { halign: 'center', fontSize: 11, lineWidth: 0.3, lineColor: [0, 0, 0], cellPadding: 5, textColor: [0, 0, 0], fillColor: [255, 255, 255] } }
-        ], ['N°', 'Documento', 'Nombre', 'Teléfono', 'Email', 'Código Ficha', 'Nombre Ficha']
-      ],
-      startY: startY,
-      columns: pdfColumns,
-      body: pdfRows.slice(startRow, startRow + rowsPerPage),
-      theme: 'grid',
-      styles: {
-        fontSize: 10,
-        cellPadding: 5,
-        halign: 'center',
-        valign: 'middle',
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
-        lineWidth: 0.3,
-        lineColor: [0, 0, 0]
-      },
-      headStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
-        halign: 'center',
-        valign: 'middle',
-        lineWidth: 0.3,
-        lineColor: [0, 0, 0]
-      },
-      tableWidth: 'auto',
-      margin: { top: 10, right: 10, bottom: 10, left: 10 },
-      didDrawPage: (data) => {
-        // Agrega el encabezado en cada página
-        if (currentPage > 1) {
-          doc.text(headerText, 10, startY - 20); // Agregar encabezado en la parte superior
+      // Agregar el título en la tabla
+      doc.autoTable({
+        head: [
+          [
+            { content: headerText, colSpan: 7, styles: { halign: 'center', fontSize: 11, lineWidth: 0.3, lineColor: [0, 0, 0], cellPadding: 5, textColor: [0, 0, 0], fillColor: [255, 255, 255] } }
+          ],
+          ['N°', 'Documento', 'Nombre', 'Teléfono', 'Email', 'Código Ficha', 'Nombre Ficha']
+        ],
+        startY: startY,
+        columns: pdfColumns,
+        body: pdfRows.slice(startRow, startRow + rowsPerPage),
+        theme: 'grid',
+        styles: {
+          fontSize: 10,
+          cellPadding: 5,
+          halign: 'center',
+          valign: 'middle',
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          lineWidth: 0.3,
+          lineColor: [0, 0, 0]
+        },
+        headStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          halign: 'center',
+          valign: 'middle',
+          lineWidth: 0.3,
+          lineColor: [0, 0, 0]
+        },
+        tableWidth: 'auto',
+        margin: { top: 10, right: 10, bottom: 10, left: 10 },
+        didDrawPage: (data) => {
+          doc.setFontSize(10);
+          doc.text(`Page ${currentPage}`, 190, 285); // Añadir el número de página
+          currentPage++;
         }
-        doc.setFontSize(10);
-        doc.text(`Page ${currentPage}`, 190, 285); // Añadir el número de página
-        currentPage++;
-      }
-    });
+      });
+    } else {
+      doc.autoTable({
+        head: [
+          ['N°', 'Documento', 'Nombre', 'Teléfono', 'Email', 'Código Ficha', 'Nombre Ficha']
+        ],
+        startY: startY,
+        columns: pdfColumns,
+        body: pdfRows.slice(startRow, startRow + rowsPerPage),
+        theme: 'grid',
+        styles: {
+          fontSize: 10,
+          cellPadding: 5,
+          halign: 'center',
+          valign: 'middle',
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          lineWidth: 0.3,
+          lineColor: [0, 0, 0]
+        },
+        headStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          halign: 'center',
+          valign: 'middle',
+          lineWidth: 0.3,
+          lineColor: [0, 0, 0]
+        },
+        tableWidth: 'auto',
+        margin: { top: 10, right: 10, bottom: 10, left: 10 },
+        didDrawPage: (data) => {
+          doc.setFontSize(10);
+          doc.text(`Page ${currentPage}`, 190, 285); // Añadir el número de página
+          currentPage++;
+        }
+      });
+    }
 
     startRow += rowsPerPage; // Avanza al siguiente grupo de filas
     if (startRow < pdfRows.length) {
@@ -191,19 +225,21 @@ const generarPdf = async () => {
     }
   }
 
-  const nombreArchivo = `registro_asistencia_${año}-${mes}-${dia}.pdf`;
+  const nombreArchivo = `registro_asistencia.pdf`;
 
   doc.save(nombreArchivo);
 
   Notify.create({
     type: 'positive',
     message: 'PDF generado exitosamente.',
-    position: 'top-right'
+    icon: 'check'
   });
 
   loadingGenerarPdf.value = false;
   mostrarDialogo.value = false;
 };
+
+
 
 const goHome = () => {
   // Redirige a la página de inicio
