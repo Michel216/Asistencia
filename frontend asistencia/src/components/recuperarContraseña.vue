@@ -22,7 +22,7 @@
 
           <q-input v-model="confirmPassword" label="Confirmar Contraseña" :type="isPwd ? 'password' : 'text'" outlined
             lazy-rules :rules="[
-              val => val && val.trim().length >= 6 || || 'La contraseña debe tener al menos 6 caracteres'
+              val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres'
             ]" autocomplete="off">
             <template v-slot:append>
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
