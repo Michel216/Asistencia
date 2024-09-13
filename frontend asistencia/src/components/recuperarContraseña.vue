@@ -12,7 +12,7 @@
             :rules="[val => val && val.trim() !== '' || 'Por favor ingresa tu correo electrónico']" />
           <q-input v-model="newPassword" label="Nueva Contraseña" :type="isPwdNew ? 'password' : 'text'" outlined
             lazy-rules :rules="[
-              val => val && val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres',
+               val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres',
             ]" autocomplete="off">
             <template v-slot:append>
               <q-icon :name="isPwdNew ? 'visibility_off' : 'visibility'" class="cursor-pointer"
@@ -22,7 +22,7 @@
 
           <q-input v-model="confirmPassword" label="Confirmar Contraseña" :type="isPwd ? 'password' : 'text'" outlined
             lazy-rules :rules="[
-              val => val && val.trim() >= 6 || 'La contraseña debe tener al menos 6 caracteres'
+              val => val && val.trim().length >= 6 || || 'La contraseña debe tener al menos 6 caracteres'
             ]" autocomplete="off">
             <template v-slot:append>
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
