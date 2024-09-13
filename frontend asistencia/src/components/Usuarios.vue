@@ -93,10 +93,10 @@ USUARIOS <template>
               <q-separator />
 
               <q-card-section style="max-height: 80vh" class="scroll">
-                <q-input filled v-model="email" label="Email del Usuario" :dense="dense" lazy-rules
-                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']" />
                 <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" lazy-rules
                   :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']" />
+                <q-input filled v-model="email" label="Email del Usuario" :dense="dense" lazy-rules
+                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']" />
                 <q-input v-if="!b" :type="isPwd ? 'password' : 'text'" filled v-model="password" label="Contraseña"
                   lazy-rules :rules="[
                     val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres'
@@ -267,11 +267,13 @@ async function crearUsuario() {
 
     } finally {
       loadingState.value[`guardar-${selectedId.value}`] = false;
+      
     }
   } else { // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
       await useUsuario.guardarUsuario(email.value, nombre.value, password.value);
+      fixed.value = false;
       await traer();
 
     } catch (error) {
