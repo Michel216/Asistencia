@@ -12,35 +12,44 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <br>
-      <div class="avatar-container">
-        <q-avatar class="large-avatar">
-          <img class="per" src="/imagenes/usuario.png" alt="perfil" />
-        </q-avatar>
+    <q-drawer 
+    show-if-above
+    v-model="leftDrawerOpen"
+    side="left"
+    bordered
+    class="my-drawer"
+    :breakpoint="500" 
+  >
+    <div class="avatar-container">
+      <q-avatar class="large-avatar">
+        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
+      </q-avatar>
+    </div>
+    <h5 >Bienvenid@ <strong>{{ nombre }}</strong></h5>
+    <q-list class="drawer-content">
+      <q-item
+        v-for="item in menuItems"
+        :key="item.label"
+        :to="item.path"
+        active-class="active-item"
+        class="custom-button"
+      >
+        <q-item-section avatar>
+          <q-icon :name="item.icon" class="icon" />
+        </q-item-section>
+        <q-item-section>
+          <span class="button-text">{{ item.label }}</span>
+        </q-item-section>
+        <q-item-section side v-if="isActiveRoute(item.path)">
+          <q-icon name="arrow_right" class="indicator-icon" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+    <div class="logon">
+      <img class="negro" src="/imagenes/snegr.png" alt="" />
+    </div>
+  </q-drawer>
 
-      </div>
-      <h5>Bienvenid@ <strong>{{ nombre }}</strong></h5>
-      <q-list>
-        <br>
-        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
-          class="custom-button">
-          <q-item-section avatar>
-            <q-icon :name="item.icon" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">{{ item.label }}</span>
-          </q-item-section>
-          <q-item-section side v-if="isActiveRoute(item.path)">
-            <q-icon name="arrow_right" class="indicator-icon" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <br>
-      <div class="logon">
-        <img class="negro" src="/imagenes/snegr.png" alt="">
-      </div>
-    </q-drawer>
 
     <q-page-container>
       <div v-if="showCards" class="container">
@@ -124,6 +133,12 @@ function isActiveRoute(path) {
 
 
 <style scoped>
+.q-drawer {
+  overflow-y: auto !important;
+  /* Asegura que el contenido del drawer permita scroll */
+}
+
+/* Estilos base */
 .avatar-container {
   display: flex;
   justify-content: center;
@@ -133,18 +148,15 @@ function isActiveRoute(path) {
 
 .large-avatar {
   width: 110px;
-  /* Ancho del avatar */
   height: 110px;
-  /* Alto del avatar */
+  max-width: 100%;
 }
 
 .large-avatar img {
   width: 100%;
-  /* La imagen ocupa todo el avatar */
   height: 100%;
-  /* La imagen ocupa todo el avatar */
+  object-fit: cover;
 }
-
 
 .logon {
   display: flex;
@@ -154,7 +166,8 @@ function isActiveRoute(path) {
 
 .negro {
   width: 30%;
-  height: 30%;
+  height: auto;
+  max-width: 100%;
 }
 
 .bg-green {
@@ -183,41 +196,37 @@ function isActiveRoute(path) {
 .custom-button {
   background-color: green;
   border-radius: 10px;
-  margin: 20px;
-  height: auto;
+  margin: 10px;
+  padding: 10px;
   display: flex;
   align-items: center;
   color: white;
-  width: 250px;
-  font-size: 130%;
+  width: 100%;
+  max-width: 250px;
+  font-size: 16px;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .custom-button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
-
 }
 
 .active-item {
   background-color: #005500;
-  /* Fondo más oscuro para la ventana activa */
   color: #ffffff;
-  /* Cambia esto por el color que desees */
   font-weight: bold;
 }
 
 .indicator-icon {
   color: rgb(255, 255, 255);
-  /* Color del ícono indicador */
   margin-left: 5px;
-
 }
 
 .container {
   display: grid;
   width: 90%;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns:repeat(2,1fr);
   grid-gap: 20px;
   justify-content: center;
   align-items: center;
@@ -225,20 +234,18 @@ function isActiveRoute(path) {
 }
 
 .card {
-  width: 65%;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-top: 10%;
-  margin: 5% auto;
+  margin: 10px 0;
 }
 
 .card-header {
   background-color: green;
   color: #fff;
-  height: 60px;
+  padding: 15px;
   text-align: center;
-  align-content: center;
-  font-size: 160%;
+  font-size: 18px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
@@ -260,40 +267,86 @@ function isActiveRoute(path) {
   background-color: green;
   border: none;
   border-radius: 5px;
-  width: 35%;
-  height: 10px;
-  margin: auto auto;
+  width: 100%;
+  max-width: 200px;
+  padding: 10px;
+  margin: 10px auto;
   display: block;
-  /* padding-top: 20px; */
-  align-content: center;
   text-align: center;
-  font-size: 110%;
+  font-size: 16px;
   transition: box-shadow 0.3s;
 }
 
 .ver:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
-
 }
 
 .pta {
   width: 40%;
-  height: 40%;
+  height: auto;
+  max-width: 100%;
 }
 
-/* .q-btn:hover {
+.q-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
+}
 
-} */
 .footer {
-  background-color: #e7e3e3; /* Color de fondo del pie de página */
-  color: #000; /* Color del texto del pie de página */
+  background-color: #e7e3e3;
+  color: #000;
   margin-bottom: 0;
   width: 100%;
-  height: 45px;
-  align-content: center;
-text-align: center;
+  padding: 15px 0;
+  text-align: center;
 }
+
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    width: 90%;
+    margin: 10px auto;
+  }
+
+  .custom-button {
+    font-size: 14px;
+  }
+
+  .card-header {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .large-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .custom-button {
+    font-size: 12px;
+  }
+
+  .ver {
+    font-size: 14px;
+  }
+}
+active-item {
+  color: var(--q-primary);
+  background: var(--q-grey-2);
+}
+
+@media (max-width: 1023px) {
+  .q-drawer {
+    width: 100% !important;
+    max-width: 280px;
+  }
+}
+
+ 
 </style>
