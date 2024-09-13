@@ -159,11 +159,9 @@ h2 {
 }
 
 .btn-green {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto auto;
-  padding-top: 20px;
+    margin: 0 auto;
+    align-items: center;
+    display: flex;
 }
 
 .header-section {
