@@ -99,7 +99,7 @@ USUARIOS <template>
                   :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']" />
                 <q-input v-if="!b" :type="isPwd ? 'password' : 'text'" filled v-model="password" label="Contraseña"
                   lazy-rules :rules="[
-                    val => val && val.trim() >= 6 || 'La contraseña debe tener al menos 6 caracteres'
+                    val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres'
                   ]">
                   <template v-slot:append>
                     <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
