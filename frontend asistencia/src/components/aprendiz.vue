@@ -550,7 +550,7 @@ const columns = [
   align-content: center;
   align-items: center;
   height: auto;
-  width: 17%;
+  width: auto;
   margin-bottom: 20px;
 
 }
