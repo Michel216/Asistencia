@@ -165,7 +165,7 @@
         </div>
       </div>
       <div class="footer">
-          <div class="text-h7 text-weight-bold">
+          <div class="text-h6 text-weight-bold">
               ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
           </div>
       </div>
