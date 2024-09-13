@@ -133,11 +133,12 @@
           </template>
         </q-table>
       </div>
-      <div class="footer">
-          <div class="text-h7 text-weight-bold">
-              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-          </div>
-      </div>
+   <!-- El footer -->
+      <footer class="footer">
+        <div class="text-h7 text-weight-bold">
+          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+        </div>
+      </footer>
     </q-page-container>
   </q-layout>
 </template>
@@ -465,18 +466,34 @@ color: white;
   background-color: rgb(0, 0, 0); /* Ajusta la opacidad aquí */
 }
 
+ .main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+}
+
+.container {
+  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+}
+
 .footer {
   background-color: #e7e3e3;
-  /* Color de fondo del pie de página */
   color: #000;
-  /* Color del texto del pie de página */
-  margin-bottom: 0;
-  width: 100%;
-  height: 45px;
-  position: sta;
-  bottom: 0;
-  align-content: center;
+  padding: 15px 0;
   text-align: center;
+  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    font-size: 14px;
+  }
 }
 
 .q-date__header {
