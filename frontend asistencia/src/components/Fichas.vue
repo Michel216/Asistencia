@@ -111,11 +111,12 @@
           </q-card>
         </q-dialog>
       </div>
-      <div class="footer">
-          <div class="text-h7 text-weight-bold">
-              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-          </div>
-      </div>
+    <!-- El footer -->
+      <footer class="footer">
+        <div class="text-h7 text-weight-bold">
+          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+        </div>
+      </footer>
     </q-page-container>
   </q-layout>
 </template>
@@ -397,5 +398,34 @@ function toggleLeftDrawer() {
   height: 45px;
   align-content: center;
 text-align: center;
+}
+   .main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+}
+
+.container {
+  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+}
+
+.footer {
+  background-color: #e7e3e3;
+  color: #000;
+  padding: 15px 0;
+  text-align: center;
+  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    font-size: 14px;
+  }
 }
 </style>
