@@ -15,8 +15,7 @@ app.use(express.json());
 app.use(cors({
   origin: [
     'https://asistencia-i7sv.onrender.com',
-     'http://localhost:5174',
-   '*'
+    
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
