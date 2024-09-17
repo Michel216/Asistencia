@@ -85,32 +85,70 @@ USUARIOS <template>
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
             transition-hide="rotate" persistent>
             <q-card>
-              <q-card-section>
+              <q-card-section style="background-color: green">
                 <div class="text-h6" v-if="b">Editar Usuario</div>
                 <div class="text-h6" v-else>Guardar Usuario</div>
               </q-card-section>
 
               <q-separator />
 
-              <q-card-section style="max-height: 80vh" class="scroll">
-                <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" lazy-rules
-                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']" />
-                <q-input filled v-model="email" label="Email del Usuario" :dense="dense" lazy-rules
-                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']" />
-                <q-input v-if="!b" :type="isPwd ? 'password' : 'text'" filled v-model="password" label="Contraseña"
-                  lazy-rules :rules="[
-                    val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres'
-                  ]">
-                  <template v-slot:append>
-                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                      @click="isPwd = !isPwd" />
-                  </template>
-                </q-input>
-              </q-card-section>
+              <q-card-section
+   style="max-height: none; max-width: 100%; width: 100vw; margin: auto; "
+  >
+    <!-- Nombre del Usuario -->
+    <q-input
+      filled
+      v-model="nombre"
+      label="Nombre del Usuario"
+      :dense="dense"
+      lazy-rules
+      :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']"
+    >
+      <template v-slot:prepend>
+        <q-icon name="person" />
+      </template>
+    </q-input>
+
+    <!-- Email del Usuario -->
+    <q-input
+      filled
+      v-model="email"
+      label="Email del Usuario"
+      :dense="dense"
+      lazy-rules
+      :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']"
+    >
+      <template v-slot:prepend>
+        <q-icon name="email" />
+      </template>
+    </q-input>
+
+    <!-- Contraseña -->
+    <q-input
+      v-if="!b"
+      :type="isPwd ? 'password' : 'text'"
+      filled
+      v-model="password"
+      label="Contraseña"
+      lazy-rules
+      :rules="[val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
+    >
+      <template v-slot:prepend>
+        <q-icon name="lock" />
+      </template>
+      <template v-slot:append>
+        <q-icon
+          :name="isPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isPwd = !isPwd"
+        />
+      </template>
+    </q-input>
+  </q-card-section>
 
               <q-separator />
 
-              <q-card-actions align="right">
+              <q-card-actions style="justify-content: center;"  align="right">
                 <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
                 <q-btn flat label="Guardar" color="primary" @click="crearUsuario()" :loading="loadingCrearUsuario" />
               </q-card-actions>

@@ -87,24 +87,48 @@
         <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
           transition-hide="rotate" persistent>
           <q-card>
-            <q-card-section>
+            <q-card-section style="background-color: green;">
               <div class="text-h6" v-if="b == true">Editar Ficha</div>
               <div class="text-h6" v-else>Guardar Ficha</div>
             </q-card-section>
 
             <q-separator />
 
-            <q-card-section style="max-height: 50vh" class="scroll">
-              <q-input filled v-model="codigo" label="Código de la Ficha" :dense="dense"
-                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el codigo de la ficha']" />
-              <q-input filled v-model="nombre" label="Nombre de la Ficha" :dense="dense"
-                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre de la ficha']" />
+            <q-card-section
+    style="max-height: none; max-width: 100%; width: 100vw; margin: auto; "
+  >
+    <!-- Código de la Ficha -->
+    <q-input
+      filled
+      v-model="codigo"
+      label="Código de la Ficha"
+      :dense="dense"
+      :rules="[val => val.trim() !== '' || 'Por favor, ingrese el código de la ficha']"
+      style="border-radius: 8px;"
+    >
+      <template v-slot:prepend>
+        <q-icon name="code" />
+      </template>
+    </q-input>
 
-            </q-card-section>
+    <!-- Nombre de la Ficha -->
+    <q-input
+      filled
+      v-model="nombre"
+      label="Nombre de la Ficha"
+      :dense="dense"
+      :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre de la ficha']"
+      style="border-radius: 8px;"
+    >
+      <template v-slot:prepend>
+        <q-icon name="label" />
+      </template>
+    </q-input>
+  </q-card-section>
 
             <q-separator />
 
-            <q-card-actions align="right">
+            <q-card-actions style="justify-content: center;" align="right">
               <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
               <q-btn flat label="Guardar" color="primary" @click="crearFicha()" />
             </q-card-actions>
