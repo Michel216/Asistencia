@@ -1,4 +1,4 @@
- <template>
+<template>
   <q-layout view="hHh lpR lFf">
     <q-header elevated class="bg-green text-white">
       <q-toolbar style="background-color: green;">
@@ -12,46 +12,34 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-    show-if-above
-    v-model="leftDrawerOpen"
-    side="left"
-    bordered
-    class="my-drawer"
-       :breakpoint="500"
-  >
-    <div class="avatar-container">
-      <q-avatar class="large-avatar">
-        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
-      </q-avatar>
-    </div>
-    <div class="user-info">
-      <p class="user-name">{{ nombreUser }}</p>
-      <p class="user-email">{{ emailUser }}</p>
-    </div>
-    <q-list class="drawer-list">
-      <q-item
-        v-for="item in menuItems"
-        :key="item.label"
-        :to="item.path"
-        active-class="active-item"
-        class="custom-button"
-      >
-        <q-item-section avatar>
-          <q-icon :name="item.icon" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">{{ item.label }}</span>
-        </q-item-section>
-        <q-item-section side v-if="isActiveRoute(item.path)">
-          <q-icon name="arrow_right" class="indicator-icon" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <div class="logon">
-      <img class="negro" src="/imagenes/snegr.png" alt="" />
-    </div>
-  </q-drawer>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="my-drawer" :breakpoint="500">
+      <div class="avatar-container">
+        <q-avatar class="large-avatar">
+          <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
+        </q-avatar>
+      </div>
+      <div class="user-info">
+        <p class="user-name">{{ nombreUser }}</p>
+        <p class="user-email">{{ emailUser }}</p>
+      </div>
+      <q-list class="drawer-list">
+        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
+          class="custom-button">
+          <q-item-section avatar>
+            <q-icon :name="item.icon" class="icon" />
+          </q-item-section>
+          <q-item-section>
+            <span class="button-text">{{ item.label }}</span>
+          </q-item-section>
+          <q-item-section side v-if="isActiveRoute(item.path)">
+            <q-icon name="arrow_right" class="indicator-icon" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <div class="logon">
+        <img class="negro" src="/imagenes/snegr.png" alt="" />
+      </div>
+    </q-drawer>
 
     <q-page-container>
       <div class="aprendices-container q-pa-md">
@@ -115,60 +103,121 @@
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
             transition-hide="rotate" persistent>
             <q-card>
-              <q-card-section>
+              <q-card-section class="vert" style="background-color: green; color:white">
                 <div class="text-h6" v-if="b">Editar Aprendiz</div>
                 <div class="text-h6" v-else>Guardar Aprendiz</div>
               </q-card-section>
 
               <q-separator />
+              <div class="agua">
+    <q-card-section
+      style="max-height: none; max-width: 100%; width: 100vw; margin: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;"
+    >
+      <!-- Fila 1 -->
+      <q-input
+        filled
+        v-model="documento"
+        label="Documento Aprendiz"
+        :dense="dense"
+        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']"
+        style="margin-bottom: 15px; border-radius: 8px;"
+      >
+        <template v-slot:prepend>
+          <q-icon name="card_membership" />
+        </template>
+      </q-input>
 
-              <q-card-section style="max-height: 100vh; max-width: 90vh" class="scroll">
-                <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']" />
+      <q-input
+        filled
+        v-model="nombre"
+        label="Nombre Del Aprendiz"
+        :dense="dense"
+        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']"
+        style="margin-bottom: 15px; border-radius: 8px;"
+      >
+        <template v-slot:prepend>
+          <q-icon name="person" />
+        </template>
+      </q-input>
 
-                <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']" />
+      <!-- Fila 2 -->
+      <q-input
+        filled
+        v-model="telefono"
+        label="Teléfono Del Aprendiz"
+        :dense="dense"
+        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono', val => val.trim().length === 10 || 'Ingrese un teléfono válido']"
+        style="margin-bottom: 15px; border-radius: 8px;"
+      >
+        <template v-slot:prepend>
+          <q-icon name="phone" />
+        </template>
+      </q-input>
 
-                <q-input filled v-model="telefono" label="Telefono Del Aprendiz" :dense="dense" :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono',
-                val => val.trim().length === 10 || 'Ingrese un teléfono valido']" />
+      <q-input
+        filled
+        v-model="email"
+        label="Email Del Aprendiz"
+        :dense="dense"
+        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']"
+        style="margin-bottom: 15px; border-radius: 8px;"
+      >
+        <template v-slot:prepend>
+          <q-icon name="email" />
+        </template>
+      </q-input>
 
-                <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']" />
-                <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-                  :options="options" @filter="filterFn" style="width: 250px" behavior="menu" emit-value map-options
-                  lazy-rules :rules="[
-                    (val) => {
-                      if (b.value === false) {
-                        return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
-                      } else { return true }
-                    }
-                  ]">
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        No results
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-              </q-card-section>
+      <!-- Fila 3 -->
+      <q-select
+        filled
+        type="number"
+        v-model="ficha"
+        use-input
+        input-debounce="0"
+        label="Ficha"
+        :options="options"
+        @filter="filterFn"
+        style="width: 100%; margin-bottom: 20px; border-radius: 8px;"
+        behavior="menu"
+        emit-value
+        map-options
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha']"
+      >
+        <template v-slot:prepend>
+          <q-icon name="folder" />
+        </template>
 
-              <q-separator />
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No results
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+    </q-card-section>
+  </div>
 
-              <q-card-actions align="right">
-                <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-                <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()"
-                  :loading="loadingGuardarAprendiz" />
-              </q-card-actions>
+
+<q-separator />
+
+<q-card-actions style="justify-content: center;" align="right">
+  <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
+  <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
+</q-card-actions>
+
+
             </q-card>
           </q-dialog>
         </div>
       </div>
-      <div class="footer">
-          <div class="text-h7 text-weight-bold">
-              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-          </div>
-      </div>
+      <!-- El footer -->
+      <footer class="footer">
+        <div class="text-h7 text-weight-bold">
+          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+        </div>
+      </footer>
     </q-page-container>
   </q-layout>
 </template>
@@ -442,23 +491,30 @@ const columns = [
 
 
 <style>
+
+
+
+
 .user-info {
   text-align: center;
   margin: 0.5rem 0;
 }
 
-.user-name{
+.user-name {
   margin: 0;
   font-weight: bold;
 }
+
 .user-email {
   margin: 0;
 }
 
 .drawer-list {
-  flex: 1; /* Permite que la lista se expanda para llenar el espacio disponible */
+  flex: 1;
+  /* Permite que la lista se expanda para llenar el espacio disponible */
 
 }
+
 .q-drawer {
   overflow-y: auto !important;
   /* Asegura que el contenido del drawer permita scroll */
@@ -550,7 +606,7 @@ const columns = [
   align-content: center;
   align-items: center;
   height: auto;
-  width: 17%;
+  width: auto;
   margin-bottom: 20px;
 
 }
@@ -575,15 +631,41 @@ const columns = [
 .q-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
+  background-color: green !important;
+  color: white !important;
 
 }
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Ocupa el 100% del alto de la pantalla */
+}
+
+.container {
+  flex-grow: 1;
+  /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+}
+
 .footer {
-  background-color: #e7e3e3; /* Color de fondo del pie de página */
-  color: #000; /* Color del texto del pie de página */
-  margin-bottom: 0;
+  background-color: #e7e3e3;
+  color: #000;
+  padding: 15px 0;
+  text-align: center;
+  margin-top: auto;
+  /* Esto fuerza al footer a estar en la parte inferior */
   width: 100%;
-  height: 45px;
-  align-content: center;
-text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    font-size: 14px;
+  }
 }
 </style>

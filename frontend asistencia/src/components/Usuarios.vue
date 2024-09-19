@@ -85,32 +85,70 @@ USUARIOS <template>
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
             transition-hide="rotate" persistent>
             <q-card>
-              <q-card-section>
+              <q-card-section class="vert" style="background-color: green; color:white">
                 <div class="text-h6" v-if="b">Editar Usuario</div>
                 <div class="text-h6" v-else>Guardar Usuario</div>
               </q-card-section>
 
               <q-separator />
 
-              <q-card-section style="max-height: 80vh" class="scroll">
-                <q-input filled v-model="email" label="Email del Usuario" :dense="dense" lazy-rules
-                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']" />
-                <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" lazy-rules
-                  :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']" />
-                <q-input v-if="!b" :type="isPwd ? 'password' : 'text'" filled v-model="password" label="Contraseña"
-                  lazy-rules :rules="[
-                    val => val && val.trim() >= 6 || 'La contraseña debe tener al menos 6 caracteres'
-                  ]">
-                  <template v-slot:append>
-                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                      @click="isPwd = !isPwd" />
-                  </template>
-                </q-input>
-              </q-card-section>
+              <q-card-section
+   style="max-height: none; max-width: 100%; width: 100vw; margin: auto; "
+  >
+    <!-- Nombre del Usuario -->
+    <q-input
+      filled
+      v-model="nombre"
+      label="Nombre del Usuario"
+      :dense="dense"
+      lazy-rules
+      :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']"
+    >
+      <template v-slot:prepend>
+        <q-icon name="person" />
+      </template>
+    </q-input>
+
+    <!-- Email del Usuario -->
+    <q-input
+      filled
+      v-model="email"
+      label="Email del Usuario"
+      :dense="dense"
+      lazy-rules
+      :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']"
+    >
+      <template v-slot:prepend>
+        <q-icon name="email" />
+      </template>
+    </q-input>
+
+    <!-- Contraseña -->
+    <q-input
+      v-if="!b"
+      :type="isPwd ? 'password' : 'text'"
+      filled
+      v-model="password"
+      label="Contraseña"
+      lazy-rules
+      :rules="[val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
+    >
+      <template v-slot:prepend>
+        <q-icon name="lock" />
+      </template>
+      <template v-slot:append>
+        <q-icon
+          :name="isPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isPwd = !isPwd"
+        />
+      </template>
+    </q-input>
+  </q-card-section>
 
               <q-separator />
 
-              <q-card-actions align="right">
+              <q-card-actions style="justify-content: center;"  align="right">
                 <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
                 <q-btn flat label="Guardar" color="primary" @click="crearUsuario()" :loading="loadingCrearUsuario" />
               </q-card-actions>
@@ -118,11 +156,12 @@ USUARIOS <template>
           </q-dialog>
         </div>
       </div>
-      <div class="footer">
-          <div class="text-h7 text-weight-bold">
-              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-          </div>
-      </div>
+    <!-- El footer -->
+      <footer class="footer">
+        <div class="text-h7 text-weight-bold">
+          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+        </div>
+      </footer>
     </q-page-container>
   </q-layout>
 </template>
@@ -267,11 +306,13 @@ async function crearUsuario() {
 
     } finally {
       loadingState.value[`guardar-${selectedId.value}`] = false;
+      
     }
   } else { // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
       await useUsuario.guardarUsuario(email.value, nombre.value, password.value);
+      fixed.value = false;
       await traer();
 
     } catch (error) {
@@ -393,15 +434,42 @@ const columns = [
 .q-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
+  background-color: green !important;
+  color: white !important;
 
 }
+
+
+
+
+
+ .main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+}
+
+.container {
+  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+}
+
 .footer {
-  background-color: #e7e3e3; /* Color de fondo del pie de página */
-  color: #000; /* Color del texto del pie de página */
-  margin-bottom: 0;
+  background-color: #e7e3e3;
+  color: #000;
+  padding: 15px 0;
+  text-align: center;
+  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
   width: 100%;
-  height: 45px;
-  align-content: center;
-text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    font-size: 14px;
+  }
 }
 </style>

@@ -87,35 +87,60 @@
         <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
           transition-hide="rotate" persistent>
           <q-card>
-            <q-card-section>
+            <q-card-section class="vert" style="background-color: green; color:white">
               <div class="text-h6" v-if="b == true">Editar Ficha</div>
               <div class="text-h6" v-else>Guardar Ficha</div>
             </q-card-section>
 
             <q-separator />
 
-            <q-card-section style="max-height: 50vh" class="scroll">
-              <q-input filled v-model="codigo" label="Código de la Ficha" :dense="dense"
-                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el codigo de la ficha']" />
-              <q-input filled v-model="nombre" label="Nombre de la Ficha" :dense="dense"
-                :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre de la ficha']" />
+            <q-card-section
+    style="max-height: none; max-width: 100%; width: 100vw; margin: auto; "
+  >
+    <!-- Código de la Ficha -->
+    <q-input
+      filled
+      v-model="codigo"
+      label="Código de la Ficha"
+      :dense="dense"
+      :rules="[val => val.trim() !== '' || 'Por favor, ingrese el código de la ficha']"
+      style="border-radius: 8px;"
+    >
+      <template v-slot:prepend>
+        <q-icon name="code" />
+      </template>
+    </q-input>
 
-            </q-card-section>
+    <!-- Nombre de la Ficha -->
+    <q-input
+      filled
+      v-model="nombre"
+      label="Nombre de la Ficha"
+      :dense="dense"
+      :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre de la ficha']"
+      style="border-radius: 8px;"
+    >
+      <template v-slot:prepend>
+        <q-icon name="label" />
+      </template>
+    </q-input>
+  </q-card-section>
 
             <q-separator />
 
-            <q-card-actions align="right">
+            <q-card-actions style="justify-content: center;" align="right">
               <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
               <q-btn flat label="Guardar" color="primary" @click="crearFicha()" />
             </q-card-actions>
           </q-card>
         </q-dialog>
       </div>
-      <div class="footer">
-          <div class="text-h7 text-weight-bold">
-              ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-          </div>
-      </div>
+    <!-- El footer -->
+      <footer class="footer">
+        <div class="text-h7 text-weight-bold">
+          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
+        </div>
+      </footer>
     </q-page-container>
   </q-layout>
 </template>
@@ -387,6 +412,8 @@ function toggleLeftDrawer() {
 .q-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
+  background-color: green !important;
+  color: white !important;
 
 }
 .footer {
@@ -397,5 +424,34 @@ function toggleLeftDrawer() {
   height: 45px;
   align-content: center;
 text-align: center;
+}
+   .main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+}
+
+.container {
+  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+}
+
+.footer {
+  background-color: #e7e3e3;
+  color: #000;
+  padding: 15px 0;
+  text-align: center;
+  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    font-size: 14px;
+  }
 }
 </style>
