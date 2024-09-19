@@ -23,18 +23,18 @@ aprendizRouter.post('/',
         validarJWT,
         check('documento', 'El número de documento es obligatorio')
             .notEmpty().withMessage('Debe ingresar un valor')
-            .isNumeric().withMessage('Debe ser un número'),
+            .isNumeric().withMessage('Debe ser un número').trim(),
         // check('documento').custom(aprendicesHelper.existeDocumento),
         check('nombre').isString().withMessage('El campo nombre debe ser una cadena')
-            .not().isEmpty().withMessage('El campo nombre no puede estar vacío'),
+            .not().isEmpty().withMessage('El campo nombre no puede estar vacío').trim(),
         check('telefono', 'El teléfono es obligatorio')
             .notEmpty().withMessage('Debe ingresar un valor')
             .isNumeric().withMessage('Debe ser un número')
-            .isLength({ min: 10, max: 10 }).withMessage('Debe tener exactamente 10 dígitos'),
+            .isLength({ min: 10, max: 10 }).withMessage('Debe tener exactamente 10 dígitos').trim(),
         check('email', 'El email es obligatorio').notEmpty()
             .withMessage('Debe ingresar un valor')
-            .isEmail().withMessage('Debe ser un email válido'),
-        check('id_ficha', 'El ID de la ficha es obligatorio').isMongoId(),
+            .isEmail().withMessage('Debe ser un email válido').trim(),
+        check('id_ficha', 'El ID de la ficha es obligatorio').isMongoId().trim(),
         validarCampos
     ],
     aprendizController.crear
@@ -45,15 +45,15 @@ aprendizRouter.put('/modificar/:id',
         validarJWT,
         check('documento', 'El número de documento es obligatorio')
             .notEmpty().withMessage('Debe ingresar un valor')
-            .isNumeric().withMessage('Debe ser un número'),
+            .isNumeric().withMessage('Debe ser un número').trim(),
         check('nombre').isString().withMessage('El campo nombre debe ser una cadena')
-            .not().isEmpty().withMessage('El campo nombre no puede estar vacío'),
+            .not().isEmpty().withMessage('El campo nombre no puede estar vacío').trim(),
         check('telefono', 'El teléfono es obligatorio')
             .notEmpty().withMessage('Debe ingresar un valor')
             .isNumeric().withMessage('Debe ser un número')
-            .isLength({ min: 10, max: 10 }).withMessage('Debe tener exactamente 10 dígitos'),
-        check('email', 'El email es obligatorio').notEmpty().withMessage('Debe ingresar un valor').isEmail().withMessage('Debe ser un email válido'),
-        check('id_ficha', 'El ID de la ficha es obligatorio').isEmpty(),
+            .isLength({ min: 10, max: 10 }).withMessage('Debe tener exactamente 10 dígitos').trim(),
+        check('email', 'El email es obligatorio').notEmpty().withMessage('Debe ingresar un valor').isEmail().withMessage('Debe ser un email válido').trim(),
+        check('id_ficha', 'El ID de la ficha es obligatorio').isEmpty().trim(),
         validarCampos
     ],
     aprendizController.modificar
@@ -62,7 +62,7 @@ aprendizRouter.put('/modificar/:id',
 aprendizRouter.put('/activar/:id',
     [
         validarJWT,
-        check('id', 'El ID proporcionado no es válido').isMongoId(),
+        check('id', 'El ID proporcionado no es válido').isMongoId().trim(),
         validarCampos
     ],
 
@@ -71,7 +71,7 @@ aprendizRouter.put('/activar/:id',
 aprendizRouter.put('/desactivar/:id',
     [
         validarJWT,
-        check('id', 'El ID proporcionado no es válido').isMongoId(),
+        check('id', 'El ID proporcionado no es válido').isMongoId().trim(),
         validarCampos
     ],
     aprendizController.desactivar);

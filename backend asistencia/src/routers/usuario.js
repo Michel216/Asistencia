@@ -8,8 +8,8 @@ const usuarioRouter = express.Router();
 
 usuarioRouter.post('/',
   [
-    check('email', 'El email es obligatorio').isEmail(),
-    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    check('email', 'El email es obligatorio').isEmail().trim(),
+    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }).trim(),
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     validarCampos,
   ],
@@ -18,7 +18,7 @@ usuarioRouter.post('/',
 usuarioRouter.post('/login',
   [
     check('email', 'El correo es obligatorio').isEmail(),
-    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }).trim(),
     validarCampos
   ],
   usuarioController.login
@@ -40,9 +40,9 @@ usuarioRouter.get('/',
 usuarioRouter.put('/modificar/:id',
   [
     validarJWT,
-    check('id', 'El id es obligatorio').isMongoId(),
-    check('email', 'El email es obligatorio').isEmail(),
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('id', 'El id es obligatorio').isMongoId().trim(),
+    check('email', 'El email es obligatorio').isEmail().trim(),
+    check('nombre', 'El nombre es obligatorio').not().isEmpty().trim(),
 
     validarCampos,
   ],
@@ -51,15 +51,15 @@ usuarioRouter.put('/modificar/:id',
 usuarioRouter.put(
   '/cambiarContrasena/',
   [
-    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }).trim(),
     validarCampos,
   ],
   usuarioController.cambiarContrasena
 );
-usuarioRouter.post('/enviarEmail/:email', [check('email', 'El correo es obligatorio').isEmail(),], usuarioController.enviarEmail)
+usuarioRouter.post('/enviarEmail/:email', [check('email', 'El correo es obligatorio').isEmail().trim()], usuarioController.enviarEmail)
 
-usuarioRouter.put('/activar/:id', [validarJWT, check('id', 'ID inválido').isMongoId(), validarCampos], usuarioController.activar);
-usuarioRouter.put('/desactivar/:id', [validarJWT, check('id', 'ID inválido').isMongoId(), validarCampos], usuarioController.inactivar);
+usuarioRouter.put('/activar/:id', [validarJWT, check('id', 'ID inválido').isMongoId().trim(), validarCampos], usuarioController.activar);
+usuarioRouter.put('/desactivar/:id', [validarJWT, check('id', 'ID inválido').isMongoId().trim(), validarCampos], usuarioController.inactivar);
 
 
 

@@ -11,13 +11,13 @@ fichaRouter.get('/',
     [
         validarJWT,
         validarCampos
-    ], fichaController.listarTodos);
+    ], fichaController.listarTodos).trim();
 
 fichaRouter.post('/',
     [
         validarJWT,
-        check('codigo').optional().isNumeric().withMessage('El código debe ser un número'),
-        check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio'),
+        check('codigo').optional().isNumeric().withMessage('El código debe ser un número').trim(),
+        check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio').trim(),
         validarCampos
     ],
     fichaController.crear
@@ -26,9 +26,9 @@ fichaRouter.post('/',
 fichaRouter.put('/modificar/:id',
     [
         validarJWT,
-        check('id', 'El id es obligatorio').isMongoId(),
-        check('codigo').optional().isNumeric().withMessage('El código debe ser un número'),
-        check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio'),
+        check('id', 'El id es obligatorio').isMongoId().trim(),
+        check('codigo').optional().isNumeric().withMessage('El código debe ser un número').trim(),
+        check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio').trim(),
         validarCampos
     ],
     fichaController.modificar
@@ -38,7 +38,7 @@ fichaRouter.put('/modificar/:id',
 fichaRouter.put('/activar/:id',
     [
         validarJWT,
-        check('id', 'El id es obligatorio').isMongoId(),
+        check('id', 'El id es obligatorio').isMongoId().trim(),
         validarCampos
     ], fichaController.activar,
 );
@@ -47,7 +47,7 @@ fichaRouter.put('/activar/:id',
 fichaRouter.put('/desactivar/:id',
     [
         validarJWT,
-        check('id', 'El id es obligatorio').isMongoId(),
+        check('id', 'El id es obligatorio').isMongoId().trim(),
         validarCampos
     ], fichaController.desactivar,);
 

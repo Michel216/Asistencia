@@ -17,7 +17,7 @@ bitacoraRouter.get('/',
 bitacoraRouter.put('/:id',
     [
         validarJWT,
-        check('id', 'El id es obligatorio').isMongoId(),
+        check('id', 'El id es obligatorio').isMongoId().trim(),
         validarCampos
     ],
     bitacoraController.updateEstado
@@ -38,17 +38,17 @@ bitacoraRouter.post('/listarAprendiz',
 bitacoraRouter.post('/listarFicha',
     [
         validarJWT,
-        check('id_ficha', 'El ID de la ficha es obligatorio').not().isEmpty(),
-        check('fechaInicio', 'La fecha de inicio es obligatoria').isISO8601(),
-        check('fechaFin', 'La fecha de fin es obligatoria').isISO8601(),
+        check('id_ficha', 'El ID de la ficha es obligatorio').not().isEmpty().trim(),
+        check('fechaInicio', 'La fecha de inicio es obligatoria').isISO8601().trim(),
+        check('fechaFin', 'La fecha de fin es obligatoria').isISO8601().trim(),
         validarCampos
     ],
     bitacoraController.listarFicha
 );
 bitacoraRouter.post('/listarFichaHora', [
     validarJWT,
-    check('idFicha', 'El idFicha es obligatorio').isMongoId(),
-    check('fecha', 'La fecha es obligatoria').notEmpty(),
+    check('idFicha', 'El idFicha es obligatorio').isMongoId().trim(),
+    check('fecha', 'La fecha es obligatoria').notEmpty().trim(),
     validarCampos
 ], bitacoraController.listarPorFichaYFecha);
 
@@ -56,7 +56,7 @@ bitacoraRouter.post('/listarFichaHora', [
 bitacoraRouter.post('/',
     [
         validarJWT,
-        check('id_aprendiz', 'El ID del aprendiz es obligatorio').not().isEmpty(),
+        check('id_aprendiz', 'El ID del aprendiz es obligatorio').not().isEmpty().trim(),
         validarCampos
     ],
     bitacoraController.crear
