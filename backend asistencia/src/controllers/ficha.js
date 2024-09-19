@@ -1,11 +1,11 @@
 const Ficha = require('../modelos/ficha');
-const { validarCodigoUnico } = require('../helpers/ficha');
+const { validarCodigoUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/ficha');
 
 const fichaController = {
     crear: async (req, res) => {
         const { codigo, nombre } = req.body;
         try {
-            await validarCodigoUnico(codigo);
+            await validarUnicidadCreacion(req.body);
             const nuevoFicha = new Ficha({ codigo, nombre });
             await nuevoFicha.save();
             res.json({ message: 'Ficha creada' });
@@ -25,9 +25,9 @@ const fichaController = {
     },
     modificar: async (req, res) => {
         const id = req.params.id;
-
         const nuevosDatos = req.body;
         try {
+            await validarUnicidadActualizacion(id, req.body);
             const fichaModificada = await Ficha.findByIdAndUpdate(id, nuevosDatos, { new: true });
             if (!fichaModificada) {
                 return res.status(404).json({ message: 'Ficha no encontrada' });

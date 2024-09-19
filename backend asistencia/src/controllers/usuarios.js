@@ -1,13 +1,16 @@
 const bcryptjs = require('bcryptjs');
 const Usuario = require('../modelos/usuarios');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const { generarJWT } = require('../middlewares/validarJWT');
-const { encriptarPassword, compararPassword, validarEmailUnico } = require('../helpers/usuario.js');
+const { encriptarPassword, validarEmailUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/usuario.js');
 
 const usuarioController = {
     // Crear usuario
 
     crear: async (req, res) => {
         try {
+            await validarUnicidadCreacion(req.body);
             const { email, password, nombre } = req.body;
             await validarEmailUnico(email);
 
@@ -79,27 +82,6 @@ const usuarioController = {
         }
     },
 
-    // login: async (req, res) => {
-    //     const { email, password } = req.body;
-    //     try {
-    //         const usuario = await Usuario.findOne({ email });
-    //         if (!usuario) {
-    //             return res.status(400).json({ msg: 'Usuario o contraseña incorrectos' });
-    //         }
-
-    //         const validPassword = compararPassword(password, usuario.password);
-    //         if (!validPassword) {
-    //             return res.status(400).json({ msg: 'Usuario o contraseña incorrectos' });
-    //         }
-
-    //         const token = await generarJWT(usuario.id);
-    //         res.json({ usuario, token });
-
-    //     } catch (error) {
-    //         console.error('Error en el login:', error);
-    //         res.status(500).json({ msg: 'Error en el login' });
-    //     }
-    // },
 
     // Modificar usuario (incluyendo cambiar contraseña)
     modificar: async (req, res) => {
@@ -107,7 +89,7 @@ const usuarioController = {
         const nuevosDatos = req.body;
 
         try {
-
+            await validarUnicidadActualizacion(id, req.body);
             const usuarioModificado = await Usuario.findByIdAndUpdate(id, nuevosDatos, { new: true });
 
             if (!usuarioModificado) {
@@ -175,13 +157,56 @@ const usuarioController = {
             res.status(500).json({ error: 'Error al eliminar al usuario' });
         }
     },
+    enviarEmail: async (req, res) => {
+        const { email } = req.params;
+        try {
+            const usuario = await Usuario.findOne({ email });
+            if (!usuario) {
+                return res.status(404).json({ msg: 'Usuario no encontrado' });
+            }
+            const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
+            const resetURL = `https://asistencia-i7sv.onrender.com/recuperarContraseña/${token}`;
+            const mailOptions = {
+                from: '"Recuperación de Contraseña" <no-reply@tuapp.com>',
+                to: email,
+                subject: 'Restablecer tu contraseña',
+                html: `
+                        <div style="text-align: center; font-family: Arial, sans-serif;">
+                        <img src="https://cdn.goconqr.com/uploads/node/image/5862283/LOGO_SENA.png" alt="Logo SENA" style="width: 100px; height: auto; margin-bottom: 20px;" />
+                        <h2>Recuperación de Contraseña</h2>
+                            <p>Recibes este correo porque solicitaste restablecer tu contraseña para la plataforma de asistencia del SENA.</p>
+                            <p>Por favor, haz clic en el botón de abajo para proceder con la recuperación de tu contraseña.</p>
+                            <a href="${resetURL}" style="background-color: #357a38; color: white; padding: 12px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block; margin: 20px 0;">Recuperar Contraseña</a>
+                            <p style="margin-top: 30px;">Si no realizaste esta solicitud, ignora este correo y no se realizará ningún cambio.</p>
+                        </div>
+                    `,
+            }
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                },
+            })
+            await transporter.sendMail(mailOptions);
+
+            res.status(200).json({ message: 'Correo enviado. Revisa tu bandeja de entrada.' });
+        } catch (error) {
+            console.error('Error al enviar el correo:', error);
+            res.status(500).json({ error: 'Error al enviar el correo' })
+        }
+    },
     // Cambiar contraseña
     cambiarContrasena: async (req, res) => {
-        const { email } = req.params;
+        const { token } = req.body;
         const { newPassword } = req.body;
 
         try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const email = decoded.email;
+
             // Encontrar usuario por email
             const usuario = await Usuario.findOne({ email });
 
@@ -200,6 +225,9 @@ const usuarioController = {
 
             res.json({ message: 'Contraseña modificada exitosamente' });
         } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                return res.status(400).json({ error: 'El token ha expirado' });
+            }
             console.error('Error al cambiar la contraseña:', error);
             res.status(500).json({ error: 'Error al cambiar la contraseña' });
         }

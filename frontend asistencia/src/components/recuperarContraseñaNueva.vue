@@ -6,14 +6,11 @@
       </div>
 
       <q-card-section>
-        <h5>Recuperar Contraseña</h5>
+        <h5>Restablecer Contraseña</h5>
         <q-form @submit.prevent="handlePasswordReset">
-          <q-input v-model="email" label="Correo Electrónico" outlined lazy-rules
-            :rules="[val => val && val.trim() !== '' || 'Por favor ingresa tu correo electrónico']" />
           <q-input v-model="newPassword" label="Nueva Contraseña" :type="isPwdNew ? 'password' : 'text'" outlined
-            lazy-rules :rules="[
-              val => val && val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres',
-            ]" autocomplete="off">
+            lazy-rules :rules="[val => val && val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
+            autocomplete="off">
             <template v-slot:append>
               <q-icon :name="isPwdNew ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                 @click="togglePasswordVisibility('new')" />
@@ -21,9 +18,7 @@
           </q-input>
 
           <q-input v-model="confirmPassword" label="Confirmar Contraseña" :type="isPwd ? 'password' : 'text'" outlined
-            lazy-rules :rules="[
-              val => val && val.trim() >= 6 || 'La contraseña debe tener al menos 6 caracteres'
-            ]" autocomplete="off">
+            lazy-rules :rules="[val => val && val.trim() !== '' || 'La contraseña debe coincidir']" autocomplete="off">
             <template v-slot:append>
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                 @click="togglePasswordVisibility('confirm')" />
@@ -43,41 +38,31 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
 import { useUsuariosStore } from '../stores/usuario.js';
+import { useRouter, useRoute } from 'vue-router';
 
-const useUsuario = useUsuariosStore();
 const isPwd = ref(true);
 const isPwdNew = ref(true);
-const isLoading = ref(false); // Estado para manejar la carga
-
-const email = ref('');
+const isLoading = ref(false);
 const newPassword = ref('');
 const confirmPassword = ref('');
 
+const useUsuario = useUsuariosStore();
 const $q = useQuasar();
 const router = useRouter();
+const route = useRoute(); // Para obtener el token desde la URL
 
 const togglePasswordVisibility = (type) => {
   if (type === 'new') {
-    isPwdNew.value = !isPwdNew.value;  // Alterna visibilidad para nueva contraseña
+    isPwdNew.value = !isPwdNew.value;
   } else if (type === 'confirm') {
-    isPwd.value = !isPwd.value;  // Alterna visibilidad para confirmar contraseña
+    isPwd.value = !isPwd.value;
   }
-
-  // Después de 3 segundos, oculta la contraseña de nuevo
-  setTimeout(() => {
-    if (type === 'new') {
-      isPwdNew.value = true;
-    } else if (type === 'confirm') {
-      isPwd.value = true;
-    }
-  }, 3000);  // Cambia 3000 (3 segundos) al tiempo deseado
 };
+
 const handlePasswordReset = async () => {
   if (newPassword.value !== confirmPassword.value) {
     $q.notify({
@@ -88,24 +73,31 @@ const handlePasswordReset = async () => {
     return;
   }
 
-  isLoading.value = true; // Muestra el spinner
+  isLoading.value = true;
 
   try {
-    const response = await useUsuario.modificarUsuario(email.value, newPassword.value);
+    const response = await useUsuario.restablecerContraseña(route.params.token, newPassword.value);
     if (response.status === 200) {
-
-      router.push('/'); // Redirige al login después de cambiar la contraseña
+      $q.notify({
+        message: 'Contraseña restablecida correctamente.',
+        color: 'positive',
+        icon: 'check',
+      });
+      router.push('/'); // Redirige al login
     } else {
-      throw new Error('Error al actualizar la contraseña');
+      throw new Error('Error al restablecer la contraseña');
     }
   } catch (error) {
-
+    $q.notify({
+      message: 'Error al restablecer la contraseña.',
+      color: 'negative',
+      icon: 'error',
+    });
   } finally {
-    isLoading.value = false; // Oculta el spinner
+    isLoading.value = false;
   }
 };
 </script>
-
 
 <style scoped>
 .recovery-wrapper {

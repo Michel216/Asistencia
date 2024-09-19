@@ -17,6 +17,7 @@ bitacoraRouter.get('/',
 bitacoraRouter.put('/:id',
     [
         validarJWT,
+        check('id', 'El id es obligatorio').isMongoId(),
         validarCampos
     ],
     bitacoraController.updateEstado

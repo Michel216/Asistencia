@@ -5,7 +5,8 @@ import Ficha from '../components/Fichas.vue';
 import Login from '../components/login.vue';
 import Usuario from '../components/Usuarios.vue';
 import Bitacora from '../components/bitacoras.vue';
-import RecuperarContraseña from '../components/recuperarContraseña.vue';
+import RecuperarContraseñaEmail from '../components/recuperarContraseñaEmail.vue';
+import RecuperarContraseñaNueva from '../components/recuperarContraseñaNueva.vue';
 import registroAprendiz from '../components/registroAprendiz.vue';
 import documentoPrevio from '../components/documentoPrevio.vue';
 
@@ -17,7 +18,8 @@ const routes = [
   { path: '/usuario', component: Usuario, },
   { path: '/bitacora', component: Bitacora, },
   { path: '/aprendiz', component: Aprendiz, },
-  { path: '/recuperarContraseña', component: RecuperarContraseña },
+  { path: '/recuperarContraseñaEmail', component: RecuperarContraseñaEmail },
+  { path: '/recuperarContraseña', component: RecuperarContraseñaNueva },
   { path: '/registro', component: registroAprendiz },
   { path: '/documento', component: documentoPrevio }
 ];

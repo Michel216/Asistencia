@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { Notify } from 'quasar';
 import axios from 'axios';
 import { useQuasar } from 'quasar'
+// import { cambiarContrasena } from '../../../backend asistencia/src/controllers/usuarios';
 
 
 const API_URL = 'https://asistencia-backend-31lj.onrender.com';
@@ -84,15 +85,11 @@ export const useUsuariosStore = defineStore('usuario', () => {
         }
     };
 
-    const modificarUsuario = async (email, newPassword) => {
+    const solicitarRecuperacion = async (email) => {
         try {
-            const response = await axios.put(`${API_URL}/usuario/cambiarContrasena/${email}`, {
-                newPassword
-            }, {
-                headers: { "token": token.value }
-            });
+            const response = await axios.post(`http://localhost:3082/usuario/enviarEmail/${email}`);
             $q.notify({
-                message: 'Contraseña actualizada exitosamente',
+                message: 'Correo de recuperación enviado. Revisa tu bandeja de entrada.',
                 color: 'positive',
                 icon: 'check',
             });
@@ -100,11 +97,35 @@ export const useUsuariosStore = defineStore('usuario', () => {
         } catch (error) {
             Notify.create({
                 type: 'negative',
-                message: 'Error al cambiar la contraseña',
+                message: 'Error al enviar el correo. Inténtalo de nuevo.',
+                icon: 'error'
             });
             throw error;
         }
     };
+
+    const cambiarContrasena = async (token, newPassword) => {
+        try {
+            const r = await axios.put(`http://localhost:3082/usuario/cambiarContraseña/${token}`, {
+                newPassword
+            });
+            $q.notify({
+                color: 'positive',
+                icon: 'check',
+                message: 'Contraseña cambiada correctamente'
+            });
+            return r;
+        } catch (error) {
+            console.error(error);
+            $q.notify({
+                color: 'negative',
+                icon: 'error',
+                message: 'Error al cambiar la contraseña'
+            });
+            return error;
+        }
+    };
+
 
     const modificarDatosUsuario = async (id, email, nombre) => {
         try {
@@ -165,14 +186,15 @@ export const useUsuariosStore = defineStore('usuario', () => {
             });
             throw error;
         }
-    };
+    }
 
     return {
         token,
         usuario,
         loading,
         login,
-        modificarUsuario,
+        cambiarContrasena,
+        solicitarRecuperacion,
         modificarDatosUsuario,
         listarUsuarios,
         activarUsuario,

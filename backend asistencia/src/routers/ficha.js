@@ -16,8 +16,8 @@ fichaRouter.get('/',
 fichaRouter.post('/',
     [
         validarJWT,
-        check('codigo', 'El código es obligatorio').not().isEmpty(),
-        check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+        check('codigo').optional().isNumeric().withMessage('El código debe ser un número'),
+        check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio'),
         validarCampos
     ],
     fichaController.crear
@@ -27,6 +27,8 @@ fichaRouter.put('/modificar/:id',
     [
         validarJWT,
         check('id', 'El id es obligatorio').isMongoId(),
+        check('codigo').optional().isNumeric().withMessage('El código debe ser un número'),
+        check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio'),
         validarCampos
     ],
     fichaController.modificar
@@ -35,18 +37,18 @@ fichaRouter.put('/modificar/:id',
 // Activar una ficha - Se requiere JWT
 fichaRouter.put('/activar/:id',
     [
-        validarJWT, 
-    check('id', 'El id es obligatorio').isMongoId(), 
-    validarCampos
-],fichaController.activar,
-   );
+        validarJWT,
+        check('id', 'El id es obligatorio').isMongoId(),
+        validarCampos
+    ], fichaController.activar,
+);
 
 // Inactivar una ficha - Se requiere JWT
 fichaRouter.put('/desactivar/:id',
-   [ 
-    validarJWT,
-    check('id', 'El id es obligatorio').isMongoId(),
-    validarCampos
-],fichaController.desactivar,);
+    [
+        validarJWT,
+        check('id', 'El id es obligatorio').isMongoId(),
+        validarCampos
+    ], fichaController.desactivar,);
 
 module.exports = fichaRouter;

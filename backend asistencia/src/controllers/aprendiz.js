@@ -1,14 +1,15 @@
 
 
-const Aprendiz = require('../modelos/aprendiz');
-const { validarCCUnico } = require('../helpers/aprendiz');
+const Aprendiz = require('../modelos/aprendiz.js');
+const { validarCCUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/aprendiz.js');
+const Ficha = require('../modelos/ficha.js')
 
 const aprendizController = {
 
     crear: async (req, res) => {
         try {
+            await validarUnicidadCreacion(req.body);
             const { documento, nombre, telefono, email, id_ficha } = req.body;
-            await validarCCUnico(documento);
 
             const nuevoAprendiz = new Aprendiz({ documento, nombre, telefono, email, id_ficha });
             await nuevoAprendiz.save();
@@ -56,6 +57,7 @@ const aprendizController = {
         const id = req.params.id;
         const nuevosDatos = req.body;
         try {
+            await validarUnicidadActualizacion(id, req.body);
             const aprendizModificado = await Aprendiz.findByIdAndUpdate(id, nuevosDatos, { new: true });
             if (!aprendizModificado) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });

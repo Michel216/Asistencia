@@ -68,7 +68,7 @@ const Login = async () => {
 };
 
 const redirectToRecoveryPage = () => {
-  router.push('/recuperarContraseña');
+  router.push('/recuperarContraseñaEmail');
 };
 </script>
 
