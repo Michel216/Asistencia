@@ -47,4 +47,4 @@ const usuarioHelper = {
     }
 }
 
-export { usuarioHelper }
+module.exports =  usuarioHelper 

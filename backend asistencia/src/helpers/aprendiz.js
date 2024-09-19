@@ -93,4 +93,4 @@ const aprendizHelper = {
 
 }
 
-export { aprendizHelper }
+module.exports = aprendizHelper 

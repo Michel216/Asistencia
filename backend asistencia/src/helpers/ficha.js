@@ -64,4 +64,4 @@ const fichaHelper = {
 
 }
 
-export { fichaHelper };
+module.exports = fichaHelper ;
