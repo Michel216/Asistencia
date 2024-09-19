@@ -87,7 +87,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
 
     const solicitarRecuperacion = async (email) => {
         try {
-            const response = await axios.post(`http://localhost:3082/usuario/enviarEmail/${email}`);
+            const response = await axios.post(`${API_URL}/usuario/enviarEmail/${email}`);
             $q.notify({
                 message: 'Correo de recuperación enviado. Revisa tu bandeja de entrada.',
                 color: 'positive',
@@ -106,7 +106,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
 
     const cambiarContrasena = async (token, newPassword) => {
         try {
-            const r = await axios.put(`http://localhost:3082/usuario/cambiarContraseña/${token}`, {
+            const r = await axios.put(`${API_URL}/usuario/cambiarContraseña/${token}`, {
                 newPassword
             });
             $q.notify({
@@ -155,6 +155,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
             });
             Notify.create({
                 type: 'positive',
+                icon:'check',
                 message: 'Usuario activado con éxito',
             });
             return response;
@@ -175,6 +176,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
             });
             Notify.create({
                 type: 'positive',
+                icon:'check',
                 message: 'Usuario desactivado con éxito',
             });
             return response;

@@ -6,10 +6,9 @@ import Login from '../components/login.vue';
 import Usuario from '../components/Usuarios.vue';
 import Bitacora from '../components/bitacoras.vue';
 import RecuperarContraseñaEmail from '../components/recuperarContraseñaEmail.vue';
-import RecuperarContraseñaNueva from '../components/recuperarContraseñaNueva.vue';
 import registroAprendiz from '../components/registroAprendiz.vue';
 import documentoPrevio from '../components/documentoPrevio.vue';
-
+import RecuperarContraseñaNueva from '../components/recuperarContraseñaNueva.vue';
 
 const routes = [
   { path: '/', component: Login },
