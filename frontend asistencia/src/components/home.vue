@@ -25,7 +25,10 @@
         <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
       </q-avatar>
     </div>
-    <h5 >Bienvenid@ <strong>{{ nombre }}</strong></h5>
+    <h5>
+  Bienvenid@
+  <strong style="display: block;">{{ nombre }}</strong>
+</h5>
     <q-list class="drawer-content">
       <q-item
         v-for="item in menuItems"

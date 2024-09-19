@@ -69,7 +69,7 @@
           <q-card>
             <q-card-section>
               <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-                :options="options" @filter="filterFn" style="width: 250px" behavior="menu" emit-value map-options
+                :options="options" @filter="filterFn"  style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value map-options
                 lazy-rules :rules="[
                   (val) => {
                     if (b.value === false) {
@@ -100,9 +100,11 @@
                 </template>
               </q-input>
               <br>
+              <q-card-actions style="justify-content: center;" align="right">
               <q-btn label="Cancelar" @click="fechaFiltrada = false" /> <span>         </span>
               <q-btn label="Previsualizar" style="background-color: green; color: white" @click="previsualizarDocumento" />
-            </q-card-section>
+           </q-card-actions>
+           </q-card-section>
           </q-card>
         </q-dialog>
 

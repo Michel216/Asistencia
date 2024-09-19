@@ -103,7 +103,7 @@
           <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
             transition-hide="rotate" persistent>
             <q-card>
-              <q-card-section class="vert" style="background-color: green;">
+              <q-card-section class="vert" style="background-color: green; color:white">
                 <div class="text-h6" v-if="b">Editar Aprendiz</div>
                 <div class="text-h6" v-else>Guardar Aprendiz</div>
               </q-card-section>
@@ -631,6 +631,8 @@ const columns = [
 .q-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-weight: bold;
+  background-color: green !important;
+  color: white !important;
 
 }
 
