@@ -18,7 +18,7 @@ const routes = [
   { path: '/bitacora', component: Bitacora, },
   { path: '/aprendiz', component: Aprendiz, },
   { path: '/recuperarContraseñaEmail', component: RecuperarContraseñaEmail },
-  { path: '/recuperarContraseña', component: RecuperarContraseñaNueva },
+  { path: '/recuperarContraseña/:token', component: RecuperarContraseñaNueva },
   { path: '/registro', component: registroAprendiz },
   { path: '/documento', component: documentoPrevio }
 ];
