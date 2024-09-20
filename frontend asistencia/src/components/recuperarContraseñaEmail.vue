@@ -15,7 +15,7 @@
               <q-spinner size="20px" color="white" />
             </template>
             <template v-else>
-              Enviar Instrucciones
+              Enviar Correo
             </template>
           </q-btn>
         </q-form>
