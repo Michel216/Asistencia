@@ -166,7 +166,7 @@ const usuarioController = {
             }
             const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-            const resetURL = `https://asistencia-i7sv.onrender.com/recuperarContraseña/{token}`;
+            const resetURL = `https://asistencia-i7sv.onrender.com/recuperarContraseña/${token}`;
             const mailOptions = {
                 from: '"Recuperación de Contraseña" <no-reply@tuapp.com>',
                 to: email,
