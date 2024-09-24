@@ -69,7 +69,7 @@
           <q-card>
             <q-card-section>
               <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-                :options="options" @filter="filterFn"  style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value map-options
+                :options="options" @filter="filterFn"  style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value map-options crearable
                 lazy-rules :rules="[
                   (val) => {
                     if (b.value === false) {
