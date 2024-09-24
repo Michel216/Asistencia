@@ -200,7 +200,7 @@ const usuarioController = {
     },
     // Cambiar contraseña
     cambiarContrasena: async (req, res) => {
-        const { token } = req.body;
+        const { token } = req.params;
         const { newPassword } = req.body;
 
         try {

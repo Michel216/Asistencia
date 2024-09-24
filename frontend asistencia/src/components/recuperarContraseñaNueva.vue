@@ -89,7 +89,7 @@ const handlePasswordReset = async () => {
     }
   } catch (error) {
     $q.notify({
-      message: 'Error al restablecer la contraseña.',
+      message: 'Error al restablecer la contraseñaa.',
       color: 'negative',
       icon: 'error',
     });
