@@ -67,6 +67,11 @@
 
             <q-dialog v-model="fechaFiltrada">
           <q-card>
+             <q-card-section class="vert" style="background-color: green; color:white">
+                <div class="text-h6" v-else>Filtro Asistencia</div>
+              </q-card-section>
+
+              <q-separator />
             <q-card-section>
               <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
                 :options="options" @filter="filterFn"  style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value map-options clearable
@@ -102,7 +107,7 @@
               <br>
               <q-card-actions style="justify-content: center;" align="right">
               <q-btn label="Cancelar" @click="fechaFiltrada = false" /> <span>         </span>
-              <q-btn label="Previsualizar" style="background-color: green; color: white" @click="previsualizarDocumento" />
+              <q-btn label="Visualizar" style="background-color: green; color: white" @click="previsualizarDocumento" />
            </q-card-actions>
            </q-card-section>
           </q-card>
