@@ -49,7 +49,7 @@ usuarioRouter.put('/modificar/:id',
   usuarioController.modificar
 );
 usuarioRouter.put(
-  '/cambiarContraseña/:token',
+  '/cambiarContrasena/:token',
   [
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }).trim(),
     validarCampos,

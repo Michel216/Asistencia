@@ -106,7 +106,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
 
     const restablecerContraseña = async (token, newPassword) => {
         try {
-            const r = await axios.put(`${API_URL}/usuario/cambiarContraseña/${token}`, {
+            const r = await axios.put(`${API_URL}/usuario/cambiarContrasena/${token}`, {
                 newPassword
             });
             $q.notify({
