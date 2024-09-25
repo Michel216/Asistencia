@@ -68,7 +68,7 @@
             <q-dialog v-model="fechaFiltrada">
           <q-card>
              <q-card-section class="vert" style="background-color: green; color:white">
-                <div class="text-h6" v-else>Filtro Asistencia</div>
+                <div class="text-h6">Filtro Asistencia</div>
               </q-card-section>
 
               <q-separator />
