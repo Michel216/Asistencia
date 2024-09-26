@@ -46,17 +46,19 @@ export const useFichaStore = defineStore('ficha', () => {
             $q.notify({
                 color: 'positive',
                 icon: 'check',
-                message: 'Ficha guardada correctamente'
+                message: 'Ficha creada existosamente'
             });
             return r;
         } catch (error) {
-            console.log(error);
+            const errorMessage = error.response?.data?.message || 'No se pudo crear la ficha. Intente nuevamente.';
+            console.error("Error al guardar la ficha:", error);
+            
+            // Capturamos el mensaje del backend si la ficha ya existe
             $q.notify({
-                color: 'negative',
-                icon: 'error',
-                message: 'Error al guardar la ficha'
+              color: 'negative',
+              icon: 'error',
+              message: errorMessage,
             });
-            return error;
         }
     };
     const modificarFicha = async (id, codigo, nombre) => {
@@ -72,17 +74,18 @@ export const useFichaStore = defineStore('ficha', () => {
             $q.notify({
                 color: 'positive',
                 icon: 'check',
-                message: 'Ficha editada correctamente'
+                message: 'Ficha editada exitosamente'
             });
             console.log(r);
             return r;
         } catch (error) {
+            const errorMessage = error.response?.data?.message || 'No se pudo editar la ficha. Intente nuevamente.';
+            console.error("Error al modificar la ficha:", error);
             $q.notify({
-                color: 'negative',
-                icon: 'error',
-                message: 'Error al editar la ficha'
+              color: 'negative',
+              icon: 'error',
+              message: errorMessage,
             });
-            throw error;
         }
     };
 

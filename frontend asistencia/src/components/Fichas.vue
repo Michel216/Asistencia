@@ -216,31 +216,34 @@ async function traer() {
 }
 async function crearFicha() {
 
-  if (!nombre.value.trim() && !codigo.value.trim()) {
+  if (!nombre.value.trim() || !codigo.value.trim()) {
 
     $q.notify({
       color: 'negative',
       icon: 'error',
-      message: 'No se pudo guardar la ficha'
+      message: 'Por favor complete todos los campos correctamente.'
     });
     return;
   }
   if (b.value === true) {
     if (!id.value) {
-      console.error("ID de la ficha no está disponible");
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'No se puede identificar la ficha a editar.',
+      });
       return;
     }
 
     loadingState.value[`guardar-${id.value}`] = true;
 
     try {
-      await useFicha.modificarFicha(id.value, codigo.value, nombre.value);
+      await useFicha.modificarFicha(id.value.trim(), codigo.value.trim(), nombre.value.trim());
       await traer();
       fixed.value = false;
       b.value = false;
 
     } catch (error) {
-
       console.error("Error al modificar la ficha:", error);
     } finally {
       loadingState.value[`guardar-${id.value}`] = false;
@@ -249,7 +252,7 @@ async function crearFicha() {
     loadingState.value[`guardar-${id.value}`] = false;
 
     try {
-      await useFicha.guardarFicha(codigo.value, nombre.value);
+      await useFicha.guardarFicha(codigo.value.trim(), nombre.value.trim());
       await traer();
       fixed.value = false;
 
