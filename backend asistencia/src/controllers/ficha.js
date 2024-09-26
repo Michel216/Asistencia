@@ -15,7 +15,7 @@ const fichaController = {
         } catch (error) {
             console.error('Error al crear ficha:', error);
             res.status(400).json({ error: error.message }); // Respuesta con el mensaje específico
-        }
+        }        
     },
 
     listarTodos: async (req, res) => {

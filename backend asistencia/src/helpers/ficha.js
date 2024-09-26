@@ -5,7 +5,7 @@ const fichaHelper = {
         try {
             const ficha = await Ficha.findOne({ codigo });
             if (ficha) {
-                throw new Error(`El código ${codigo} ya está registrado`);
+                throw new Error(`El código ${codigo} ya existe`);
             }
         } catch (error) {
             throw new Error(`Error al verificar código: ${error.message}`);
