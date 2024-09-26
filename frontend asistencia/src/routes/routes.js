@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../components/home.vue';
 import Aprendiz from '../components/aprendiz.vue';
 import Ficha from '../components/Fichas.vue';
@@ -24,7 +24,7 @@ const routes = [
 ];
 
 export const router = createRouter({
-  history: createWebHistory(),  // Cambia a createWebHashHistory si prefieres el hash mode
+  history: createWebHashHistory(),  // Cambia a createWebHashHistory si prefieres el hash mode
   routes
 });
 
