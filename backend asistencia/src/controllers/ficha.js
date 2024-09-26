@@ -13,6 +13,9 @@ const fichaController = {
             await nuevaFicha.save();
             res.status(201).json({ message: 'Ficha creada exitosamente' });
         } catch (error) {
+            if (error instanceof FichaExistenteError) {
+                return res.status(400).json({ message: error.message }); // Envia el mensaje específico
+            }
             console.error('Error al crear ficha:', error);
             res.status(400).json({ error: error.message }); // Respuesta con el mensaje específico
         }        
