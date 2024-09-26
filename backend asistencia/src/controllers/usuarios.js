@@ -226,7 +226,7 @@ const usuarioController = {
             res.json({ message: 'Contraseña modificada exitosamente' });
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
-                return res.status(400).json({ error: 'El token ha expirado' });
+                return res.status(401).json({ msg: 'El token ha expirado' });
             }
             console.error('Error al cambiar la contraseña:', error);
             res.status(500).json({ error: 'Error al cambiar la contraseña' });

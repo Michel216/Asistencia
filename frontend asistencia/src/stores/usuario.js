@@ -39,7 +39,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
             // Notificar error
             Notify.create({
                 type: 'negative',
-                message: `Error al iniciar sesión. Verifica tu correo y contraseña, y prueba de nuevo.`,
+                message: `Error al iniciar sesión: ${error.response?.data?.message || error.message}`,
             });
             return false;
         } finally {
@@ -107,7 +107,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
     const restablecerContraseña = async (token, newPassword) => {
         try {
             const r = await axios.put(`${API_URL}/usuario/cambiarContrasena/${token}`, {
-                newPassword
+                password: newPassword
             });
             $q.notify({
                 color: 'positive',
@@ -117,11 +117,22 @@ export const useUsuariosStore = defineStore('usuario', () => {
             return r;
         } catch (error) {
             console.error(error);
-            $q.notify({
-                color: 'negative',
-                icon: 'error',
-                message: 'Error al cambiar la contraseña'
-            });
+            
+            // Manejo de notificación para token expirado
+            if (error.response && error.response.data.msg === 'El token ha expirado') {
+                $q.notify({
+                    color: 'negative',
+                    icon: 'error',
+                    message: 'El token ha expirado. Por favor, solicita un nuevo enlace de recuperación.'
+                });
+            } else {
+                $q.notify({
+                    color: 'negative',
+                    icon: 'error',
+                    message: 'Error al cambiar la contraseña'
+                });
+            }
+            
             return error;
         }
     };
