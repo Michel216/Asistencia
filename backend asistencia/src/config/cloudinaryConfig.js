@@ -1,7 +1,6 @@
-// cloudinaryConfig.js
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import multer from 'multer';
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
 
 // Configuración de Cloudinary
 cloudinary.config({
@@ -16,7 +15,7 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'uploads', // Carpeta en Cloudinary donde se guardarán los archivos
-        format: async (req, file) => 'png', // puedes elegir el formato aquí
+        format: async (req, file) => 'png', // Puedes elegir el formato aquí
         public_id: (req, file) => file.originalname.split('.')[0], // Nombre del archivo
     },
 });
@@ -24,4 +23,4 @@ const storage = new CloudinaryStorage({
 // Configurar multer
 const upload = multer({ storage: storage });
 
-export default upload;
+module.exports = upload;
