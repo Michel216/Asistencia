@@ -2,29 +2,35 @@
 
 const Aprendiz = require('../modelos/aprendiz.js');
 const { validarCCUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/aprendiz.js');
-const Ficha = require('../modelos/ficha.js')
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const cloudinary = require('../config/cloudinaryConfig.js'); // Asegúrate de que la ruta sea correcta
+
 
 const aprendizController = {
 
     crear: async (req, res) => {
         try {
-            const { documento, nombre, telefono, email, id_ficha } = req.body;
-            const imageUrl = req.file ? req.file.path : null; // Captura la URL del archivo si se ha subido
-    
-            // Crear el aprendiz con la URL de la imagen si se ha subido
+            const { ficha, cedula, nombre, telefono, email } = req.body;
+
+            // Captura la URL de la firma si se ha subido
+            const firma = req.file ? req.file.path : null;
+
+            // Crea una nueva instancia de Aprendiz
             const nuevoAprendiz = new Aprendiz({
-                documento,
+                ficha,
+                cedula,
                 nombre,
                 telefono,
                 email,
-                id_ficha,
-                imagen: imageUrl, // Guarda la URL de la imagen
+                firma, // Guarda la URL de la firma
             });
-    
+
+            // Guarda el aprendiz en la base de datos
             await nuevoAprendiz.save();
-            res.json({ message: 'Aprendiz creado exitosamente', aprendiz: nuevoAprendiz });
+            res.json({ message: 'Aprendiz creado exitosamente', nuevoAprendiz });
         } catch (error) {
-            res.status(500).json({ message: 'Error al crear aprendiz', error });
+            res.status(400).json({ message: 'Error al crear aprendiz', error });
         }
     },
     listarTodos: async (req, res) => {
@@ -64,24 +70,24 @@ const aprendizController = {
     modificar: async (req, res) => {
         const id = req.params.id;
         const nuevosDatos = req.body;
-    
+
         try {
             // Validar la unicidad de los datos antes de actualizar
             await validarUnicidadActualizacion(id, nuevosDatos);
-    
+
             // Si hay un archivo en la solicitud, agregar la URL de la imagen a los datos a actualizar
             if (req.file) {
                 const imageUrl = req.file.path; // Obtener la URL de la imagen subida a Cloudinary
                 nuevosDatos.imagen = imageUrl; // Agregar la URL al objeto de datos
             }
-    
+
             // Actualizar los datos del aprendiz
             const aprendizModificado = await Aprendiz.findByIdAndUpdate(id, nuevosDatos, { new: true });
-    
+
             if (!aprendizModificado) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });
             }
-    
+
             // Responder con éxito
             res.json({ message: 'Datos del aprendiz modificados', aprendiz: aprendizModificado });
         } catch (error) {
@@ -89,7 +95,7 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al modificar los datos del aprendiz' });
         }
     },
-    
+
     activar: async (req, res) => {
         const id = req.params.id; // Asegúrate de que la ruta esté configurada para recibir `id` en lugar de `_id`
         try {

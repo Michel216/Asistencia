@@ -3,7 +3,7 @@ const aprendizController = require('../controllers/aprendiz');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos.js');
 const { validarJWT } = require('../middlewares/validarJWT');
-const upload = require('../config/cloudinaryConfig.js'); // Importa la configuración de Cloudinary
+const upload = require('../config/cloudinaryConfig.js')
 
 const aprendizRouter = express.Router();
 
@@ -23,7 +23,7 @@ aprendizRouter.get('/', [
 aprendizRouter.post('/',
     [
         validarJWT,
-        upload.single('file'), // Middleware para subir archivo (nombre del campo: 'file')
+        upload.single('firma'), 
         check('documento', 'El número de documento es obligatorio')
             .notEmpty().withMessage('Debe ingresar un valor')
             .isNumeric().withMessage('Debe ser un número').trim(),
