@@ -10,7 +10,7 @@ const cloudinary = require('../config/cloudinaryConfig.js'); // Asegúrate de qu
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'firmas', // Carpeta en Cloudinary donde se guardarán los archivos
+        folder: 'firmasAprendiz', // Carpeta en Cloudinary donde se guardarán los archivos
         allowed_formats: ['jpg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'heic'],
         public_id: (req, file) => file.originalname.split('.')[0], // Nombre del archivo
     },
@@ -24,16 +24,16 @@ const aprendizController = {
 
     crear: async (req, res) => {
         try {
-            const { ficha, cedula, nombre, telefono, email } = req.body;
+            const { documento, nombre, telefono, email, id_ficha } = req.body;
             const firma = req.file ? req.file.path : null;
 
             // Crea una nueva instancia de Aprendiz
             const nuevoAprendiz = new Aprendiz({
-                ficha,
-                cedula,
+                documento, // Asegúrate de incluir el documento
                 nombre,
                 telefono,
                 email,
+                id_ficha, // El ID de la ficha
                 firma
             });
 
@@ -145,4 +145,4 @@ const aprendizController = {
 
 };
 
-module.exports = aprendizController;
+module.exports = { aprendizController, upload };
