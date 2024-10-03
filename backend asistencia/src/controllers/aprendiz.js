@@ -30,11 +30,11 @@ const aprendizController = {
 
             // Crea una nueva instancia de Aprendiz
             const nuevoAprendiz = new Aprendiz({
-                documento, // Asegúrate de incluir el documento
+                documento, 
                 nombre,
                 telefono,
                 email,
-                id_ficha, // El ID de la ficha
+                id_ficha, 
                 firma
             });
 

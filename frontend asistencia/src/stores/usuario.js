@@ -107,7 +107,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
     const restablecerContraseña = async (token, newPassword) => {
         try {
             const r = await axios.put(`${API_URL}/usuario/cambiarContrasena/${token}`, {
-                password: newPassword
+                newPassword: newPassword
             });
             $q.notify({
                 color: 'positive',
@@ -126,11 +126,12 @@ export const useUsuariosStore = defineStore('usuario', () => {
                     message: 'El token ha expirado. Por favor, solicita un nuevo enlace de recuperación.'
                 });
             } else {
-                $q.notify({
-                    color: 'negative',
-                    icon: 'error',
-                    message: 'Error al cambiar la contraseña'
-                });
+                // $q.notify({
+                //     color: 'negative',
+                //     icon: 'error',
+                //     message: 'Error al cambiar la contraseña'
+                // });
+                console.log("error")
             }
             
             return error;
