@@ -165,10 +165,9 @@
                 </q-select>
          
 
-<q-file clearable color="orange" filled bottom-slots  v-model="firma"
+<q-file clearable color="green" filled bottom-slots  v-model="firma"
                   accept=".jpg, .jpeg, .png, image/*" label="Firma" @input="handleFirma" :rules="[
                     (val) => !val || (val.length === 0 ? 'Por favor, seleccione un archivo' : true),
-                    (val) => (val && val.length > 0) ? true : 'El archivo debe ser una imagen válida'
                   ]" counter>
         <template v-slot:prepend>
           <q-icon name="attach_file" />
@@ -349,7 +348,7 @@ async function crearAprendiz() {
   } else {  // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
-      await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
+      await useAprendiz.guardarAprendiz(documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
       await traer();  // Actualizar la lista de aprendices
       fixed.value = false;
 

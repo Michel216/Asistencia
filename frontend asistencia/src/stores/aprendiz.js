@@ -32,15 +32,13 @@ export const useAprendizStore = defineStore('aprendiz', () => {
 
     const guardarAprendiz = async (documento, nombre, telefono, email, id_ficha, firma) => {
         try {
-
             let formData = new FormData();
-
-            formData.append('documento', documento);
-            formData.append('nombre', nombre);
-            formData.append('telefono', telefono);
-            formData.append('email', email);
-            formData.append('ficha', id_ficha);
-            formData.append('firma', firma);
+            formData.append('documento', documento.value);
+            formData.append('nombre', nombre.value);
+            formData.append('telefono', telefono.value);
+            formData.append('email', email.value);
+            formData.append('ficha', id_ficha.value);
+            formData.append('firma', firma.value);
 
             let r = await axios.post(`${API_URL}/aprendiz`, formData, {
                 headers: {
