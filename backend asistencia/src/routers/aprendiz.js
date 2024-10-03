@@ -3,7 +3,6 @@ const { aprendizController, upload } = require('../controllers/aprendiz');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos.js');
 const { validarJWT } = require('../middlewares/validarJWT');
-const upload = require('../config/cloudinaryConfig.js')
 
 const aprendizRouter = express.Router();
 
