@@ -2,6 +2,7 @@
   <div>
     <router-view v-if="!isLoginPage" />
     <div v-if="isLoginPage">
+      
       <router-view />
     </div>
   </div>
