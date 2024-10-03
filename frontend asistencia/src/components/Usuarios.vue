@@ -148,10 +148,10 @@ USUARIOS <template>
 
               <q-separator />
 
-              <q-card-actions style="justify-content: center;"  align="right">
-                <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-                <q-btn flat label="Guardar" color="primary" @click="crearUsuario()" :loading="loadingCrearUsuario" />
-              </q-card-actions>
+              <q-card-actions style="justify-content: center;" align="right">
+  <q-btn unelevated label="Cerrar" icon="close" style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" v-close-popup @click="fixed.value = false" />
+  <q-btn unelevated label="Guardar"  icon="save" style="background-color: green;  color: white; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
+</q-card-actions>
             </q-card>
           </q-dialog>
         </div>

@@ -82,6 +82,11 @@
               {{ props.row.id_ficha ? props.row.id_ficha.nombre : 'No disponible' }}
             </q-td>
           </template>
+          <template v-slot:body-cell-firma="props">
+            <q-td :props="props">
+              {{ props.row.firma ? props.row.firma : 'No disponible' }}
+            </q-td>
+          </template>
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
               <q-btn flat icon="edit" @click="abrirModal(props.row)"
@@ -109,6 +114,7 @@
             </q-card-section>
 
             <q-separator />
+
             <div class="agua">
               <q-card-section
                 style="max-height: none; max-width: 100%; width: 100vw; margin: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
@@ -145,7 +151,6 @@
                     <q-icon name="email" />
                   </template>
                 </q-input>
-
                 <!-- Fila 3 -->
                 <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
                   :options="options" @filter="filterFn" style="width: 100%; margin-bottom: 20px; border-radius: 8px;"
@@ -154,6 +159,7 @@
                   <template v-slot:prepend>
                     <q-icon name="folder" />
                   </template>
+                  <!-- Fila 3 -->
 
                   <template v-slot:no-option>
                     <q-item>
@@ -163,22 +169,22 @@
                     </q-item>
                   </template>
                 </q-select>
-         
 
-<q-file clearable color="green" filled bottom-slots  v-model="firma"
-                  accept=".jpg, .jpeg, .png, image/*" label="Firma" @input="handleFirma" :rules="[
+
+                <q-file clearable color="green" filled bottom-slots v-model="firma" accept=".jpg, .jpeg, .png, image/*"
+                  label="Firma" @input="handleFirma" :rules="[
                     (val) => !val || (val.length === 0 ? 'Por favor, seleccione un archivo' : true),
                   ]" counter>
-        <template v-slot:prepend>
-          <q-icon name="attach_file" />
-        </template>
+                  <template v-slot:prepend>
+                    <q-icon name="attach_file" />
+                  </template>
 
-      </q-file>
+                </q-file>
 
               </q-card-section>
             </div>
 
-
+            <q-separator />
             <q-separator />
 
             <q-card-actions style="justify-content: center;" align="right">
@@ -197,7 +203,7 @@
         ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
       </div>
     </footer>
-    <!-- </q-page-container> -->
+
   </q-layout>
 </template>
 
@@ -238,6 +244,9 @@ const email = ref("")
 const firma = ref(null);
 const firmaPreview = ref(null);
 const change = ref(false);
+const firma = ref(null);
+const firmaPreview = ref(null);
+const change = ref(false);
 const b = ref(false)
 const id = ref("")
 const rows = ref([])
@@ -265,19 +274,20 @@ function toggleLeftDrawer() {
 function isActiveRoute(path) {
   return route.path === path
 }
+
 function handleFirma(file) {
-      if (file && file.length > 0) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          firmaPreview.value = e.target.result; // Generar vista previa
-          change.value = true; // Indicar que hubo un cambio
-        };
-        reader.readAsDataURL(file[0]); // Leer el archivo como Data URL
-      } else {
-        firmaPreview.value = null; // Limpiar vista previa si no hay archivo
-        change.value = false; // Reiniciar el estado de cambio
-      }
-    }
+  if (file && file.length > 0) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      firmaPreview.value = e.target.result; // Generar vista previa
+      change.value = true; // Indicar que hubo un cambio
+    };
+    reader.readAsDataURL(file[0]); // Leer el archivo como Data URL
+  } else {
+    firmaPreview.value = null; // Limpiar vista previa si no hay archivo
+    change.value = false; // Reiniciar el estado de cambio
+  }
+}
 
 async function abrirModal(row = null) {
   if (row) {
@@ -288,6 +298,7 @@ async function abrirModal(row = null) {
     email.value = row.email || ''
     ficha.value = row.id_ficha ? row.id_ficha._id : ''
     firma.value = row.firma || ''
+    firma.value = row.firma || ''
     b.value = true
   } else {
     id.value = ''
@@ -296,6 +307,7 @@ async function abrirModal(row = null) {
     telefono.value = ''
     email.value = ''
     ficha.value = ''
+    firma.value = ''
     firma.value = ''
     b.value = false
   }
@@ -317,48 +329,51 @@ async function traer() {
 
 async function crearAprendiz() {
   if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value || !firma.value) {
-    $q.notify({
-      color: 'negative',
-      icon: 'error',
-      message: 'Todos los campos son obligatorios'
-    });
-    return;
-  }
-
-  if (b.value) {  // Editar
-    if (!id.value) {
-      console.error("ID del Aprendiz no está disponible");
+    if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value || !firma.value) {
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'Todos los campos son obligatorios'
+      });
       return;
     }
 
-    loadingState.value[`guardar-${id.value}`] = true;
-    try {
-      await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
-      traer()
+    if (b.value) {  // Editar
+      if (!id.value) {
+        console.error("ID del Aprendiz no está disponible");
+        return;
+      }
 
-      fixed.value = false;
-      b.value = false;
+      loadingState.value[`guardar-${id.value}`] = true;
+      try {
+        await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
+        await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
+        traer()
 
-    } catch (error) {
-      console.error("Error al modificar el Aprendiz:", error);
+        fixed.value = false;
+        b.value = false;
 
-    } finally {
-      loadingState.value[`guardar-${id.value}`] = false;
-    }
-  } else {  // Crear
-    loadingState.value['guardar-nuevo'] = true;
-    try {
-      console.log(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
-      
-      await useAprendiz.guardarAprendiz(documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
-      await traer();  // Actualizar la lista de aprendices
-      fixed.value = false;
+      } catch (error) {
+        console.error("Error al modificar el Aprendiz:", error);
 
-    } catch (error) {
-      console.error("Error al guardar el aprendiz:", error);
+      } finally {
+        loadingState.value[`guardar-${id.value}`] = false;
+      }
+    } else {  // Crear
+      loadingState.value['guardar-nuevo'] = true;
+      try {
+        console.log(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
 
-    } finally {
-      loadingState.value['guardar-nuevo'] = false;
+        await useAprendiz.guardarAprendiz(documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
+        await traer();  // Actualizar la lista de aprendices
+        fixed.value = false;
+
+      } catch (error) {
+        console.error("Error al guardar el aprendiz:", error);
+
+      } finally {
+        loadingState.value['guardar-nuevo'] = false;
+      }
     }
   }
 }
@@ -470,6 +485,13 @@ const columns = [
     align: 'center',
     label: 'Nombre de la Ficha',
     field: 'id_ficha',
+    sortable: true
+  },
+  {
+    name: 'firma',
+    align: 'center',
+    label: 'Firma Aprendiz',
+    field: 'firma',
     sortable: true
   },
   {
