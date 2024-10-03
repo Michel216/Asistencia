@@ -6,14 +6,25 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 const cloudinary = require('../config/cloudinaryConfig.js'); // Asegúrate de que la ruta sea correcta
 
+// Configuración de almacenamiento con multer-storage-cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'firmas', // Carpeta en Cloudinary donde se guardarán los archivos
+        allowed_formats: ['jpg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'heic'],
+        public_id: (req, file) => file.originalname.split('.')[0], // Nombre del archivo
+    },
+});
+
+// Configurar multer
+const upload = multer({storage });
+
 
 const aprendizController = {
 
     crear: async (req, res) => {
         try {
             const { ficha, cedula, nombre, telefono, email } = req.body;
-
-            // Captura la URL de la firma si se ha subido
             const firma = req.file ? req.file.path : null;
 
             // Crea una nueva instancia de Aprendiz
@@ -23,7 +34,7 @@ const aprendizController = {
                 nombre,
                 telefono,
                 email,
-                firma, // Guarda la URL de la firma
+                firma
             });
 
             // Guarda el aprendiz en la base de datos
