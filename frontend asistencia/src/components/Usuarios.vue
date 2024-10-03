@@ -296,7 +296,7 @@ async function crearUsuario() {
 
     loadingState.value[`guardar-${selectedId.value}`] = true;
     try {
-      await useUsuario.modificarDatosUsuario(selectedId.value, email.value, nombre.value);
+      await useUsuario.modificarDatosUsuario(selectedId.value, email.value.trim(), nombre.value.trim());
       await traer();
       fixed.value = false;
       b.value = false;

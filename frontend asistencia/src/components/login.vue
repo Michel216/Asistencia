@@ -44,7 +44,7 @@ const isPwd = ref(true);
 const isLoading = ref(false);
 
 const Login = async () => {
-  if (!email.value || !password.value) {
+  if (!email.value.trim() || !password.value.trim()) {
     return; // Prevenir la ejecución si los campos están vacíos
   }
 
@@ -52,7 +52,7 @@ const Login = async () => {
   isLoading.value = true; // Muestra el spinner
 
   try {
-    const login = await useUsuarios.login(email.value, password.value);
+    const login = await useUsuarios.login(email.value.trim(), password.value.trim());
     if (login) {
       router.replace('/home');
     }

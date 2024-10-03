@@ -83,10 +83,12 @@
             </q-td>
           </template>
           <template v-slot:body-cell-firma="props">
-            <q-td :props="props">
-              {{ props.row.firma ? props.row.firma : 'No disponible' }}
-            </q-td>
-          </template>
+  <q-td :props="props">
+    <img v-if="props.row.firma" :src="props.row.firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
+    <span v-else>No disponible</span>
+  </q-td>
+</template>
+
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
               <q-btn flat icon="edit" @click="abrirModal(props.row)"
@@ -326,51 +328,48 @@ async function traer() {
 
 async function crearAprendiz() {
   if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value || !firma.value) {
-    if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value || !firma.value) {
-      $q.notify({
-        color: 'negative',
-        icon: 'error',
-        message: 'Todos los campos son obligatorios'
-      });
+    $q.notify({
+      color: 'negative',
+      icon: 'error',
+      message: 'Todos los campos son obligatorios'
+    });
+    return;
+  }
+
+  if (b.value) {  // Editar
+    if (!id.value) {
+      console.error("ID del Aprendiz no está disponible");
       return;
     }
 
-    if (b.value) {  // Editar
-      if (!id.value) {
-        console.error("ID del Aprendiz no está disponible");
-        return;
-      }
+    loadingState.value[`guardar-${id.value}`] = true;
+    try {
+      await useAprendiz.modificarAprendiz(id.value, documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
+      traer()
 
-      loadingState.value[`guardar-${id.value}`] = true;
-      try {
-        await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
-        await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
-        traer()
+      fixed.value = false;
+      b.value = false;
 
-        fixed.value = false;
-        b.value = false;
+    } catch (error) {
+      console.error("Error al modificar el Aprendiz:", error);
 
-      } catch (error) {
-        console.error("Error al modificar el Aprendiz:", error);
+    } finally {
+      loadingState.value[`guardar-${id.value}`] = false;
+    }
+  } else {  // Crear
+    loadingState.value['guardar-nuevo'] = true;
+    try {
+      console.log(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
 
-      } finally {
-        loadingState.value[`guardar-${id.value}`] = false;
-      }
-    } else {  // Crear
-      loadingState.value['guardar-nuevo'] = true;
-      try {
-        console.log(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
+      await useAprendiz.guardarAprendiz(documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
+      await traer();  // Actualizar la lista de aprendices
+      fixed.value = false;
 
-        await useAprendiz.guardarAprendiz(documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
-        await traer();  // Actualizar la lista de aprendices
-        fixed.value = false;
+    } catch (error) {
+      console.error("Error al guardar el aprendiz:", error);
 
-      } catch (error) {
-        console.error("Error al guardar el aprendiz:", error);
-
-      } finally {
-        loadingState.value['guardar-nuevo'] = false;
-      }
+    } finally {
+      loadingState.value['guardar-nuevo'] = false;
     }
   }
 }
@@ -482,13 +481,6 @@ const columns = [
     align: 'center',
     label: 'Nombre de la Ficha',
     field: 'id_ficha',
-    sortable: true
-  },
-  {
-    name: 'firma',
-    align: 'center',
-    label: 'Firma Aprendiz',
-    field: 'firma',
     sortable: true
   },
   {

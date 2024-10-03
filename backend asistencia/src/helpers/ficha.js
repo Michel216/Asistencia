@@ -4,9 +4,7 @@ const fichaHelper = {
     validarCodigoUnico: async (codigo) => {
         try {
             const ficha = await Ficha.findOne({ codigo });
-            if (ficha) {
-                throw new Error(`Esta ficha ya existe `);
-            }
+            return ficha !== null; 
         } catch (error) {
             throw new Error(`Error al verificar código: ${error.message}`);
         }

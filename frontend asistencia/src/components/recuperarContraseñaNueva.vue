@@ -76,7 +76,7 @@ const handlePasswordReset = async () => {
   isLoading.value = true;
 
   try {
-    const response = await useUsuario.restablecerContraseña(route.params.token, newPassword.value);
+    const response = await useUsuario.restablecerContraseña(route.params.token, newPassword.value.trim());
     if (response.status === 200) {
       $q.notify({
         message: 'Contraseña restablecida correctamente.',
