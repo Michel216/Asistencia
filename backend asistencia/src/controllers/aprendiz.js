@@ -145,4 +145,4 @@ const aprendizController = {
 
 };
 
-module.exports = aprendizController;
+module.exports = { aprendizController, upload };
