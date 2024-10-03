@@ -57,6 +57,17 @@
             {{ props.row.id_aprendiz && props.row.id_aprendiz.id_ficha ? props.row.id_aprendiz.id_ficha.nombre : '' }}
           </q-td>
         </template>
+
+        <template v-slot:body-cell-planta="props">
+  <q-td :props="props">
+    {{ props.row.id_aprendiz ? (props.row.planta ? props.row.planta : 'SENA CAT') : '' }}
+  </q-td>
+</template>
+<template v-slot:body-cell-otro="props">
+  <q-td :props="props">
+    {{ props.row.id_aprendiz ? (props.row.otro ? props.row.otro : 'Aprendiz') : '' }}
+  </q-td>
+</template>
       </q-table>
     </q-card-section>
 
@@ -143,7 +154,7 @@ const generarPdf = async () => {
   await nextTick(); // Asegura que el DOM esté actualizado
 
   const doc = new jsPDF({
-  orientation: 'lapscape', // Mantener orientación vertical
+  orientation: 'landscape', // Mantener orientación vertical
   
   format: 'tabloid' // Cambia esto a 'letter' o 'tabloid' si es necesario
 });
@@ -168,19 +179,20 @@ const generarPdf = async () => {
 
   const pdfRows = rowsFiltrados.value.map((row, index) => ({
     numero: index + 1,
-    documento: row.id_aprendiz ? row.id_aprendiz.documento : '',
-    nombre: row.id_aprendiz ? row.id_aprendiz.nombre : '',
-    telefono: row.id_aprendiz ? row.id_aprendiz.telefono : '',
-    email: row.id_aprendiz ? row.id_aprendiz.email : '',
+    documento: row.id_aprendiz ? row.id_aprendiz.documento : '',  
+    nombre: row.id_aprendiz ? row.id_aprendiz.nombre : '',        
+    telefono: row.id_aprendiz ? row.id_aprendiz.telefono : '',    
+    email: row.id_aprendiz ? row.id_aprendiz.email : '',          
     codigo_ficha: row.id_aprendiz && row.id_aprendiz.id_ficha ? row.id_aprendiz.id_ficha.codigo : '',
     nombre_ficha: row.id_aprendiz && row.id_aprendiz.id_ficha ? row.id_aprendiz.id_ficha.nombre : '',
-    planta: row.planta ? row.planta : 'Sena Cat',
-    contratista: row.contratista ? row.contratista : '',
-    otro: row.otro ? row.otro : 'Aprendiz',
+    planta: row.id_aprendiz ? (row.planta ? row.planta : 'SENA CAT') : '', // Solo muestra "Sena Cat" si hay aprendiz
+    contratista: row.contratista ? row.contratista : '',       
+    otro: row.id_aprendiz ? (row.otro ? row.otro : 'Aprendiz'):'',                       
     dependencia_empresa: row.dependencia_empresa ? row.dependencia_empresa : '',
     autoriza_grabacion: row.autoriza_grabacion ? row.autoriza_grabacion : '',
     firma_virtual: row.firma_virtual ? row.firma_virtual : ''
-  }));
+}));
+
 
   // Define los estilos de las columnas
   const columnStyles = {
@@ -305,7 +317,7 @@ const goHome = () => {
 
 .container {
   border: 1px solid black;
-  padding: 10px;
+  padding: 2px; 
   width: 100%;
   margin: 0 auto;
   margin-top: 50px;
@@ -316,7 +328,9 @@ const goHome = () => {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  /* Ajuste de la distancia entre el título y las fechas */
+  height: 50px;
+ 
+  
 }
 
 .header h1 {
