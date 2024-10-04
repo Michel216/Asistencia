@@ -178,7 +178,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 function isActiveRoute(path) {
   // console.log(Current Route: ${route.path}, Checking Path: ${path});
@@ -260,7 +259,7 @@ async function crearFicha() {
 
       console.error("Error al guardar la ficha:", error);
     } finally {
-      loadingState.value[crear] = false;
+      loadingState.value['guardar'] = false;
     }
   }
 }

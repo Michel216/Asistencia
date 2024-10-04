@@ -39,7 +39,7 @@ export const useUsuariosStore = defineStore('usuario', () => {
             // Notificar error
             Notify.create({
                 type: 'negative',
-                message: `Error al iniciar sesión: ${error.response?.data?.message || error.message}`,
+                message: `Error al iniciar sesión. Verifica el correo o la contraseña. `,
             });
             return false;
         } finally {

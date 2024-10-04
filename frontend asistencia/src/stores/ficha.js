@@ -50,8 +50,8 @@ export const useFichaStore = defineStore('ficha', () => {
             });
             return r;
         } catch (error) {
-            const errorMessage = error.response?.data?.message || 'No se pudo crear la ficha. Intente nuevamente.';
-            console.error("Error al guardar la ficha:", error);
+            const errorMessage = error.response?.data?.message || 'No se pudo crear la ficha. Esta ficha ya existe.';
+            console.error("Error al guardar la ficha:", errorMessage);
             
             // Capturamos el mensaje del backend si la ficha ya existe
             $q.notify({

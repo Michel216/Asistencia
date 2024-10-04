@@ -7,7 +7,7 @@
           :loading="loadingGenerarPdf">Generar PDF</q-btn>
         <q-btn dense flat round icon="arrow_back" @click="goHome" class="back-button" />
       </div>
-      <div class="container">
+      <div class="containerx">
         <div class="header">
           <h1>REGISTRO DE ASISTENCIA Y APROBACIÓN DEL ACTA No-</h1>
           <div class="date-section">
@@ -315,7 +315,7 @@ const goHome = () => {
 
 }
 
-.container {
+.containerx {
   border: 1px solid black;
   padding: 2px; 
   width: 100%;

@@ -57,10 +57,10 @@ const Login = async () => {
       router.replace('/home');
     }
   } catch (error) {
-    console.error("Error en el login:", error);
+    console.error("Error en el login:");
     $q.notify({
       type: 'negative',
-      message: 'Error en el inicio de sesión. '
+      message: 'Error al iniciar sesión. Verifica el correo o la contraseña. '
     });
   } finally {
     isLoading.value = false; // Oculta el spinner

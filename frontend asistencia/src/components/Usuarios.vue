@@ -212,7 +212,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 
 function isActiveRoute(path) {
@@ -311,7 +310,7 @@ async function crearUsuario() {
   } else { // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
-      await useUsuario.guardarUsuario(email.value, nombre.value, password.value);
+      await useUsuario.guardarUsuario(email.value.trim(), nombre.value.trim(), password.value.trim());
       fixed.value = false;
       await traer();
 

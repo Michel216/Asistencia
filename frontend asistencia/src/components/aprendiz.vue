@@ -85,6 +85,7 @@
           <template v-slot:body-cell-firma="props">
   <q-td :props="props">
     <img v-if="props.row.firma" :src="props.row.firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
+    <img v-else-if="firmaPreview" :src="firmaPreview" alt="Firma" style="max-width: 100px; max-height: 50px;" />
     <span v-else>No disponible</span>
   </q-td>
 </template>
@@ -234,7 +235,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 
 const leftDrawerOpen = ref(false)
@@ -278,13 +278,15 @@ function handleFirma(file) {
   if (file && file.length > 0) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      firmaPreview.value = e.target.result; // Generar vista previa
-      change.value = true; // Indicar que hubo un cambio
+      firmaPreview.value = e.target.result; // Guardar la vista previa de la firma
+      firma.value = e.target.result; // También guarda el resultado en la variable 'firma'
+      change.value = true;
     };
     reader.readAsDataURL(file[0]); // Leer el archivo como Data URL
   } else {
     firmaPreview.value = null; // Limpiar vista previa si no hay archivo
-    change.value = false; // Reiniciar el estado de cambio
+    firma.value = null; // Limpiar el valor de la firma
+    change.value = false;
   }
 }
 
