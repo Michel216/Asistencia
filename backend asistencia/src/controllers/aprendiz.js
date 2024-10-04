@@ -40,9 +40,9 @@ const aprendizController = {
 
             // Guarda el aprendiz en la base de datos
             await nuevoAprendiz.save();
-            res.json({ message: 'Aprendiz creado exitosamente', nuevoAprendiz });
+            res.status(201).json({ message: 'Aprendiz creado exitosamente' });
         } catch (error) {
-            res.status(400).json({ message: 'Error al crear aprendiz', error });
+            return res.status(400).json({ message: error.message });
         }
     },
     listarTodos: async (req, res) => {
