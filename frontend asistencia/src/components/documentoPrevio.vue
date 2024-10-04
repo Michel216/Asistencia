@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="objetivos">
-          OBJETIVO(S):
+          OBJETIVO(S): 
         </div>
       </div>
       <q-table :rows="rowsFiltrados" :columns="columnsPDF" row-key="_id" ref="tableContainer" :pagination="pagination"
@@ -47,20 +47,9 @@
             {{ props.row.id_aprendiz ? props.row.id_aprendiz.email : '' }}
           </q-td>
         </template>
-        <template v-slot:body-cell-codigo_ficha="props">
-          <q-td :props="props">
-            {{ props.row.id_aprendiz && props.row.id_aprendiz.id_ficha ? props.row.id_aprendiz.id_ficha.codigo : '' }}
-          </q-td>
-        </template>
-        <template v-slot:body-cell-nombre_ficha="props">
-          <q-td :props="props">
-            {{ props.row.id_aprendiz && props.row.id_aprendiz.id_ficha ? props.row.id_aprendiz.id_ficha.nombre : '' }}
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-planta="props">
+        <template v-slot:body-cell-dependencia_empresa="props">
   <q-td :props="props">
-    {{ props.row.id_aprendiz ? (props.row.planta ? props.row.planta : 'SENA CAT') : '' }}
+    {{ props.row.id_aprendiz ? (props.row.dependencia_empresa ? props.row.dependencia_empresa : 'SENA/CAT') : '' }}
   </q-td>
 </template>
 <template v-slot:body-cell-otro="props">
@@ -70,9 +59,9 @@
 </template>
 <template v-slot:body-cell-firma="props">
   <q-td :props="props">
-    <img v-if="props.row.firma" :src="props.row.firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
-    <img v-else-if="firmaPreview" :src="firmaPreview" alt="Firma" style="max-width: 100px; max-height: 50px;" />
-    <span v-else>No disponible</span>
+    {{ props.row.id_aprendiz ? props.row.id_aprendiz.firma_virtual : '' }}
+    <img v-if="firmaPreview" :src="firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
+    <span v-else></span>
   </q-td>
 </template>
 
@@ -142,18 +131,16 @@ const formatFecha = (date) => {
 };
 const columnsPDF = [
   { name: 'numero', label: 'N°', align: 'center', field: row => rowsFiltrados.value.indexOf(row) + 1 },
-  { name: 'documento', label: 'Documento', align: 'center', field: 'id_aprendiz.documento' },
-  { name: 'nombre', label: 'Nombre', align: 'center', field: 'id_aprendiz.nombre' },
-  { name: 'telefono', label: 'Teléfono', align: 'center', field: 'id_aprendiz.telefono' },
-  { name: 'email', label: 'Email', align: 'center', field: 'id_aprendiz.email' },
-  { name: 'codigo_ficha', label: 'Código Ficha', align: 'center', field: 'id_aprendiz.id_ficha.codigo' },
-  { name: 'nombre_ficha', label: 'Nombre Ficha', align: 'center', field: 'id_aprendiz.id_ficha.nombre' },
-  { name: 'planta', label: 'Planta', align: 'center', field: 'id_aprendiz.id_ficha.planta' },
-  { name: 'contratista', label: 'Contratista', align: 'center', field: 'contratista' },
-  { name: 'otro', label: 'Otro ¿Cuál?', align: 'center', field: 'otro' },
-  { name: 'dependencia_empresa', label: 'Dependencia/Empresa', align: 'center', field: 'dependencia_empresa' },
-  { name: 'autoriza_grabacion', label: 'Autoriza Grabación', align: 'center', field: 'autoriza_grabacion' },
-  { name: 'firma_virtual', label: 'Firma o Participación Virtual', align: 'center', field: 'firma_virtual' }
+  { name: 'nombre', label: 'NOMBRES Y APELLIDO', align: 'center', field: 'id_aprendiz.nombre' },
+  { name: 'documento', label: 'No. DOCUMENTO', align: 'center', field: 'id_aprendiz.documento' },
+  { name: 'planta', label: 'PLANTA', align: 'center', field: 'id_aprendiz.id_ficha.planta' },
+  { name: 'contratista', label: 'CONTRATISTA', align: 'center', field: 'contratista' },
+  { name: 'otro', label: 'OTRO ¿CUÁL?', align: 'center', field: 'otro' },
+  { name: 'dependencia_empresa', label: 'DEPENDENCIA/EMPRESA', align: 'center', field: 'dependencia_empresa' },
+  { name: 'email', label: 'CORREO ELECTRÓNICO', align: 'center', field: 'id_aprendiz.email' },
+  { name: 'telefono', label: 'TELÉFONO', align: 'center', field: 'id_aprendiz.telefono' },
+  { name: 'autoriza_grabacion', label: 'AUTORIZACIÓN GRABADA', align: 'center', field: 'autoriza_grabacion' },
+  { name: 'firma_virtual', label: 'FIRMA O PARTICIPACIÓN VIRTUAL', align: 'center', field: 'id_aprendiz.firma_virtual' }
 
 ];
 
@@ -171,18 +158,16 @@ const generarPdf = async () => {
 
   const pdfColumns = [
     { header: 'N°', dataKey: 'numero' },
-    { header: 'Documento', dataKey: 'documento' },
-    { header: 'Nombre', dataKey: 'nombre' },
-    { header: 'Teléfono', dataKey: 'telefono' },
-    { header: 'Email', dataKey: 'email' },
-    { header: 'Código Ficha', dataKey: 'codigo_ficha' },
-    { header: 'Nombre Ficha', dataKey: 'nombre_ficha' },
-    { header: 'Planta', dataKey: 'planta' },
-    { header: 'Contratista', dataKey: 'contratista' },
-    { header: 'Otro ¿Cuál?', dataKey: 'otro' },
-    { header: 'Dependencia/Empresa', dataKey: 'dependencia_empresa' },
-    { header: 'Autoriza Grabación', dataKey: 'autoriza_grabacion' },
-    { header: 'Firma o Participación Virtual', dataKey: 'firma_virtual' }
+    { header: 'NOMBRES Y APELLIDO', dataKey: 'nombre' },
+    { header: 'No. DOCUMENTO', dataKey: 'documento' },
+    { header: 'PLANTA', dataKey: 'planta' },
+    { header: 'CONTRATISTA', dataKey: 'contratista' },
+    { header: 'OTRO ¿CUÁL?', dataKey: 'otro' },
+    { header: 'DEPENDENCIA/EMPRESA', dataKey: 'dependencia_empresa' },
+    { header: 'CORREO ELECTRÓNICO', dataKey: 'email' },
+    { header: 'TELÉFONO', dataKey: 'telefono' },
+    { header: 'AUTORIZACIÓN GRABADA', dataKey: 'autoriza_grabacion' },
+    { header: 'FIRMA O PARTICIPACIÓN VIRTUAL', dataKey: 'firma_virtual' }
   ];
 
   const pdfRows = rowsFiltrados.value.map((row, index) => ({
@@ -191,14 +176,12 @@ const generarPdf = async () => {
     nombre: row.id_aprendiz ? row.id_aprendiz.nombre : '',        
     telefono: row.id_aprendiz ? row.id_aprendiz.telefono : '',    
     email: row.id_aprendiz ? row.id_aprendiz.email : '',          
-    codigo_ficha: row.id_aprendiz && row.id_aprendiz.id_ficha ? row.id_aprendiz.id_ficha.codigo : '',
-    nombre_ficha: row.id_aprendiz && row.id_aprendiz.id_ficha ? row.id_aprendiz.id_ficha.nombre : '',
-    planta: row.id_aprendiz ? (row.planta ? row.planta : 'SENA CAT') : '', // Solo muestra "Sena Cat" si hay aprendiz
+    planta: row.id_aprendiz ? row.planta : '',
     contratista: row.contratista ? row.contratista : '',       
     otro: row.id_aprendiz ? (row.otro ? row.otro : 'Aprendiz'):'',                       
-    dependencia_empresa: row.dependencia_empresa ? row.dependencia_empresa : '',
+    dependencia_empresa: row.dependencia_empresa ? (row.dependencia_empresa ? row.dependencia_empresa : 'SENA/CAT' ): '',
     autoriza_grabacion: row.autoriza_grabacion ? row.autoriza_grabacion : '',
-    firma_virtual: row.firma_virtual ? row.firma_virtual : ''
+    firma_virtual: row.id_aprendiz ? row.id_aprendiz.firma : ''
 }));
 
 

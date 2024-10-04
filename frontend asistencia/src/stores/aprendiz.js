@@ -63,7 +63,7 @@ export const useAprendizStore = defineStore('aprendiz', () => {
         }
     };
 
-const modificarAprendiz = async (id, documento, nombre, telefono, email, ficha, ) => {
+const modificarAprendiz = async (id, documento, nombre, telefono, email, ficha, firma ) => {
     console.log(`Función modificarAprendiz ejecutada`, { id, documento, nombre, telefono, email, ficha });
     try {
         if (ficha){

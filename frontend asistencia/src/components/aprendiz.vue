@@ -83,12 +83,14 @@
             </q-td>
           </template>
           <template v-slot:body-cell-firma="props">
-  <q-td :props="props">
-    <img v-if="props.row.firma" :src="props.row.firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
-    <img v-else-if="firmaPreview" :src="firmaPreview" alt="Firma" style="max-width: 100px; max-height: 50px;" />
-    <span v-else>No disponible</span>
-  </q-td>
-</template>
+            <q-td :props="props">
+              <img v-if="props.row.firma" :src="props.row.firma" alt="Firma"
+                style="max-width: 100px; max-height: 50px;" />
+              <img v-else-if="firmaPreview" :src="firmaPreview" alt="Firma"
+                style="max-width: 100px; max-height: 50px;" />
+              <span v-else>No disponible</span>
+            </q-td>
+          </template>
 
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
@@ -191,10 +193,13 @@
             <q-separator />
 
             <q-card-actions style="justify-content: center;" align="right">
-              <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-              <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
+              <q-btn flat label="Cerrar" icon="close"
+                style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" v-close-popup
+                @click="fixed.value = false" />
+              <q-btn flat label="Guardar" icon="save"
+                style="background-color: green;  color: white; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);"
+                @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
             </q-card-actions>
-
 
           </q-card>
         </q-dialog>
@@ -278,14 +283,14 @@ function handleFirma(file) {
   if (file && file.length > 0) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      firmaPreview.value = e.target.result; 
-      firma.value = e.target.result; 
+      firmaPreview.value = e.target.result;
+      firma.value = e.target.result;
       change.value = true;
     };
-    reader.readAsDataURL(file[0]); 
+    reader.readAsDataURL(file[0]);
   } else {
-    firmaPreview.value = null; 
-    firma.value = null; 
+    firmaPreview.value = null;
+    firma.value = null;
     change.value = false;
   }
 }

@@ -54,7 +54,7 @@
   </q-drawer>
 
 
-   
+    <q-page-container>
       <div v-if="showCards" class="container">
         <div v-for="(card, index) in cards" :key="index" class="card">
           <div class="card-header">{{ card.title }}</div>
@@ -73,7 +73,7 @@
           ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
         </div>
       </footer>
-
+    </q-page-container>
   </q-layout>
 </template>
 
@@ -104,6 +104,7 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
+  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ];
 
 // Información de las tarjetas y las rutas correspondientes

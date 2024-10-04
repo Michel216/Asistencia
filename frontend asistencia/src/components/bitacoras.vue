@@ -13,46 +13,34 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-    show-if-above
-    v-model="leftDrawerOpen"
-    side="left"
-    bordered
-    class="my-drawer"
-       :breakpoint="500"
-  >
-    <div class="avatar-container">
-      <q-avatar class="large-avatar">
-        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
-      </q-avatar>
-    </div>
-    <div class="user-info">
-      <p class="user-name">{{ nombreUser }}</p>
-      <p class="user-email">{{ emailUser }}</p>
-    </div>
-    <q-list class="drawer-list">
-      <q-item
-        v-for="item in menuItems"
-        :key="item.label"
-        :to="item.path"
-        exact-active-class="active-item"
-        class="custom-button"
-      >
-        <q-item-section avatar>
-          <q-icon :name="item.icon" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">{{ item.label }}</span>
-        </q-item-section>
-        <q-item-section side v-if="isActiveRoute(item.path)">
-          <q-icon name="arrow_right" class="indicator-icon" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <div class="logon">
-      <img class="negro" src="/imagenes/snegr.png" alt="" />
-    </div>
-  </q-drawer>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="my-drawer" :breakpoint="500">
+      <div class="avatar-container">
+        <q-avatar class="large-avatar">
+          <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
+        </q-avatar>
+      </div>
+      <div class="user-info">
+        <p class="user-name">{{ nombreUser }}</p>
+        <p class="user-email">{{ emailUser }}</p>
+      </div>
+      <q-list class="drawer-list">
+        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" exact-active-class="active-item"
+          class="custom-button">
+          <q-item-section avatar>
+            <q-icon :name="item.icon" class="icon" />
+          </q-item-section>
+          <q-item-section>
+            <span class="button-text">{{ item.label }}</span>
+          </q-item-section>
+          <q-item-section side v-if="isActiveRoute(item.path)">
+            <q-icon name="arrow_right" class="indicator-icon" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <div class="logon">
+        <img class="negro" src="/imagenes/snegr.png" alt="" />
+      </div>
+    </q-drawer>
 
     <q-page-container>
       <h3 class="title-table">Bitacoras</h3>
@@ -65,17 +53,18 @@
           </q-btn>
         </div>
 
-            <q-dialog v-model="fechaFiltrada">
+        <q-dialog v-model="fechaFiltrada">
           <q-card>
-             <q-card-section class="vert" style="background-color: green; color:white">
-                <div class="text-h6">Filtro Asistencia</div>
-              </q-card-section>
+            <q-card-section class="vert" style="background-color: green; color:white">
+              <div class="text-h6">Filtro Asistencia</div>
+            </q-card-section>
 
-              <q-separator />
+            <q-separator />
             <q-card-section>
               <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-                :options="options" @filter="filterFn"  style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value map-options clearable
-                lazy-rules :rules="[
+                :options="options" @filter="filterFn"
+                style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value
+                map-options clearable lazy-rules :rules="[
                   (val) => {
                     if (b.value === false) {
                       return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
@@ -90,26 +79,30 @@
                   </q-item>
                 </template>
               </q-select>
-              <q-input  filled v-model="selectedDate" label="Fecha (AAAA-MM-DD)" dense ref="dateInput" :error="showError"
-              error-message="Por favor, ingrese la fecha" class="custom-error-message" @input="handleInput">
-              <template v-slot:append > 
-                <q-icon name="event" class="cursor-pointer" @click="showDatePicker" />
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale"    class="custom-overlay">
+              <q-input filled v-model="selectedDate" label="Fecha (AAAA-MM-DD)" dense ref="dateInput" :error="showError"
+                error-message="Por favor, ingrese la fecha" class="custom-error-message" @input="handleInput">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer" @click="showDatePicker" />
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale" class="custom-overlay">
                     <div class="calendar-centered" style="width: 100%">
-                    <q-date v-model="selectedDate" locale="auto" >
-                      <div class="row items-center justify-center">
-                        <q-btn v-close-popup label="Aceptar" color="white" flat />
-                      </div>
-                    </q-date></div>
+                      <q-date v-model="selectedDate" locale="auto">
+                        <div class="row items-center justify-center">
+                          <q-btn v-close-popup label="Aceptar" color="white" flat />
+                        </div>
+                      </q-date>
+                    </div>
                   </q-popup-proxy>
                 </template>
               </q-input>
               <br>
               <q-card-actions style="justify-content: center;" align="right">
-              <q-btn label="Cancelar" @click="fechaFiltrada = false" /> <span>         </span>
-              <q-btn label="Visualizar" style="background-color: green; color: white" @click="previsualizarDocumento" />
-           </q-card-actions>
-           </q-card-section>
+                <q-btn label="Cancelar" icon="close"
+                  style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);"
+                  @click="fechaFiltrada = false" />
+                <q-btn label="Visualizar" icon="visibility"
+                  style="background-color: green; color: white; margin-left: 16px;" @click="previsualizarDocumento" />
+              </q-card-actions>
+            </q-card-section>
           </q-card>
         </q-dialog>
 
@@ -140,7 +133,7 @@
           </template>
         </q-table>
       </div>
-   <!-- El footer -->
+      <!-- El footer -->
       <footer class="footer">
         <div class="text-h7 text-weight-bold">
           ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
@@ -377,7 +370,7 @@ onMounted(() => {
 }
 
 .q-btn:hover {
- 
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   /* Sombra al pasar el mouse, sin cambiar el color */
   text-shadow: 0px 0px 10px white;
@@ -452,6 +445,7 @@ onMounted(() => {
   border-right: 1px solid #ddd;
   /* Borde derecho del encabezado */
 }
+
 /* Asegúrate de que el calendario se centre correctamente */
 .calendar-centered {
   display: flex;
@@ -459,27 +453,33 @@ onMounted(() => {
   align-items: center;
 
 }
-.calendar-centered .q-btn{
-background-color: green;
-color: white;
+
+.calendar-centered .q-btn {
+  background-color: green;
+  color: white;
 }
+
 .q-popup-proxy {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .custom-overlay .q-overlay {
-  background-color: rgb(0, 0, 0); /* Ajusta la opacidad aquí */
+  background-color: rgb(0, 0, 0);
+  /* Ajusta la opacidad aquí */
 }
 
- .main-content {
+.main-content {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+  min-height: 100vh;
+  /* Ocupa el 100% del alto de la pantalla */
 }
 
 .container {
-  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+  flex-grow: 1;
+  /* Permite que el contenido se expanda para empujar el footer hacia abajo */
 }
 
 .footer {
@@ -487,7 +487,8 @@ color: white;
   color: #000;
   padding: 15px 0;
   text-align: center;
-  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  margin-top: auto;
+  /* Esto fuerza al footer a estar en la parte inferior */
   width: 100%;
 }
 
@@ -505,6 +506,4 @@ color: white;
 .q-date__header {
   background-color: #008000
 }
-
 </style>
-
