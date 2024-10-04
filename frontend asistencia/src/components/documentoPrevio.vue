@@ -57,10 +57,13 @@
     {{ props.row.id_aprendiz ? (props.row.otro ? props.row.otro : 'Aprendiz') : '' }}
   </q-td>
 </template>
-<template v-slot:body-cell-firma="props">
+<template v-slot:body-cell-firma_virtual="props">
   <q-td :props="props">
     {{ props.row.id_aprendiz ? props.row.id_aprendiz.firma_virtual : '' }}
-    <img v-if="firmaPreview" :src="firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
+    <img   v-if="props.row.firma_virtual" 
+      :src="props.row.firma_virtual" 
+      alt="Firma del aprendiz" 
+      style="max-width: 100px; max-height: 50px;" />
     <span v-else></span>
   </q-td>
 </template>
@@ -181,8 +184,8 @@ const generarPdf = async () => {
     otro: row.id_aprendiz ? (row.otro ? row.otro : 'Aprendiz'):'',                       
     dependencia_empresa: row.dependencia_empresa ? (row.dependencia_empresa ? row.dependencia_empresa : 'SENA/CAT' ): '',
     autoriza_grabacion: row.autoriza_grabacion ? row.autoriza_grabacion : '',
-    firma_virtual: row.id_aprendiz ? row.id_aprendiz.firma : ''
-}));
+    firma_virtual: row.id_aprendiz && row.id_aprendiz.src ? row.id_aprendiz.src : firmaPreview
+  }));
 
 
   // Define los estilos de las columnas

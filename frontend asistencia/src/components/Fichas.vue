@@ -99,6 +99,7 @@
   >
     <!-- Código de la Ficha -->
     <q-input
+    type="number"
       filled
       v-model="codigo"
       label="Código de la Ficha"

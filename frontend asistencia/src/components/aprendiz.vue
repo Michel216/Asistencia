@@ -141,7 +141,7 @@
                 </q-input>
 
                 <!-- Fila 2 -->
-                <q-input filled v-model="telefono" label="Teléfono Del Aprendiz" :dense="dense"
+                <q-input type="number" filled v-model="telefono" label="Teléfono Del Aprendiz" :dense="dense"
                   :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono', val => val.trim().length === 10 || 'Ingrese un teléfono válido']"
                   style="margin-bottom: 15px; border-radius: 8px;">
                   <template v-slot:prepend>
@@ -351,7 +351,7 @@ async function crearAprendiz() {
 
     loadingState.value[`guardar-${id.value}`] = true;
     try {
-      await useAprendiz.modificarAprendiz(id.value, documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
+      await useAprendiz.modificarAprendiz(id.value, documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value, firmaPreview.value);
       traer()
 
       fixed.value = false;
