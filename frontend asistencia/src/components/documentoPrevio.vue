@@ -68,6 +68,14 @@
     {{ props.row.id_aprendiz ? (props.row.otro ? props.row.otro : 'Aprendiz') : '' }}
   </q-td>
 </template>
+<template v-slot:body-cell-firma="props">
+  <q-td :props="props">
+    <img v-if="props.row.firma" :src="props.row.firma" alt="Firma" style="max-width: 100px; max-height: 50px;" />
+    <img v-else-if="firmaPreview" :src="firmaPreview" alt="Firma" style="max-width: 100px; max-height: 50px;" />
+    <span v-else>No disponible</span>
+  </q-td>
+</template>
+
       </q-table>
     </q-card-section>
 

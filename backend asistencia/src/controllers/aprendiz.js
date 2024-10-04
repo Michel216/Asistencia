@@ -82,15 +82,15 @@ const aprendizController = {
     modificar: async (req, res) => {
         const id = req.params.id;
         const nuevosDatos = req.body;
+        const firma = req.file ? req.file.path : null;
 
         try {
             // Validar la unicidad de los datos antes de actualizar
             await validarUnicidadActualizacion(id, nuevosDatos);
 
-            // Si hay un archivo en la solicitud, agregar la URL de la imagen a los datos a actualizar
             if (req.file) {
-                const imageUrl = req.file.path; // Obtener la URL de la imagen subida a Cloudinary
-                nuevosDatos.imagen = imageUrl; // Agregar la URL al objeto de datos
+                const firmaImg = req.file.path; 
+                nuevosDatos.firma = firmaImg; 
             }
 
             // Actualizar los datos del aprendiz

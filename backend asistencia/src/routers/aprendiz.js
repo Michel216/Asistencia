@@ -45,7 +45,7 @@ aprendizRouter.post('/',
 aprendizRouter.put('/modificar/:id',
     [
         validarJWT,
-        upload.single('file'), // Middleware para subir archivo
+        upload.single('firma'), 
         check('documento', 'El número de documento es obligatorio')
             .notEmpty().withMessage('Debe ingresar un valor')
             .isNumeric().withMessage('Debe ser un número').trim(),
