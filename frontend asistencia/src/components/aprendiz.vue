@@ -157,7 +157,7 @@
                   </template>
                 </q-input>
                 <!-- Fila 3 -->
-                <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
+                <q-select clearable filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
                   :options="options" @filter="filterFn" style="width: 100%; margin-bottom: 20px; border-radius: 8px;"
                   behavior="menu" emit-value map-options lazy-rules
                   :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha']">

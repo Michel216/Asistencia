@@ -66,6 +66,7 @@ export const useAprendizStore = defineStore('aprendiz', () => {
 const modificarAprendiz = async (id, documento, nombre, telefono, email, ficha, firma ) => {
     console.log(`Función modificarAprendiz ejecutada`, { id, documento, nombre, telefono, email, ficha });
     try {
+        let res;
         if (ficha){
             let formData = new FormData();
             formData.append('documento', documento);
@@ -74,7 +75,7 @@ const modificarAprendiz = async (id, documento, nombre, telefono, email, ficha, 
             formData.append('email', email);
             formData.append('id_ficha', ficha);
             formData.append('firma', firma);
-            const res = await axios.put(`${API_URL}/aprendiz/modificar/${id}`,formData, {
+             res = await axios.put(`${API_URL}/aprendiz/modificar/${id}`,formData, {
                 headers: { "token": usuariosStore.token },
                 'Content-Type': 'multipart/form-data'
             });
@@ -84,7 +85,8 @@ const modificarAprendiz = async (id, documento, nombre, telefono, email, ficha, 
                 message: 'Aprendiz editado correctamente'
             });
         }
-       else{ const res = await axios.put(`${API_URL}/aprendiz/modificar/${id}`, {
+       else 
+       {  res = await axios.put(`${API_URL}/aprendiz/modificar/${id}`, {
             documento, nombre, telefono, email, id_ficha: ficha
         }, {
             headers: { "token": usuariosStore.token },

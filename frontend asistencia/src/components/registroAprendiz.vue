@@ -8,7 +8,7 @@
       <h5><strong>Registro de Asistencia</strong></h5>
       <q-form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <q-select filled v-model="model" use-input input-debounce="0" label="Escribe tu documento" :options="options"
+          <q-select clearable filled v-model="model" use-input input-debounce="0" label="Escribe tu documento" :options="options"
             @filter="filterFn" style="width: 250px" behavior="menu">
             <template v-slot:no-option>
               <q-item>
