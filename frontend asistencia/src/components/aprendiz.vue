@@ -278,14 +278,14 @@ function handleFirma(file) {
   if (file && file.length > 0) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      firmaPreview.value = e.target.result; // Guardar la vista previa de la firma
-      firma.value = e.target.result; // También guarda el resultado en la variable 'firma'
+      firmaPreview.value = e.target.result; 
+      firma.value = e.target.result; 
       change.value = true;
     };
-    reader.readAsDataURL(file[0]); // Leer el archivo como Data URL
+    reader.readAsDataURL(file[0]); 
   } else {
-    firmaPreview.value = null; // Limpiar vista previa si no hay archivo
-    firma.value = null; // Limpiar el valor de la firma
+    firmaPreview.value = null; 
+    firma.value = null; 
     change.value = false;
   }
 }
