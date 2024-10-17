@@ -3,22 +3,35 @@
 const Aprendiz = require('../modelos/aprendiz.js');
 const { validarCCUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/aprendiz.js');
 const Ficha = require('../modelos/ficha.js')
+const aprendizHelper = require('../helpers/aprendiz');
 
 const aprendizController = {
 
+
     crear: async (req, res) => {
         try {
-            await validarUnicidadCreacion(req.body);
+            // Validar unicidad de los campos antes de crear el aprendiz
+            await aprendizHelper.validarUnicidadCreacion(req.body);
+    
+            // Crear el aprendiz si las validaciones son exitosas
             const { documento, nombre, telefono, email, id_ficha } = req.body;
-
             const nuevoAprendiz = new Aprendiz({ documento, nombre, telefono, email, id_ficha });
+    
             await nuevoAprendiz.save();
-            res.json({ message: 'Aprendiz creado', aprendiz: nuevoAprendiz });
+            return res.json({ message: 'Aprendiz creado', aprendiz: nuevoAprendiz });
+            
         } catch (error) {
+            // Verificar si el error lanzado es personalizado (de las validaciones)
+            if (error.message.includes('Ya existe un aprendiz')) {
+                return res.status(400).json({ error: error.message });
+            }
+    
+            // Para otros errores no controlados
             console.error('Error al crear aprendiz:', error);
-            res.status(500).json({ error: 'Error al crear aprendiz' });
+            return res.status(500).json({ error: 'Error al crear aprendiz' });
         }
     },
+    
     listarTodos: async (req, res) => {
         try {
             const aprendices = await Aprendiz.find()
@@ -64,6 +77,10 @@ const aprendizController = {
             }
             res.json({ message: 'Datos del aprendiz modificados', aprendiz: aprendizModificado });
         } catch (error) {
+            if (error.message.includes('Ya existe un aprendiz')) {
+                return res.status(400).json({ error: error.message });
+            }
+    
             console.error('Error al modificar los datos del aprendiz:', error);
             res.status(500).json({ error: 'Error al modificar los datos del aprendiz' });
         }

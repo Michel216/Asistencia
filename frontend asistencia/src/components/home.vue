@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR lFf">
+  <q-layout view="hHh lpR fff">
     <q-header elevated class="bg-green text-white">
       <q-toolbar style="background-color: green;">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -12,68 +12,62 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer 
-    show-if-above
-    v-model="leftDrawerOpen"
-    side="left"
-    bordered
-    class="my-drawer"
-    :breakpoint="500" 
-  >
-    <div class="avatar-container">
-      <q-avatar class="large-avatar">
-        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
-      </q-avatar>
-    </div>
-    <h5>
-  Bienvenid@
-  <strong style="display: block;">{{ nombre }}</strong>
-</h5>
-    <q-list class="drawer-content">
-      <q-item
-        v-for="item in menuItems"
-        :key="item.label"
-        :to="item.path"
-        active-class="active-item"
-        class="custom-button"
-      >
-        <q-item-section avatar>
-          <q-icon :name="item.icon" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">{{ item.label }}</span>
-        </q-item-section>
-        <q-item-section side v-if="isActiveRoute(item.path)">
-          <q-icon name="arrow_right" class="indicator-icon" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <div class="logon">
-      <img class="negro" src="/imagenes/snegr.png" alt="" />
-    </div>
-  </q-drawer>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="my-drawer" :breakpoint="500">
+      <q-scroll-area style="height: calc(100% - 150px);  border-right: 1px solid #ddd">
 
-
+        <div class="avatar-container">
+          <q-avatar class="large-avatar">
+            <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
+          </q-avatar>
+        </div>
+        <h5>
+          Bienvenid@
+          <strong style="display: block;">{{ nombre }}</strong>
+        </h5>
+        <q-list class="drawer-content">
+          <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
+            class="custom-button">
+            <q-item-section avatar>
+              <q-icon :name="item.icon" class="icon" />
+            </q-item-section>
+            <q-item-section>
+              <span class="button-text">{{ item.label }}</span>
+            </q-item-section>
+            <q-item-section side v-if="isActiveRoute(item.path)">
+              <q-icon name="arrow_right" class="indicator-icon" />
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
+      <div class="logon">
+        <img class="negro" src="/imagenes/snegr.png" alt="" />
+      </div>
+    </q-drawer>
     <q-page-container>
-      <div v-if="showCards" class="container">
-        <div v-for="(card, index) in cards" :key="index" class="card">
-          <div class="card-header">{{ card.title }}</div>
-          <div class="card-body">
-            <img class="pta" :src="card.img" :alt="card.alt">
-          </div>
-          <div class="card-footer">
-            <q-btn :loading="isLoading[index]" @click="handleClick(index, card.route)" class="ver">Abrir</q-btn>
-          </div>
+
+      <div v-if="route.path === '/home'">
+    <div v-if="showCards" class="container">
+      <div v-for="(card, index) in cards" :key="index" class="card">
+        <div class="card-header">{{ card.title }}</div>
+        <div class="card-body">
+          <img class="pta" :src="card.img" :alt="card.alt">
+        </div>
+        <div class="card-footer">
+          <q-btn :loading="isLoading[index]" @click="handleClick(index, card.route)" class="ver">Abrir</q-btn>
         </div>
       </div>
+    </div>
+    </div>
+    <router-view />
+  </q-page-container>
 
-      <router-view />
-      <footer class="footer">
-        <div class="text-h7 text-weight-bold">
-          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-        </div>
-      </footer>
-    </q-page-container>
+    <q-footer class="bg-grey-4 text-black">
+      <q-toolbar>
+        <q-toolbar-title>
+          <div class="text-center text-h6 text-weight-bold text-subtitle1">REPFORA ASISTENCIA - Sena 2024 © Todos los derechos reservados</div>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -104,7 +98,7 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
+  {label: 'Informes', path:'/informes'}
 ];
 
 // Información de las tarjetas y las rutas correspondientes
@@ -112,7 +106,8 @@ const cards = [
   { title: 'Fichas', img: '/imagenes/documentos.png', alt: 'Salud Publica', route: '/ficha' },
   { title: 'Aprendices', img: '/imagenes/estudiantes.png', alt: 'Salud Publica', route: '/aprendiz' },
   { title: 'Bitacoras', img: '/imagenes/internet.png', alt: 'Salud Publica', route: '/bitacora' },
-  { title: 'Usuarios', img: '/imagenes/seguidores.png', alt: 'Salud Publica', route: '/usuario' }
+  { title: 'Usuarios', img: '/imagenes/seguidores.png', alt: 'Salud Publica', route: '/usuario' },
+
 ];
 
 function toggleLeftDrawer() {
@@ -128,10 +123,11 @@ function handleClick(index, route) {
   }, 2000);
 }
 
-// Verifica si la ruta actual está activa
 function isActiveRoute(path) {
-  return route.path === path;
+  return router.currentRoute.value.path == path;
 }
+
+
 </script>
 
 
@@ -174,7 +170,7 @@ function isActiveRoute(path) {
 }
 
 .bg-green {
-  background-color: green;
+  background-color: rgb(203, 203, 203);
 }
 
 .text-white {
@@ -229,7 +225,7 @@ function isActiveRoute(path) {
 .container {
   display: grid;
   width: 90%;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
   justify-content: center;
   align-items: center;
@@ -339,6 +335,7 @@ function isActiveRoute(path) {
     font-size: 14px;
   }
 }
+
 active-item {
   color: var(--q-primary);
   background: var(--q-grey-2);
@@ -351,14 +348,16 @@ active-item {
   }
 }
 
- .main-content {
+.main-content {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+  min-height: 100vh;
+  /* Ocupa el 100% del alto de la pantalla */
 }
 
 .container {
-  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+  flex-grow: 1;
+  /* Permite que el contenido se expanda para empujar el footer hacia abajo */
 }
 
 .footer {
@@ -366,7 +365,8 @@ active-item {
   color: #000;
   padding: 15px 0;
   text-align: center;
-  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  margin-top: auto;
+  /* Esto fuerza al footer a estar en la parte inferior */
   width: 100%;
 }
 

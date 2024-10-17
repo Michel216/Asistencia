@@ -1,59 +1,6 @@
-USUARIOS <template>
+<template>
   <q-layout view="hHh lpR lFf">
-    <q-header elevated class="bg-green text-white">
-      <q-toolbar style="background-color: green;">
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>Asistencia</q-toolbar-title>
-        <q-item to="/" active-class="q-item--active" class="salida">
-          <q-item-section avatar>
-            <q-btn dense flat round icon="logout" />
-          </q-item-section>
-        </q-item>
-      </q-toolbar>
-    </q-header>
 
-    <q-drawer
-    show-if-above
-    v-model="leftDrawerOpen"
-    side="left"
-    bordered
-    class="my-drawer"
-       :breakpoint="500"
-  >
-    <div class="avatar-container">
-      <q-avatar class="large-avatar">
-        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
-      </q-avatar>
-    </div>
-    <div class="user-info">
-      <p class="user-name">{{ nombreUser }}</p>
-      <p class="user-email">{{ emailUser }}</p>
-    </div>
-    <q-list class="drawer-list">
-      <q-item
-        v-for="item in menuItems"
-        :key="item.label"
-        :to="item.path"
-        active-class="active-item"
-        class="custom-button"
-      >
-        <q-item-section avatar>
-          <q-icon :name="item.icon" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">{{ item.label }}</span>
-        </q-item-section>
-        <q-item-section side v-if="isActiveRoute(item.path)">
-          <q-icon name="arrow_right" class="indicator-icon" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <div class="logon">
-      <img class="negro" src="/imagenes/snegr.png" alt="" />
-    </div>
-  </q-drawer>
-
-    <q-page-container>
       <div class="usuarios-container q-pa-md">
         <h3 class="title-table">Usuarios</h3>
         <hr id="hr" class="bg-green-9">
@@ -156,13 +103,7 @@ USUARIOS <template>
           </q-dialog>
         </div>
       </div>
-    <!-- El footer -->
-      <footer class="footer">
-        <div class="text-h7 text-weight-bold">
-          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-        </div>
-      </footer>
-    </q-page-container>
+
   </q-layout>
 </template>
 

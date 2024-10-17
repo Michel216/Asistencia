@@ -1,225 +1,161 @@
 <template>
-  <q-layout view="hHh lpR lFf">
-    <q-header elevated class="bg-green text-white">
-      <q-toolbar style="background-color: green;">
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>Asistencia</q-toolbar-title>
-        <q-item to="/" active-class="q-item--active" class="salida">
-          <q-item-section avatar>
-            <q-btn dense flat round icon="logout" />
-          </q-item-section>
-        </q-item>
-      </q-toolbar>
-    </q-header>
+  <div>
+    <div class="aprendices-container q-pa-md">
+      <h3 class="title-table">Aprendices</h3>
+      <hr id="hr" class="bg-green-9">
+      <div class="q-pa-md">
+        <div style="display: flex; justify-content: end; ">
+          <q-btn class="agregar" @click="abrirModal()" :loading="loadingCrearAprendiz">
+            Agregar Aprendiz
+          </q-btn>
+        </div>
+        <q-table title="Aprendiz" :rows="rows" :columns="columns" row-key="_id">
+          <template v-slot:body-cell-documento="props">
+            <q-td :props="props">
+              {{ props.row.documento ? props.row.documento : 'No disponible' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-nombre="props">
+            <q-td :props="props">
+              {{ props.row.nombre ? props.row.nombre : 'No disponible' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-telefono="props">
+            <q-td :props="props">
+              {{ props.row.telefono ? props.row.telefono : 'No disponible' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-email="props">
+            <q-td :props="props">
+              {{ props.row.email ? props.row.email : 'No disponible' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-ficha="props">
+            <q-td :props="props">
+              {{ props.row.id_ficha ? props.row.id_ficha.codigo : 'No disponible' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-fichaNombre="props">
+            <q-td :props="props">
+              {{ props.row.id_ficha ? props.row.id_ficha.nombre : 'No disponible' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-opciones="props">
+            <q-td :props="props">
+              <q-btn flat icon="edit" @click="abrirModal(props.row)"
+                :loading="loadingState[`guardar-${props.row._id}`]" />
+              <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
+                color="red" :loading="loadingState[`desactivar-${props.row._id}`]" />
+              <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else color="green"
+                :loading="loadingState[`activar-${props.row._id}`]" />
+            </q-td>
+          </template>
+          <template v-slot:body-cell-estado1="props">
+            <q-td :props="props">
+              <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
+              <q-chip square outline color="red" v-else>Inactivo</q-chip>
+            </q-td>
+          </template>
+        </q-table>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="my-drawer" :breakpoint="500">
-      <div class="avatar-container">
-        <q-avatar class="large-avatar">
-          <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
-        </q-avatar>
-      </div>
-      <div class="user-info">
-        <p class="user-name">{{ nombreUser }}</p>
-        <p class="user-email">{{ emailUser }}</p>
-      </div>
-      <q-list class="drawer-list">
-        <q-item v-for="item in menuItems" :key="item.label" :to="item.path" active-class="active-item"
-          class="custom-button">
-          <q-item-section avatar>
-            <q-icon :name="item.icon" class="icon" />
-          </q-item-section>
-          <q-item-section>
-            <span class="button-text">{{ item.label }}</span>
-          </q-item-section>
-          <q-item-section side v-if="isActiveRoute(item.path)">
-            <q-icon name="arrow_right" class="indicator-icon" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <div class="logon">
-        <img class="negro" src="/imagenes/snegr.png" alt="" />
-      </div>
-    </q-drawer>
+        <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
+          transition-hide="rotate" persistent>
+          <q-card>
+            <q-card-section class="vert" style="background-color: green; color:white">
+              <div class="text-h6" v-if="b">Editar Aprendiz</div>
+              <div class="text-h6" v-else>Guardar Aprendiz</div>
+            </q-card-section>
 
-    <q-page-container>
-      <div class="aprendices-container q-pa-md">
-        <h3 class="title-table">Aprendices</h3>
-        <hr id="hr" class="bg-green-9">
-        <div class="q-pa-md">
-          <div style="display: flex; justify-content: end; ">
-            <q-btn class="agregar" @click="abrirModal()" :loading="loadingCrearAprendiz">
-              Agregar Aprendiz
-            </q-btn>
-          </div>
-          <q-table title="Aprendiz" :rows="rows" :columns="columns" row-key="_id">
-            <template v-slot:body-cell-documento="props">
-              <q-td :props="props">
-                {{ props.row.documento ? props.row.documento : 'No disponible' }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-nombre="props">
-              <q-td :props="props">
-                {{ props.row.nombre ? props.row.nombre : 'No disponible' }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-telefono="props">
-              <q-td :props="props">
-                {{ props.row.telefono ? props.row.telefono : 'No disponible' }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-email="props">
-              <q-td :props="props">
-                {{ props.row.email ? props.row.email : 'No disponible' }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-ficha="props">
-              <q-td :props="props">
-                {{ props.row.id_ficha ? props.row.id_ficha.codigo : 'No disponible' }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-fichaNombre="props">
-              <q-td :props="props">
-                {{ props.row.id_ficha ? props.row.id_ficha.nombre : 'No disponible' }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-opciones="props">
-              <q-td :props="props">
-                <q-btn flat icon="edit" @click="abrirModal(props.row)"
-                  :loading="loadingState[`guardar-${props.row._id}`]" />
-                <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
-                  color="red" :loading="loadingState[`desactivar-${props.row._id}`]" />
-                <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else color="green"
-                  :loading="loadingState[`activar-${props.row._id}`]" />
-              </q-td>
-            </template>
-            <template v-slot:body-cell-estado1="props">
-              <q-td :props="props">
-                <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
-                <q-chip square outline color="red" v-else>Inactivo</q-chip>
-              </q-td>
-            </template>
-          </q-table>
+            <q-separator />
+            <div class="agua">
+              <q-card-section
+                style="max-height: none; max-width: 100%; width: 100vw; margin: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <!-- Fila 1 -->
+                <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']"
+                  style="margin-bottom: 15px; border-radius: 8px;">
+                  <template v-slot:prepend>
+                    <q-icon name="card_membership" />
+                  </template>
+                </q-input>
 
-          <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
-            transition-hide="rotate" persistent>
-            <q-card>
-              <q-card-section class="vert" style="background-color: green; color:white">
-                <div class="text-h6" v-if="b">Editar Aprendiz</div>
-                <div class="text-h6" v-else>Guardar Aprendiz</div>
+                <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']"
+                  style="margin-bottom: 15px; border-radius: 8px;">
+                  <template v-slot:prepend>
+                    <q-icon name="person" />
+                  </template>
+                </q-input>
+
+                <!-- Fila 2 -->
+                <q-input filled v-model="telefono" label="Teléfono Del Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono', val => val.trim().length === 10 || 'Ingrese un teléfono válido']"
+                  style="margin-bottom: 15px; border-radius: 8px;">
+                  <template v-slot:prepend>
+                    <q-icon name="phone" />
+                  </template>
+                </q-input>
+
+                <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']"
+                  style="margin-bottom: 15px; border-radius: 8px;">
+                  <template v-slot:prepend>
+                    <q-icon name="email" />
+                  </template>
+                </q-input>
+
+                <!-- Fila 3 -->
+                <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
+                  :options="options" @filter="filterFn" style="width: 100%; margin-bottom: 20px; border-radius: 8px;"
+                  behavior="menu" emit-value map-options lazy-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha']">
+                  <template v-slot:prepend>
+                    <q-icon name="folder" />
+                  </template>
+
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+                <q-file style="max-width: 250px; min-width: 200px;" clearable filled
+                  v-model="firma" accept=".jpg, image/*" label="Firma" @input="handleFirma" :rules="[
+                    (val) => !change ? (val !== null || 'Por favor, seleccione un archivo') : true]">
+                  <template v-slot:prepend>
+                    <font-awesome-icon icon="file-signature" />
+                  </template>
+                </q-file>
+                <div v-if="firmaPreview && change === true" style="max-width: 250px; min-width: 200px;">
+                  <q-img :src="firmaPreview" alt="Firma del aprendiz">
+                    <div class="absolute-bottom text-subtitle1 text-center">
+                      Firma Actual
+                    </div>
+                  </q-img>
+                </div>
+                <div v-if="!firmaPreview && change === true" style="max-width: 250px; min-width: 200px;">
+                  <q-img
+                    src="https://media.istockphoto.com/id/1409329028/es/vector/no-hay-imagen-disponible-marcador-de-posici%C3%B3n-miniatura-icono-dise%C3%B1o-de-ilustraci%C3%B3n.jpg?s=612x612&w=0&k=20&c=Bd89b8CBr-IXx9mBbTidc-wu_gtIj8Py_EMr3hGGaPw="
+                    alt="Firma del aprendiz">
+                    <div class="absolute-bottom text-subtitle1 text-center">
+                      Image not found
+                    </div>
+                  </q-img>
+                </div>
               </q-card-section>
-
-              <q-separator />
-              <div class="agua">
-    <q-card-section
-      style="max-height: none; max-width: 100%; width: 100vw; margin: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;"
-    >
-      <!-- Fila 1 -->
-      <q-input
-        filled
-        v-model="documento"
-        label="Documento Aprendiz"
-        :dense="dense"
-        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']"
-        style="margin-bottom: 15px; border-radius: 8px;"
-      >
-        <template v-slot:prepend>
-          <q-icon name="card_membership" />
-        </template>
-      </q-input>
-
-      <q-input
-        filled
-        v-model="nombre"
-        label="Nombre Del Aprendiz"
-        :dense="dense"
-        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']"
-        style="margin-bottom: 15px; border-radius: 8px;"
-      >
-        <template v-slot:prepend>
-          <q-icon name="person" />
-        </template>
-      </q-input>
-
-      <!-- Fila 2 -->
-      <q-input
-        filled
-        v-model="telefono"
-        label="Teléfono Del Aprendiz"
-        :dense="dense"
-        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono', val => val.trim().length === 10 || 'Ingrese un teléfono válido']"
-        style="margin-bottom: 15px; border-radius: 8px;"
-      >
-        <template v-slot:prepend>
-          <q-icon name="phone" />
-        </template>
-      </q-input>
-
-      <q-input
-        filled
-        v-model="email"
-        label="Email Del Aprendiz"
-        :dense="dense"
-        :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']"
-        style="margin-bottom: 15px; border-radius: 8px;"
-      >
-        <template v-slot:prepend>
-          <q-icon name="email" />
-        </template>
-      </q-input>
-
-      <!-- Fila 3 -->
-      <q-select
-        filled
-        type="number"
-        v-model="ficha"
-        use-input
-        input-debounce="0"
-        label="Ficha"
-        :options="options"
-        @filter="filterFn"
-        style="width: 100%; margin-bottom: 20px; border-radius: 8px;"
-        behavior="menu"
-        emit-value
-        map-options
-        lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha']"
-      >
-        <template v-slot:prepend>
-          <q-icon name="folder" />
-        </template>
-
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No results
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-    </q-card-section>
-  </div>
-
-
-<q-separator />
-
-<q-card-actions style="justify-content: center;" align="right">
-  <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-  <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
-</q-card-actions>
-
-
-            </q-card>
-          </q-dialog>
-        </div>
+            </div>
+            <q-separator />
+            <q-card-actions style="justify-content: center;" align="right">
+              <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
+              <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </div>
-      <!-- El footer -->
-      <footer class="footer">
-        <div class="text-h7 text-weight-bold">
-          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-        </div>
-      </footer>
-    </q-page-container>
-  </q-layout>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -256,6 +192,8 @@ const documento = ref("")
 const nombre = ref("")
 const telefono = ref("")
 const email = ref("")
+const firma=ref("")
+const firmaPreview= (null)
 const b = ref(false)
 const id = ref("")
 const rows = ref([])
@@ -318,6 +256,17 @@ async function traer() {
   }
 }
 
+function handleFirma(file) {
+  if (file && file.length > 0) {
+    const reader = new FileReader();
+    // console.log(reader);
+
+    reader.onload = (e) => {
+      firmaPreview.value = e.target.result; 
+    };
+    reader.readAsDataURL(file[0]); 
+  }
+}
 async function crearAprendiz() {
   if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value) {
     $q.notify({
@@ -336,7 +285,7 @@ async function crearAprendiz() {
 
     loadingState.value[`guardar-${id.value}`] = true;
     try {
-      await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value);
+      await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
       traer()
 
       fixed.value = false;
@@ -351,8 +300,8 @@ async function crearAprendiz() {
   } else {  // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
-      await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value);
-      await traer();  // Actualizar la lista de aprendices
+      await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
+      await traer(); 
       fixed.value = false;
 
     } catch (error) {
@@ -491,10 +440,6 @@ const columns = [
 
 
 <style>
-
-
-
-
 .user-info {
   text-align: center;
   margin: 0.5rem 0;

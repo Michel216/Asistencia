@@ -8,16 +8,10 @@
       <h5><strong>Registro de Asistencia</strong></h5>
       <q-form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <q-select filled v-model="model" use-input input-debounce="0" label="Escribe tu documento" :options="options"
-            @filter="filterFn" style="width: 250px" behavior="menu">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+          <q-input filled v-model="model" label="Escribe tu documento" :dense="dense"
+                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']"
+                  style="margin-bottom: 15px; border-radius: 8px; width: 250px">
+                </q-input>
         </div>
         <button type="submit" class="submit-button" :disabled="isLoading">
           <template v-if="isLoading">

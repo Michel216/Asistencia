@@ -1,5 +1,6 @@
 const Bitacora = require('../modelos/bitacora');
 const Aprendiz = require('../modelos/aprendiz');
+const bitacoraHelper = require('../helpers/bitacora');
 
 const bitacoraController = {
 
@@ -10,6 +11,10 @@ const bitacoraController = {
             if (!id_aprendiz || !fecha) {
                 return res.status(400).json({ error: 'Faltan campos requeridos' });
             }
+            const registroExistente = await bitacoraHelper.registroExistenteHoy(id_aprendiz);
+            if (registroExistente) {
+                throw new Error('Ya has registrado tu asistencia el día de hoy.');
+              }
 
             const nuevaBitacora = new Bitacora({ id_aprendiz, fecha });
             const resultado = await nuevaBitacora.save();

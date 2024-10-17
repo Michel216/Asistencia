@@ -15,6 +15,17 @@ const bitacoraHelper = {
             throw new Error(`Error al validar bitácora: ${error.message}`);
         }
     },
+    registroExistenteHoy: async (id_aprendiz) => {
+        const hoy = moment().startOf('day'); // Fecha de hoy, 00:00 horas
+    
+        // Busca un registro del aprendiz para el día actual
+        const registro = await Bitacora.findOne({
+          aprendiz: id_aprendiz,
+          fecha: { $gte: hoy.toDate(), $lt: moment(hoy).endOf('day').toDate() },
+        });
+    
+        return registro ? true : false;
+      },
 };
 
 module.exports = bitacoraHelper;

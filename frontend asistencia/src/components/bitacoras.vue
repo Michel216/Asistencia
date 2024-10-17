@@ -1,147 +1,37 @@
 <template>
-  <q-layout view="hHh lpR lFf">
-    <!-- Encabezado y menú lateral -->
-    <q-header elevated class="bg-green text-white">
-      <q-toolbar style="background-color: green;">
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>Asistencia</q-toolbar-title>
-        <q-item to="/" active-class="q-item--active" class="salida">
-          <q-item-section avatar>
-            <q-btn dense flat round icon="logout" />
-          </q-item-section>
-        </q-item>
-      </q-toolbar>
-    </q-header>
+  <q-layout view="hHh lpR fFf">
 
-    <q-drawer
-    show-if-above
-    v-model="leftDrawerOpen"
-    side="left"
-    bordered
-    class="my-drawer"
-       :breakpoint="500"
-  >
-    <div class="avatar-container">
-      <q-avatar class="large-avatar">
-        <img class="per" src="/imagenes/usuario.png" style=" margin-top: 15%;" alt="perfil" />
-      </q-avatar>
+    <h3 class="title-table">Bitacoras</h3>
+    <hr id="hr" class="bg-green-9">
+    <div class="fichas-container q-pa-md">
+      
+      <!-- Tabla de Bitácoras -->
+      <q-table title="Bitacora" :rows="rows" :columns="columns" row-key="_id" style=" margin: auto 5% ">
+        <template v-slot:body-cell-nombre="props">
+          <q-td :props="props">
+            {{ props.row.id_aprendiz ? props.row.id_aprendiz.nombre : 'No disponible' }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-ficha="props">
+          <q-td :props="props">
+            {{ props.row.id_aprendiz ? props.row.id_aprendiz.id_ficha.codigo : 'No disponible' }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-estado="props">
+          <q-td :props="props">
+            <q-select filled v-model="props.row.estado" label="Estado" style="max-width: 300px;"
+              :options="estadoOptions" emit-value map-options :loading="loadingButtons[props.row._id]"
+              @update:model-value="updateEstado($event, props.row._id)" />
+            <q-spinner v-if="props.row.loading" size="20px" color="primary" />
+          </q-td>
+        </template>
+        <template v-slot:body-cell-fecha="props">
+          <q-td :props="props">
+            {{ new Date(props.row.fecha).toLocaleString() }}
+          </q-td>
+        </template>
+      </q-table>
     </div>
-    <div class="user-info">
-      <p class="user-name">{{ nombreUser }}</p>
-      <p class="user-email">{{ emailUser }}</p>
-    </div>
-    <q-list class="drawer-list">
-      <q-item
-        v-for="item in menuItems"
-        :key="item.label"
-        :to="item.path"
-        exact-active-class="active-item"
-        class="custom-button"
-      >
-        <q-item-section avatar>
-          <q-icon :name="item.icon" class="icon" />
-        </q-item-section>
-        <q-item-section>
-          <span class="button-text">{{ item.label }}</span>
-        </q-item-section>
-        <q-item-section side v-if="isActiveRoute(item.path)">
-          <q-icon name="arrow_right" class="indicator-icon" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <div class="logon">
-      <img class="negro" src="/imagenes/snegr.png" alt="" />
-    </div>
-  </q-drawer>
-
-    <q-page-container>
-      <h3 class="title-table">Bitacoras</h3>
-      <hr id="hr" class="bg-green-9">
-      <div class="fichas-container q-pa-md">
-        <!-- Botones para generar documento y guardar estados -->
-        <div class="btn">
-          <q-btn icon="description" @click="openDateDialog" :loading="loadingGenerarDocumento" class="q-mr-xs">
-            <q-tooltip anchor="bottom middle" self="top middle">Generar documento</q-tooltip>
-          </q-btn>
-        </div>
-
-            <q-dialog v-model="fechaFiltrada">
-          <q-card>
-            <q-card-section>
-              <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-                :options="options" @filter="filterFn"  style="max-height: none; max-width: 100%; width: 100vw; margin: auto;" behavior="menu" emit-value map-options
-                lazy-rules :rules="[
-                  (val) => {
-                    if (b.value === false) {
-                      return (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
-                    } else { return true }
-                  }
-                ]">
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No results
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-              <q-input  filled v-model="selectedDate" label="Fecha (AAAA-MM-DD)" dense ref="dateInput" :error="showError"
-              error-message="Por favor, ingrese la fecha" class="custom-error-message" @input="handleInput">
-              <template v-slot:append > 
-                <q-icon name="event" class="cursor-pointer" @click="showDatePicker" />
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale"    class="custom-overlay">
-                    <div class="calendar-centered" style="width: 100%">
-                    <q-date v-model="selectedDate" locale="auto" >
-                      <div class="row items-center justify-center">
-                        <q-btn v-close-popup label="Aceptar" color="white" flat />
-                      </div>
-                    </q-date></div>
-                  </q-popup-proxy>
-                </template>
-              </q-input>
-              <br>
-              <q-card-actions style="justify-content: center;" align="right">
-              <q-btn label="Cancelar" @click="fechaFiltrada = false" /> <span>         </span>
-              <q-btn label="Previsualizar" style="background-color: green; color: white" @click="previsualizarDocumento" />
-           </q-card-actions>
-           </q-card-section>
-          </q-card>
-        </q-dialog>
-
-        <!-- Tabla de Bitácoras -->
-        <q-table title="Bitacora" :rows="rows" :columns="columns" row-key="_id" style=" margin: auto 5% ">
-          <template v-slot:body-cell-nombre="props">
-            <q-td :props="props">
-              {{ props.row.id_aprendiz ? props.row.id_aprendiz.nombre : 'No disponible' }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-ficha="props">
-            <q-td :props="props">
-              {{ props.row.id_aprendiz ? props.row.id_aprendiz.id_ficha.codigo : 'No disponible' }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-estado="props">
-            <q-td :props="props">
-              <q-select filled v-model="props.row.estado" label="Estado" style="max-width: 300px;"
-                :options="estadoOptions" emit-value map-options :loading="loadingButtons[props.row._id]"
-                @update:model-value="updateEstado($event, props.row._id)" />
-              <q-spinner v-if="props.row.loading" size="20px" color="primary" />
-            </q-td>
-          </template>
-          <template v-slot:body-cell-fecha="props">
-            <q-td :props="props">
-              {{ new Date(props.row.fecha).toLocaleString() }}
-            </q-td>
-          </template>
-        </q-table>
-      </div>
-   <!-- El footer -->
-      <footer class="footer">
-        <div class="text-h7 text-weight-bold">
-          ASISTENCIA SENA - Sena 2024 © Todos los derechos reservados
-        </div>
-      </footer>
-    </q-page-container>
   </q-layout>
 </template>
 
@@ -373,7 +263,7 @@ onMounted(() => {
 }
 
 .q-btn:hover {
- 
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   /* Sombra al pasar el mouse, sin cambiar el color */
   text-shadow: 0px 0px 10px white;
@@ -448,6 +338,7 @@ onMounted(() => {
   border-right: 1px solid #ddd;
   /* Borde derecho del encabezado */
 }
+
 /* Asegúrate de que el calendario se centre correctamente */
 .calendar-centered {
   display: flex;
@@ -455,27 +346,33 @@ onMounted(() => {
   align-items: center;
 
 }
-.calendar-centered .q-btn{
-background-color: green;
-color: white;
+
+.calendar-centered .q-btn {
+  background-color: green;
+  color: white;
 }
+
 .q-popup-proxy {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .custom-overlay .q-overlay {
-  background-color: rgb(0, 0, 0); /* Ajusta la opacidad aquí */
+  background-color: rgb(0, 0, 0);
+  /* Ajusta la opacidad aquí */
 }
 
- .main-content {
+.main-content {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+  min-height: 100vh;
+  /* Ocupa el 100% del alto de la pantalla */
 }
 
 .container {
-  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+  flex-grow: 1;
+  /* Permite que el contenido se expanda para empujar el footer hacia abajo */
 }
 
 .footer {
@@ -483,7 +380,8 @@ color: white;
   color: #000;
   padding: 15px 0;
   text-align: center;
-  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  margin-top: auto;
+  /* Esto fuerza al footer a estar en la parte inferior */
   width: 100%;
 }
 
@@ -501,6 +399,4 @@ color: white;
 .q-date__header {
   background-color: #008000
 }
-
 </style>
-
