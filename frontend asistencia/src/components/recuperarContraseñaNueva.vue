@@ -16,7 +16,6 @@
                 @click="togglePasswordVisibility('new')" />
             </template>
           </q-input>
-
           <q-input v-model="confirmPassword" label="Confirmar Contraseña" :type="isPwd ? 'password' : 'text'" outlined
             lazy-rules :rules="[val => val && val.trim() !== '' || 'La contraseña debe coincidir']" autocomplete="off">
             <template v-slot:append>

@@ -8,7 +8,7 @@ import { useQuasar } from 'quasar'
 
 const API_URL = 'https://asistencia-backend-31lj.onrender.com';
 
-// Definición de la tienda para el manejo de usuarios y token
+
 export const useUsuariosStore = defineStore('usuario', () => {
     const token = ref("");
     const usuario = ref("");

@@ -45,11 +45,11 @@ const isLoading = ref(false);
 
 const Login = async () => {
   if (!email.value || !password.value) {
-    return; // Prevenir la ejecución si los campos están vacíos
+    return; 
   }
 
 
-  isLoading.value = true; // Muestra el spinner
+  isLoading.value = true; 
 
   try {
     const login = await useUsuarios.login(email.value, password.value);

@@ -6,7 +6,6 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 const cloudinary = require('../config/cloudinaryConfig.js'); // Asegúrate de que la ruta sea correcta
 
-// Configuración de almacenamiento con multer-storage-cloudinary
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
