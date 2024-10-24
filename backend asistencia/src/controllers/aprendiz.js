@@ -4,6 +4,22 @@ const Aprendiz = require('../modelos/aprendiz.js');
 const { validarCCUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/aprendiz.js');
 const Ficha = require('../modelos/ficha.js')
 const aprendizHelper = require('../helpers/aprendiz');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const cloudinary = require('../config/cloudinaryConfig.js'); // Asegúrate de que la ruta sea correcta
+
+// Configuración de almacenamiento con multer-storage-cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'firmasAprendiz', // Carpeta en Cloudinary donde se guardarán los archivos
+        allowed_formats: ['jpg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'heic'],
+        public_id: (req, file) => file.originalname.split('.')[0], // Nombre del archivo
+    },
+});
+
+// Configurar multer
+const upload = multer({storage });
 
 const aprendizController = {
 
@@ -11,11 +27,21 @@ const aprendizController = {
     crear: async (req, res) => {
         try {
             // Validar unicidad de los campos antes de crear el aprendiz
-            await aprendizHelper.validarUnicidadCreacion(req.body);
+            await validarUnicidadCreacion(req.body);
     
             // Crear el aprendiz si las validaciones son exitosas
             const { documento, nombre, telefono, email, id_ficha } = req.body;
-            const nuevoAprendiz = new Aprendiz({ documento, nombre, telefono, email, id_ficha });
+            const firma = req.file ? req.file.path : null;
+            // Crea una nueva instancia de Aprendiz
+            const nuevoAprendiz = new Aprendiz({
+                documento, 
+                nombre,
+                telefono,
+                email,
+                id_ficha, 
+                firma
+            });
+
     
             await nuevoAprendiz.save();
             return res.json({ message: 'Aprendiz creado', aprendiz: nuevoAprendiz });
@@ -69,12 +95,24 @@ const aprendizController = {
     modificar: async (req, res) => {
         const id = req.params.id;
         const nuevosDatos = req.body;
+
         try {
-            await validarUnicidadActualizacion(id, req.body);
+            // Validar la unicidad de los datos antes de actualizar
+            await validarUnicidadActualizacion(id, nuevosDatos);
+
+            if (req.file) {
+                const firmaImg = req.file.path; 
+                nuevosDatos.firma = firmaImg; 
+            }
+
+            // Actualizar los datos del aprendiz
             const aprendizModificado = await Aprendiz.findByIdAndUpdate(id, nuevosDatos, { new: true });
+
             if (!aprendizModificado) {
                 return res.status(404).json({ msg: 'Aprendiz no encontrado' });
             }
+
+            // Responder con éxito
             res.json({ message: 'Datos del aprendiz modificados', aprendiz: aprendizModificado });
         } catch (error) {
             if (error.message.includes('Ya existe un aprendiz')) {
@@ -85,6 +123,7 @@ const aprendizController = {
             res.status(500).json({ error: 'Error al modificar los datos del aprendiz' });
         }
     },
+
     activar: async (req, res) => {
         const id = req.params.id; // Asegúrate de que la ruta esté configurada para recibir `id` en lugar de `_id`
         try {
@@ -123,4 +162,4 @@ const aprendizController = {
 
 };
 
-module.exports = aprendizController;
+module.exports = { aprendizController, upload };

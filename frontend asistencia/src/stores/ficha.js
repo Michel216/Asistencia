@@ -46,17 +46,24 @@ export const useFichaStore = defineStore('ficha', () => {
             $q.notify({
                 color: 'positive',
                 icon: 'check',
-                message: 'Ficha guardada correctamente'
+                message: 'Ficha creada existosamente'
             });
             return r;
         } catch (error) {
-            console.log(error);
-            $q.notify({
-                color: 'negative',
-                icon: 'error',
-                message: 'Error al guardar la ficha'
-            });
-            return error;
+            if (error.response && error.response.status === 400) {
+                $q.notify({
+                  type: 'negative',
+                  icon: 'error',
+                  message: error.response.data.error || 'Ya existe una ficha con este código', // Mostrar el mensaje devuelto por el backend
+                });
+              } else {
+                // Notificar sobre cualquier otro tipo de error (por ejemplo, problemas de red)
+                $q.notify({
+                  type: 'negative',
+                  icon: 'error',
+                  message:'Error en el servidor al crear la ficha',
+                });
+              }
         }
     };
     const modificarFicha = async (id, codigo, nombre) => {
@@ -72,17 +79,18 @@ export const useFichaStore = defineStore('ficha', () => {
             $q.notify({
                 color: 'positive',
                 icon: 'check',
-                message: 'Ficha editada correctamente'
+                message: 'Ficha editada exitosamente'
             });
             console.log(r);
             return r;
         } catch (error) {
+            const errorMessage = error.response?.data?.message || 'No se pudo editar la ficha. Intente nuevamente.';
+            console.error("Error al modificar la ficha:", error);
             $q.notify({
-                color: 'negative',
-                icon: 'error',
-                message: 'Error al editar la ficha'
+              color: 'negative',
+              icon: 'error',
+              message: errorMessage,
             });
-            throw error;
         }
     };
 

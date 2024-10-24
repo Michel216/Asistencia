@@ -40,6 +40,15 @@
               {{ props.row.id_ficha ? props.row.id_ficha.nombre : 'No disponible' }}
             </q-td>
           </template>
+          <template v-slot:body-cell-firma="props">
+            <q-td :props="props">
+              <img v-if="props.row.firma" :src="props.row.firma" alt="Firma"
+                style="max-width: 100px; max-height: 50px;" />
+              <img v-else-if="firmaPreview" :src="firmaPreview" alt="Firma"
+                style="max-width: 100px; max-height: 50px;" />
+              <span v-else>No disponible</span>
+            </q-td>
+          </template>
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
               <q-btn flat icon="edit" @click="abrirModal(props.row)"
@@ -59,100 +68,118 @@
         </q-table>
 
         <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
-          transition-hide="rotate" persistent>
-          <q-card>
-            <q-card-section class="vert" style="background-color: green; color:white">
-              <div class="text-h6" v-if="b">Editar Aprendiz</div>
-              <div class="text-h6" v-else>Guardar Aprendiz</div>
-            </q-card-section>
+  transition-hide="rotate" persistent>
+  <q-card>
+    <q-card-section class="vert" style="background-color: green; color:white">
+      <div class="text-h6" v-if="b">Editar Aprendiz</div>
+      <div class="text-h6" v-else>Guardar Aprendiz</div>
+    </q-card-section>
 
-            <q-separator />
-            <div class="agua">
-              <q-card-section
-                style="max-height: none; max-width: 100%; width: 100vw; margin: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                <!-- Fila 1 -->
-                <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']"
-                  style="margin-bottom: 15px; border-radius: 8px;">
-                  <template v-slot:prepend>
-                    <q-icon name="card_membership" />
-                  </template>
-                </q-input>
+    <q-separator />
+    <div class="agua">
+      <q-card-section
+        style="max-height: none; max-width: 100%; width: 100vw; margin: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <!-- Fila 1 -->
+        <q-input filled v-model="documento" label="Documento Aprendiz" :dense="dense"
+          :rules="[val => val.trim() !== '' || 'Por favor, ingrese el documento']"
+          style="margin-bottom: 15px; border-radius: 8px;">
+          <template v-slot:prepend>
+            <q-icon name="card_membership" />
+          </template>
+        </q-input>
 
-                <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']"
-                  style="margin-bottom: 15px; border-radius: 8px;">
-                  <template v-slot:prepend>
-                    <q-icon name="person" />
-                  </template>
-                </q-input>
+        <q-input filled v-model="nombre" label="Nombre Del Aprendiz" :dense="dense"
+          :rules="[val => val.trim() !== '' || 'Por favor, ingrese el nombre']"
+          style="margin-bottom: 15px; border-radius: 8px;">
+          <template v-slot:prepend>
+            <q-icon name="person" />
+          </template>
+        </q-input>
 
-                <!-- Fila 2 -->
-                <q-input filled v-model="telefono" label="Teléfono Del Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono', val => val.trim().length === 10 || 'Ingrese un teléfono válido']"
-                  style="margin-bottom: 15px; border-radius: 8px;">
-                  <template v-slot:prepend>
-                    <q-icon name="phone" />
-                  </template>
-                </q-input>
+        <!-- Fila 2 -->
+        <q-input filled v-model="telefono" label="Teléfono Del Aprendiz" :dense="dense"
+          :rules="[val => val.trim() !== '' || 'Por favor, ingrese el teléfono', val => val.trim().length === 10 || 'Ingrese un teléfono válido']"
+          style="margin-bottom: 15px; border-radius: 8px;">
+          <template v-slot:prepend>
+            <q-icon name="phone" />
+          </template>
+        </q-input>
 
-                <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
-                  :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']"
-                  style="margin-bottom: 15px; border-radius: 8px;">
-                  <template v-slot:prepend>
-                    <q-icon name="email" />
-                  </template>
-                </q-input>
+        <q-input filled v-model="email" label="Email Del Aprendiz" :dense="dense"
+          :rules="[val => val.trim() !== '' || 'Por favor, ingrese el email']"
+          style="margin-bottom: 15px; border-radius: 8px;">
+          <template v-slot:prepend>
+            <q-icon name="email" />
+          </template>
+        </q-input>
 
-                <!-- Fila 3 -->
-                <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
-                  :options="options" @filter="filterFn" style="width: 100%; margin-bottom: 20px; border-radius: 8px;"
-                  behavior="menu" emit-value map-options lazy-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha']">
-                  <template v-slot:prepend>
-                    <q-icon name="folder" />
-                  </template>
+        <!-- Fila 3 -->
+        <q-select filled type="number" v-model="ficha" use-input input-debounce="0" label="Ficha"
+          :options="options" @filter="filterFn"
+          style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value
+          map-options lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha']">
+          <template v-slot:prepend>
+            <q-icon name="folder" />
+          </template>
 
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        No results
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-                <q-file style="max-width: 250px; min-width: 200px;" clearable filled
-                  v-model="firma" accept=".jpg, image/*" label="Firma" @input="handleFirma" :rules="[
-                    (val) => !change ? (val !== null || 'Por favor, seleccione un archivo') : true]">
-                  <template v-slot:prepend>
-                    <font-awesome-icon icon="file-signature" />
-                  </template>
-                </q-file>
-                <div v-if="firmaPreview && change === true" style="max-width: 250px; min-width: 200px;">
-                  <q-img :src="firmaPreview" alt="Firma del aprendiz">
-                    <div class="absolute-bottom text-subtitle1 text-center">
-                      Firma Actual
-                    </div>
-                  </q-img>
-                </div>
-                <div v-if="!firmaPreview && change === true" style="max-width: 250px; min-width: 200px;">
-                  <q-img
-                    src="https://media.istockphoto.com/id/1409329028/es/vector/no-hay-imagen-disponible-marcador-de-posici%C3%B3n-miniatura-icono-dise%C3%B1o-de-ilustraci%C3%B3n.jpg?s=612x612&w=0&k=20&c=Bd89b8CBr-IXx9mBbTidc-wu_gtIj8Py_EMr3hGGaPw="
-                    alt="Firma del aprendiz">
-                    <div class="absolute-bottom text-subtitle1 text-center">
-                      Image not found
-                    </div>
-                  </q-img>
-                </div>
-              </q-card-section>
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No results
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
+        <!-- <q-file style="max-width: 250px; min-width: 200px;" clearable filled v-model="firma"
+          accept=".jpg, image/*" label="Firma" @input="handleFirma" :rules="[
+            (val) => !change ? (val !== null || 'Por favor, seleccione un archivo') : true]">
+          <template v-slot:prepend>
+            <q-icon name="attach_file" />
+          </template>
+        </q-file>
+
+        <div v-if="firmaPreview && change === true" style="max-width: 250px; min-width: 200px;">
+          <q-img :src="firmaPreview" alt="Firma del aprendiz">
+            <div class="absolute-bottom text-subtitle1 text-center">
+              Firma Actual
             </div>
-            <q-separator />
-            <q-card-actions style="justify-content: center;" align="right">
-              <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-              <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
+          </q-img>
+        </div>
+
+        <div v-if="!firmaPreview && change === true" style="max-width: 250px; min-width: 200px;">
+          <q-img
+            src="https://media.istockphoto.com/id/1409329028/es/vector/no-hay-imagen-disponible-marcador-de-posici%C3%B3n-miniatura-icono-dise%C3%B1o-de-ilustraci%C3%B3n.jpg?s=612x612&w=0&k=20&c=Bd89b8CBr-IXx9mBbTidc-wu_gtIj8Py_EMr3hGGaPw="
+            alt="Firma del aprendiz">
+            <div class="absolute-bottom text-subtitle1 text-center">
+              Image not found
+            </div>
+          </q-img>
+        </div> -->
+   
+        <q-file clearable color="green" filled bottom-slots v-model="firma" accept=".jpg, .jpeg, .png, image/*"
+                  label="Firma" @input="handleFirma" :rules="[
+                    (val) => !val || (val.length === 0 ? 'Por favor, seleccione un archivo' : true),
+                  ]" counter>
+                  <template v-slot:prepend>
+                    <q-icon name="attach_file" />
+                  </template>
+
+                </q-file>
+      </q-card-section>
+    </div>
+
+    <q-separator />
+
+    <q-card-actions style="justify-content: center;" align="right">
+      <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
+      <q-btn flat label="Guardar" color="primary" @click="crearAprendiz()"
+        :loading="loadingGuardarAprendiz" />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
+
       </div>
     </div>
   </div>
@@ -169,7 +196,6 @@ import { useUsuariosStore } from '../stores/usuario.js';
 const route = useRoute()
 const $q = useQuasar();
 
-
 const { InfoUser } = useUsuariosStore();
 console.log(InfoUser);
 
@@ -183,7 +209,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 
 const leftDrawerOpen = ref(false)
@@ -192,8 +217,9 @@ const documento = ref("")
 const nombre = ref("")
 const telefono = ref("")
 const email = ref("")
-const firma=ref("")
-const firmaPreview= (null)
+const firma = ref(null)
+const firmaPreview = (null)
+const change = ref(false);
 const b = ref(false)
 const id = ref("")
 const rows = ref([])
@@ -214,14 +240,6 @@ onBeforeMount(() => {
   traerFichas()
 })
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
-
-function isActiveRoute(path) {
-  return route.path === path
-}
-
 async function abrirModal(row = null) {
   if (row) {
     id.value = row._id || ''
@@ -230,6 +248,8 @@ async function abrirModal(row = null) {
     telefono.value = row.telefono || ''
     email.value = row.email || ''
     ficha.value = row.id_ficha ? row.id_ficha._id : ''
+    firma.value = row.firma || ''
+    firma.value = row.firma || ''
     b.value = true
   } else {
     id.value = ''
@@ -238,6 +258,8 @@ async function abrirModal(row = null) {
     telefono.value = ''
     email.value = ''
     ficha.value = ''
+    firma.value = ''
+    firma.value = ''
     b.value = false
   }
   fixed.value = true
@@ -259,16 +281,21 @@ async function traer() {
 function handleFirma(file) {
   if (file && file.length > 0) {
     const reader = new FileReader();
-    // console.log(reader);
-
     reader.onload = (e) => {
-      firmaPreview.value = e.target.result; 
+      firmaPreview.value = e.target.result;
+      firma.value = e.target.result;
+      change.value = true;
     };
-    reader.readAsDataURL(file[0]); 
+    reader.readAsDataURL(file[0]);
+  } else {
+    firmaPreview.value = null;
+    firma.value = null;
+    change.value = false;
   }
 }
+
 async function crearAprendiz() {
-  if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value) {
+  if (!documento.value.trim() || !nombre.value.trim() || !telefono.value.trim() || !email.value.trim() || !ficha.value || !firma.value) {
     $q.notify({
       color: 'negative',
       icon: 'error',
@@ -285,14 +312,11 @@ async function crearAprendiz() {
 
     loadingState.value[`guardar-${id.value}`] = true;
     try {
-      await useAprendiz.modificarAprendiz(id.value, documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
+      await useAprendiz.modificarAprendiz(id.value, documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value, firmaPreview.value);
       traer()
 
       fixed.value = false;
       b.value = false;
-
-    } catch (error) {
-      console.error("Error al modificar el Aprendiz:", error);
 
     } finally {
       loadingState.value[`guardar-${id.value}`] = false;
@@ -300,18 +324,18 @@ async function crearAprendiz() {
   } else {  // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
-      await useAprendiz.guardarAprendiz(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
-      await traer(); 
-      fixed.value = false;
+      console.log(documento.value, nombre.value, telefono.value, email.value, ficha.value, firma.value);
 
-    } catch (error) {
-      console.error("Error al guardar el aprendiz:", error);
+      await useAprendiz.guardarAprendiz(documento.value.trim(), nombre.value.trim(), telefono.value.trim(), email.value.trim(), ficha.value.trim(), firma.value);
+      await traer();  // Actualizar la lista de aprendices
+      fixed.value = false;
 
     } finally {
       loadingState.value['guardar-nuevo'] = false;
     }
   }
 }
+
 async function activar(id) {
   if (id) {
     loadingState.value[`activar-${id}`] = true
@@ -420,6 +444,13 @@ const columns = [
     align: 'center',
     label: 'Nombre de la Ficha',
     field: 'id_ficha',
+    sortable: true
+  },
+  {
+    name: 'firma',
+    align: 'center',
+    label: 'Firma Aprendiz',
+    field: 'firma',
     sortable: true
   },
   {

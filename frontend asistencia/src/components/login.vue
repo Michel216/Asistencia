@@ -44,7 +44,7 @@ const isPwd = ref(true);
 const isLoading = ref(false);
 
 const Login = async () => {
-  if (!email.value || !password.value) {
+  if (!email.value.trim() || !password.value.trim()) {
     return; // Prevenir la ejecución si los campos están vacíos
   }
 
@@ -52,15 +52,15 @@ const Login = async () => {
   isLoading.value = true; // Muestra el spinner
 
   try {
-    const login = await useUsuarios.login(email.value, password.value);
+    const login = await useUsuarios.login(email.value.trim(), password.value.trim());
     if (login) {
       router.replace('/home');
     }
   } catch (error) {
-    console.error("Error en el login:", error);
+    console.error("Error en el login:");
     $q.notify({
       type: 'negative',
-      message: 'Error en el inicio de sesión. '
+      message: 'Error al iniciar sesión. Verifica el correo o la contraseña. '
     });
   } finally {
     isLoading.value = false; // Oculta el spinner

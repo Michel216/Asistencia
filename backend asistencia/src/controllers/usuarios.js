@@ -2,7 +2,7 @@ const bcryptjs = require('bcryptjs');
 const Usuario = require('../modelos/usuarios');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const { generarJWT } = require('../middlewares/validarJWT');
+const { generaJWT } = require('../middlewares/validarJWT');
 const { encriptarPassword, validarEmailUnico, validarUnicidadCreacion, validarUnicidadActualizacion } = require('../helpers/usuario.js');
 
 const usuarioController = {
@@ -166,7 +166,7 @@ const usuarioController = {
             }
             const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-            const resetURL = `https://asistencia-i7sv.onrender.com/recuperarContraseña/${token}`;
+            const resetURL = `https://asistencia-i7sv.onrender.com/#/recuperarContrasena/${token}`;
             const mailOptions = {
                 from: '"Recuperación de Contraseña" <no-reply@tuapp.com>',
                 to: email,
@@ -200,7 +200,7 @@ const usuarioController = {
     },
     // Cambiar contraseña
     cambiarContrasena: async (req, res) => {
-        const { token } = req.body;
+        const { token } = req.params;
         const { newPassword } = req.body;
 
         try {
@@ -226,7 +226,7 @@ const usuarioController = {
             res.json({ message: 'Contraseña modificada exitosamente' });
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
-                return res.status(400).json({ error: 'El token ha expirado' });
+                return res.status(401).json({ msg: 'El token ha expirado' });
             }
             console.error('Error al cambiar la contraseña:', error);
             res.status(500).json({ error: 'Error al cambiar la contraseña' });

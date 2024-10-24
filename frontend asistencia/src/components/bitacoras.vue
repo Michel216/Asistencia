@@ -4,7 +4,7 @@
     <h3 class="title-table">Bitacoras</h3>
     <hr id="hr" class="bg-green-9">
     <div class="fichas-container q-pa-md">
-      
+
       <!-- Tabla de Bitácoras -->
       <q-table title="Bitacora" :rows="rows" :columns="columns" row-key="_id" style=" margin: auto 5% ">
         <template v-slot:body-cell-nombre="props">
@@ -72,7 +72,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ];
 
 function isActiveRoute(path) {
@@ -264,6 +263,7 @@ onMounted(() => {
 
 .q-btn:hover {
 
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   /* Sombra al pasar el mouse, sin cambiar el color */
   text-shadow: 0px 0px 10px white;
@@ -339,6 +339,7 @@ onMounted(() => {
   /* Borde derecho del encabezado */
 }
 
+
 /* Asegúrate de que el calendario se centre correctamente */
 .calendar-centered {
   display: flex;
@@ -352,51 +353,67 @@ onMounted(() => {
   color: white;
 }
 
+.calendar-centered .q-btn {
+  background-color: green;
+  color: white;
+}
+
+
 .q-popup-proxy {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+
 .custom-overlay .q-overlay {
+  background-color: rgb(0, 0, 0);
+  /* Ajusta la opacidad aquí */
   background-color: rgb(0, 0, 0);
   /* Ajusta la opacidad aquí */
 }
 
-.main-content {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  /* Ocupa el 100% del alto de la pantalla */
-}
 
-.container {
-  flex-grow: 1;
-  /* Permite que el contenido se expanda para empujar el footer hacia abajo */
-}
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Ocupa el 100% del alto de la pantalla */
+    min-height: 100vh;
+    /* Ocupa el 100% del alto de la pantalla */
+  }
 
-.footer {
-  background-color: #e7e3e3;
-  color: #000;
-  padding: 15px 0;
-  text-align: center;
-  margin-top: auto;
-  /* Esto fuerza al footer a estar en la parte inferior */
-  width: 100%;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
   .container {
-    grid-template-columns: 1fr;
+    flex-grow: 1;
+    /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+    flex-grow: 1;
+    /* Permite que el contenido se expanda para empujar el footer hacia abajo */
   }
 
   .footer {
-    font-size: 14px;
+    background-color: #e7e3e3;
+    color: #000;
+    padding: 15px 0;
+    text-align: center;
+    margin-top: auto;
+    /* Esto fuerza al footer a estar en la parte inferior */
+    margin-top: auto;
+    /* Esto fuerza al footer a estar en la parte inferior */
+    width: 100%;
   }
-}
 
-.q-date__header {
-  background-color: #008000
-}
-</style>
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+
+    .footer {
+      font-size: 14px;
+    }
+  }
+
+  .q-date__header {
+    background-color: #008000
+  }
+  </style>

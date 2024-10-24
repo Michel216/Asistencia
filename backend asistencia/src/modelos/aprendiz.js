@@ -6,6 +6,7 @@ const aprendizShema = new mongoose.Schema({
     telefono: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     id_ficha: { type: mongoose.Schema.Types.ObjectId, ref: 'Ficha' },
+    firma: { type: String},
     estado: { type: String, required: true, default: 1 }
 }, { timestamps: true })
 

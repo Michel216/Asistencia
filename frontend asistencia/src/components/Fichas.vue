@@ -45,6 +45,7 @@
   >
     <!-- Código de la Ficha -->
     <q-input
+    type="number"
       filled
       v-model="codigo"
       label="Código de la Ficha"
@@ -75,8 +76,8 @@
             <q-separator />
 
             <q-card-actions style="justify-content: center;" align="right">
-              <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-              <q-btn flat label="Guardar" color="primary" @click="crearFicha()" />
+              <q-btn flat label="Cerrar"  icon="close" style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" v-close-popup @click="fixed.value = false" />
+              <q-btn flat label="Guardar"   icon="save"  style="background-color: green;  color: white; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" @click="crearFicha()" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -117,7 +118,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 function isActiveRoute(path) {
   // console.log(Current Route: ${route.path}, Checking Path: ${path});
@@ -155,31 +155,34 @@ async function traer() {
 }
 async function crearFicha() {
 
-  if (!nombre.value.trim() && !codigo.value.trim()) {
+  if (!nombre.value.trim() || !codigo.value.trim()) {
 
     $q.notify({
       color: 'negative',
       icon: 'error',
-      message: 'No se pudo guardar la ficha'
+      message: 'Por favor complete todos los campos correctamente.'
     });
     return;
   }
   if (b.value === true) {
     if (!id.value) {
-      console.error("ID de la ficha no está disponible");
+      $q.notify({
+        color: 'negative',
+        icon: 'error',
+        message: 'No se puede identificar la ficha a editar.',
+      });
       return;
     }
 
     loadingState.value[`guardar-${id.value}`] = true;
 
     try {
-      await useFicha.modificarFicha(id.value, codigo.value, nombre.value);
+      await useFicha.modificarFicha(id.value.trim(), codigo.value.trim(), nombre.value.trim());
       await traer();
       fixed.value = false;
       b.value = false;
 
     } catch (error) {
-
       console.error("Error al modificar la ficha:", error);
     } finally {
       loadingState.value[`guardar-${id.value}`] = false;
@@ -188,7 +191,7 @@ async function crearFicha() {
     loadingState.value[`guardar-${id.value}`] = false;
 
     try {
-      await useFicha.guardarFicha(codigo.value, nombre.value);
+      await useFicha.guardarFicha(codigo.value.trim(), nombre.value.trim());
       await traer();
       fixed.value = false;
 
@@ -196,7 +199,7 @@ async function crearFicha() {
 
       console.error("Error al guardar la ficha:", error);
     } finally {
-      loadingState.value[crear] = false;
+      loadingState.value['guardar'] = false;
     }
   }
 }

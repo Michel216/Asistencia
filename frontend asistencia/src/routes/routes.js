@@ -21,7 +21,7 @@ const routes = [
   ] },
   { path: '/', component: Login },
   { path: '/recuperarContraseñaEmail', component: RecuperarContraseñaEmail },
-  { path: '/recuperarContraseña/:token', component: RecuperarContraseñaNueva },
+  { path: '/recuperarContrasena/:token', component: RecuperarContraseñaNueva },
   { path: '/registro', component: registroAprendiz },
   { path: '/documento', component: documentoPrevio }
 ];

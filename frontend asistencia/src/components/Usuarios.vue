@@ -1,108 +1,88 @@
 <template>
   <q-layout view="hHh lpR lFf">
 
-      <div class="usuarios-container q-pa-md">
-        <h3 class="title-table">Usuarios</h3>
-        <hr id="hr" class="bg-green-9">
-        <div class="q-pa-md">
-          <div style="display: flex; justify-content: end; ">
-            <q-btn @click="abrirModal()"
-              style="background-color: green; color: white; margin:10px 0 20px 0; width: 160px" label="Agregar Usuario"
-              :loading="loadingCrearUsuario" />
-          </div>
-          <q-table title="Usuarios" :rows="rows" :columns="columns" row-key="email">
-            <template v-slot:body-cell-opciones="props">
-              <q-td :props="props">
-                <q-btn flat icon="edit" @click="abrirModal(props.row)"
-                  :loading="loadingState[`guardar-${props.row._id}`]" />
-                <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
-                  color="red" :loading="loadingState[`desactivar-${props.row._id}`]" />
-                <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else color="green"
-                  :loading="loadingState[`activar-${props.row._id}`]" />
-              </q-td>
-            </template>
-            <template v-slot:body-cell-estado1="props">
-              <q-td :props="props">
-                <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
-                <q-chip square outline color="red" v-else>Inactivo</q-chip>
-              </q-td>
-            </template>
-          </q-table>
-
-          <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
-            transition-hide="rotate" persistent>
-            <q-card>
-              <q-card-section class="vert" style="background-color: green; color:white">
-                <div class="text-h6" v-if="b">Editar Usuario</div>
-                <div class="text-h6" v-else>Guardar Usuario</div>
-              </q-card-section>
-
-              <q-separator />
-
-              <q-card-section
-   style="max-height: none; max-width: 100%; width: 100vw; margin: auto; "
-  >
-    <!-- Nombre del Usuario -->
-    <q-input
-      filled
-      v-model="nombre"
-      label="Nombre del Usuario"
-      :dense="dense"
-      lazy-rules
-      :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']"
-    >
-      <template v-slot:prepend>
-        <q-icon name="person" />
-      </template>
-    </q-input>
-
-    <!-- Email del Usuario -->
-    <q-input
-      filled
-      v-model="email"
-      label="Email del Usuario"
-      :dense="dense"
-      lazy-rules
-      :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']"
-    >
-      <template v-slot:prepend>
-        <q-icon name="email" />
-      </template>
-    </q-input>
-
-    <!-- Contraseña -->
-    <q-input
-      v-if="!b"
-      :type="isPwd ? 'password' : 'text'"
-      filled
-      v-model="password"
-      label="Contraseña"
-      lazy-rules
-      :rules="[val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
-    >
-      <template v-slot:prepend>
-        <q-icon name="lock" />
-      </template>
-      <template v-slot:append>
-        <q-icon
-          :name="isPwd ? 'visibility_off' : 'visibility'"
-          class="cursor-pointer"
-          @click="isPwd = !isPwd"
-        />
-      </template>
-    </q-input>
-  </q-card-section>
-
-              <q-separator />
-
-              <q-card-actions style="justify-content: center;"  align="right">
-                <q-btn flat label="Cerrar" color="primary" v-close-popup @click="fixed.value = false" />
-                <q-btn flat label="Guardar" color="primary" @click="crearUsuario()" :loading="loadingCrearUsuario" />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
+    <div class="usuarios-container q-pa-md">
+      <h3 class="title-table">Usuarios</h3>
+      <hr id="hr" class="bg-green-9">
+      <div class="q-pa-md">
+        <div style="display: flex; justify-content: end; ">
+          <q-btn @click="abrirModal()" style="background-color: green; color: white; margin:10px 0 20px 0; width: 160px"
+            label="Agregar Usuario" :loading="loadingCrearUsuario" />
         </div>
+        <q-table title="Usuarios" :rows="rows" :columns="columns" row-key="email">
+          <template v-slot:body-cell-opciones="props">
+            <q-td :props="props">
+              <q-btn flat icon="edit" @click="abrirModal(props.row)"
+                :loading="loadingState[`guardar-${props.row._id}`]" />
+              <q-btn @click="desactivar(props.row._id)" flat dense icon="cancel" v-if="props.row.estado == 1"
+                color="red" :loading="loadingState[`desactivar-${props.row._id}`]" />
+              <q-btn @click="activar(props.row._id)" flat dense icon="check_circle" v-else color="green"
+                :loading="loadingState[`activar-${props.row._id}`]" />
+            </q-td>
+          </template>
+          <template v-slot:body-cell-estado1="props">
+            <q-td :props="props">
+              <q-chip square outline color="green" v-if="props.row.estado == 1">Activo</q-chip>
+              <q-chip square outline color="red" v-else>Inactivo</q-chip>
+            </q-td>
+          </template>
+        </q-table>
+
+        <q-dialog v-model="fixed" :backdrop-filter="'blur(4px) saturate(150%)'" transition-show="rotate"
+          transition-hide="rotate" persistent>
+          <q-card>
+            <q-card-section class="vert" style="background-color: green; color:white">
+              <div class="text-h6" v-if="b">Editar Usuario</div>
+              <div class="text-h6" v-else>Guardar Usuario</div>
+            </q-card-section>
+
+            <q-separator />
+
+            <q-card-section style="max-height: none; max-width: 100%; width: 100vw; margin: auto; ">
+              <!-- Nombre del Usuario -->
+              <q-input filled v-model="nombre" label="Nombre del Usuario" :dense="dense" lazy-rules
+                :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el nombre']">
+                <template v-slot:prepend>
+                  <q-icon name="person" />
+                </template>
+              </q-input>
+
+              <!-- Email del Usuario -->
+              <q-input filled v-model="email" label="Email del Usuario" :dense="dense" lazy-rules
+                :rules="[val => val && val.trim() !== '' || 'Por favor ingresa el email']">
+                <template v-slot:prepend>
+                  <q-icon name="email" />
+                </template>
+              </q-input>
+
+              <!-- Contraseña -->
+              <q-input v-if="!b" :type="isPwd ? 'password' : 'text'" filled v-model="password" label="Contraseña"
+                lazy-rules
+                :rules="[val => val && val.trim().length >= 6 || 'La contraseña debe tener al menos 6 caracteres']">
+                <template v-slot:prepend>
+                  <q-icon name="lock" />
+                </template>
+                <template v-slot:append>
+                  <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                    @click="isPwd = !isPwd" />
+                </template>
+              </q-input>
+            </q-card-section>
+
+            <q-separator />
+
+            <q-card-actions style="justify-content: center;" align="right">
+              <q-btn unelevated label="Cerrar" icon="close"
+                style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" v-close-popup
+                @click="fixed.value = false" />
+              <q-btn unelevated label="Guardar" icon="save"
+                style="background-color: green;  color: white; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);"
+                @click="crearAprendiz()" :loading="loadingGuardarAprendiz" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </div>
+    </div>
 
   </q-layout>
 </template>
@@ -153,7 +133,6 @@ const menuItems = [
   { label: 'Bitacora', path: '/bitacora', icon: 'library_books' },
   { label: 'Fichas', path: '/ficha', icon: 'folder' },
   { label: 'Usuarios', path: '/usuario', icon: 'people' },
-  { label: 'Registro Asistencia', path: '/registro', icon: 'assignment' }
 ]
 
 function isActiveRoute(path) {
@@ -237,7 +216,7 @@ async function crearUsuario() {
 
     loadingState.value[`guardar-${selectedId.value}`] = true;
     try {
-      await useUsuario.modificarDatosUsuario(selectedId.value, email.value, nombre.value);
+      await useUsuario.modificarDatosUsuario(selectedId.value, email.value.trim(), nombre.value.trim());
       await traer();
       fixed.value = false;
       b.value = false;
@@ -247,12 +226,12 @@ async function crearUsuario() {
 
     } finally {
       loadingState.value[`guardar-${selectedId.value}`] = false;
-      
+
     }
   } else { // Crear
     loadingState.value['guardar-nuevo'] = true;
     try {
-      await useUsuario.guardarUsuario(email.value, nombre.value, password.value);
+      await useUsuario.guardarUsuario(email.value.trim(), nombre.value.trim(), password.value.trim());
       fixed.value = false;
       await traer();
 
@@ -384,14 +363,16 @@ const columns = [
 
 
 
- .main-content {
+.main-content {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+  min-height: 100vh;
+  /* Ocupa el 100% del alto de la pantalla */
 }
 
 .container {
-  flex-grow: 1; /* Permite que el contenido se expanda para empujar el footer hacia abajo */
+  flex-grow: 1;
+  /* Permite que el contenido se expanda para empujar el footer hacia abajo */
 }
 
 .footer {
@@ -399,7 +380,8 @@ const columns = [
   color: #000;
   padding: 15px 0;
   text-align: center;
-  margin-top: auto; /* Esto fuerza al footer a estar en la parte inferior */
+  margin-top: auto;
+  /* Esto fuerza al footer a estar en la parte inferior */
   width: 100%;
 }
 
